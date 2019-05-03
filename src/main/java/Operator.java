@@ -5,5 +5,7 @@ import java.util.List;
 public class Operator implements Serializable{
 
     List<Operator>  equivalentSet = new ArrayList<Operator>();
+    List<Integer> subStrings;
+
 
 }
