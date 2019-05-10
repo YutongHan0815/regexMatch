@@ -1,4 +1,4 @@
-package plan;
+package operators;
 
 import com.google.common.base.Preconditions;
 
@@ -44,10 +44,6 @@ public class PhysicalJoinOperator implements Operator, Serializable {
         return joinCondition;
     }
 
-    @Override
-    public int hashOperator() {
-        return 0;
-    }
 
     @Override
     public boolean equals(Object o) {

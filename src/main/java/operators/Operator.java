@@ -1,10 +1,8 @@
-package plan;
+package operators;
 
 
 
 public interface Operator {
-
-
 
 
 }

@@ -1,7 +1,9 @@
 package rules;
 
-import plan.PhysicalJoinOperator;
-import plan.PhysicalMatchOperator;
+import operators.PhysicalJoinOperator;
+import operators.PhysicalMatchOperator;
+import plan.PatternNode;
+import plan.RuleCall;
 
 import java.io.Serializable;
 import java.util.Objects;

@@ -4,8 +4,11 @@ import com.google.re2j.PublicParser;
 import com.google.re2j.PublicRE2;
 import com.google.re2j.PublicRegexp;
 import com.google.re2j.PublicSimplify;
-import plan.PhysicalVerifyOperator;
-import regexMatcher.SubRegex;
+
+import operators.PhysicalVerifyOperator;
+import plan.PatternNode;
+import plan.RuleCall;
+
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -16,7 +19,7 @@ public class VerifyToVerifySplitRule implements TransformationRule, Serializable
 
     public VerifyToVerifySplitRule() {
         this.description = this.getClass().getName();
-        this.mainPattern = PatternNode.any(PhysicalVerifyOperator.class, VerifyToVerifySplitRule::isComposable());
+        this.mainPattern = PatternNode.any(PhysicalVerifyOperator.class, VerifyToVerifySplitRule::isComposable);
     }
 
     public String getDescription() {
@@ -41,13 +44,14 @@ public class VerifyToVerifySplitRule implements TransformationRule, Serializable
 
     }
 
-    public static boolean isComposable(PhysicalVerifyOperator verifyOperator) {
-        final String regex = verifyOperator.getSubRegex();
+    public static boolean isComposable() {
+
+        final String regex = null;
         PublicRegexp re = PublicParser.parse(regex, PublicRE2.PERL);
         re = PublicSimplify.simplify(re);
         return re.getOp() != PublicRegexp.PublicOp.CONCAT;
-
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

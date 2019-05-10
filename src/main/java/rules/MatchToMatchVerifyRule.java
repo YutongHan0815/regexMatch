@@ -1,8 +1,10 @@
 package rules;
 
 
-import plan.PhysicalMatchOperator;
-import plan.PhysicalVerifyOperator;
+import operators.PhysicalMatchOperator;
+import operators.PhysicalVerifyOperator;
+import plan.PatternNode;
+import plan.RuleCall;
 
 import java.io.Serializable;
 import java.util.Arrays;

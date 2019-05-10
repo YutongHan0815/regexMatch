@@ -1,9 +1,8 @@
-package rules;
+package plan;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import plan.ChildrenPolicy;
-import plan.Operator;
+import operators.Operator;
 
 import java.io.Serializable;
 import java.util.List;

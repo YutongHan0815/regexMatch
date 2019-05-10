@@ -1,7 +1,5 @@
-package plan;
+package operators;
 
-
-import regexMatcher.SubRegex;
 
 import java.io.Serializable;
 

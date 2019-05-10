@@ -1,7 +1,8 @@
 package rules;
 
-import plan.LogicalJoinOperator;
-import plan.PhysicalJoinOperator;
+import operators.LogicalJoinOperator;
+import plan.PatternNode;
+import plan.RuleCall;
 
 
 public class LogicalJoinToPhysicalJoinRules implements TransformationRule{

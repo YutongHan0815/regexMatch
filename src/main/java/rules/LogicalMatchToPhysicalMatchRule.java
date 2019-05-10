@@ -1,8 +1,9 @@
 package rules;
 
 
-import plan.LogicalMatchOperator;
-import plan.PhysicalMatchOperator;
+import operators.LogicalMatchOperator;
+import plan.PatternNode;
+import plan.RuleCall;
 
 import java.io.Serializable;
 

@@ -1,8 +1,9 @@
 package rules;
 
-import plan.LogicalVerifyOperator;
+import operators.LogicalVerifyOperator;
 
-import plan.PhysicalVerifyOperator;
+import plan.PatternNode;
+import plan.RuleCall;
 
 import java.io.Serializable;
 

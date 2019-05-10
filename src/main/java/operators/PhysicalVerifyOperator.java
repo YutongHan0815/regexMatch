@@ -1,9 +1,13 @@
-package plan;
+package operators;
 
-import regexMatcher.SubRegex;
+import com.google.re2j.PublicParser;
+import com.google.re2j.PublicRE2;
+import com.google.re2j.PublicRegexp;
+import com.google.re2j.PublicSimplify;
+
 
 import java.io.Serializable;
-import java.util.function.Predicate;
+
 
 public class PhysicalVerifyOperator implements Operator, Serializable {
 
@@ -25,4 +29,12 @@ public class PhysicalVerifyOperator implements Operator, Serializable {
     public VerifyCondition getVerifyCondition() {
         return verifyCondition;
     }
+
+    public boolean isComposable() {
+        final String regex = this.getSubRegex();
+        PublicRegexp re = PublicParser.parse(regex, PublicRE2.PERL);
+        re = PublicSimplify.simplify(re);
+        return re.getOp() != PublicRegexp.PublicOp.CONCAT;
+    }
 }
+

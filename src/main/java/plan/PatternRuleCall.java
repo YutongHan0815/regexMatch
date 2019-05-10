@@ -1,6 +1,6 @@
-package rules;
+package plan;
 
-import plan.Operator;
+import operators.Operator;
 
 import java.io.Serializable;
 
