@@ -7,29 +7,29 @@ import java.util.Objects;
 
 public class PhysicalJoinOperator implements Operator, Serializable {
 
-    private Operator leftOpertor;
+    private Operator leftOperator;
     private Operator rightOperator;
 
     private final JoinCondition joinCondition;
 
 
-    public PhysicalJoinOperator(Operator leftOpertor, Operator rightOperator, JoinCondition joinCondition) {
-        Preconditions.checkNotNull(leftOpertor);
+    public PhysicalJoinOperator(Operator leftOperator, Operator rightOperator, JoinCondition joinCondition) {
+        Preconditions.checkNotNull(leftOperator);
         Preconditions.checkNotNull(rightOperator);
         Preconditions.checkNotNull(joinCondition);
 
-        this.leftOpertor = leftOpertor;
+        this.leftOperator = leftOperator;
         this.rightOperator = rightOperator;
         this.joinCondition = joinCondition;
 
     }
 
-    public Operator getLeftOpertor() {
-        return leftOpertor;
+    public Operator getLeftOperator() {
+        return leftOperator;
     }
 
-    public void setLeftOpertor(Operator leftOpertor) {
-        this.leftOpertor = leftOpertor;
+    public void setLeftOperator(Operator leftOperator) {
+        this.leftOperator = leftOperator;
     }
 
     public Operator getRightOperator() {
@@ -50,13 +50,17 @@ public class PhysicalJoinOperator implements Operator, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PhysicalJoinOperator that = (PhysicalJoinOperator) o;
-        return leftOpertor.equals(that.leftOpertor) &&
+        return leftOperator.equals(that.leftOperator) &&
                 rightOperator.equals(that.rightOperator) &&
                 joinCondition.equals(that.joinCondition);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(leftOpertor, rightOperator, joinCondition);
+        return Objects.hash(getDigest());
     }
+    public String getDigest() {
+        return "PhysicalJoinOperator(" + leftOperator.toString()+rightOperator.toString() + ")";
+    }
+
 }

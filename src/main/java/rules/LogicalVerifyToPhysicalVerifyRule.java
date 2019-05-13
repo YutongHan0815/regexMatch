@@ -2,10 +2,14 @@ package rules;
 
 import operators.LogicalVerifyOperator;
 
+import operators.PhysicalVerifyOperator;
+import plan.OperatorInput;
 import plan.PatternNode;
 import plan.RuleCall;
+import plan.SetNode;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class LogicalVerifyToPhysicalVerifyRule implements TransformationRule, Serializable {
 
@@ -31,10 +35,12 @@ public class LogicalVerifyToPhysicalVerifyRule implements TransformationRule, Se
 
     @Override
     public void onMatch(RuleCall ruleCall) {
-        final LogicalVerifyOperator logicalMatchOperator = ruleCall.getMatchedOperator(0);
+        final PhysicalVerifyOperator physicalVerifyOperator = ruleCall.getMatchedOperator(0);
 
-        //PhysicalVerifyOperator physicalVerifyOperator = new PhysicalVerifyOperator();
-        //ruleCall.transformTo(physicalVerifyOperator);
+        final SetNode verifySetNode = new SetNode();
+        OperatorInput optInput = new OperatorInput(physicalVerifyOperator, new ArrayList<>());
+        verifySetNode.operatorList.add(optInput);
+        ruleCall.transformTo(verifySetNode);
 
     }
 

@@ -35,20 +35,20 @@ public class PatternNode implements Serializable {
     }
 
 
-    public static PatternNode exact(Class<? extends Operator> operatorClass, List<PatternNode> children){
+    public static <T extends Operator> PatternNode exact(Class<? extends Operator> operatorClass, List<PatternNode> children) {
         return exact(operatorClass, op -> true, children);
     }
 
-    public static PatternNode exact(Class<? extends Operator> operatorClass,
-                                    Predicate<? extends Operator> predicate, List<PatternNode> children){
+    public static <T extends Operator> PatternNode exact(Class<? extends Operator> operatorClass,
+                                    Predicate<? extends Operator> predicate, List<PatternNode> children) {
         return new PatternNode(operatorClass, predicate, children, ChildrenPolicy.EXACT);
     }
 
-    public static PatternNode any(Class<? extends Operator> operatorClass){
+    public static <T extends Operator> PatternNode any(Class<T> operatorClass) {
         return any(operatorClass, op -> true);
     }
 
-    public static PatternNode any(Class<? extends Operator> operatorClass, Predicate<? extends Operator> predicate){
+    public static <T extends Operator> PatternNode any (Class<T> operatorClass, Predicate<T> predicate) {
         return new PatternNode(operatorClass, predicate, ImmutableList.of(), ChildrenPolicy.ANY);
     }
 

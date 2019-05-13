@@ -1,13 +1,13 @@
 package rules;
 
+import javafx.util.Pair;
+import operators.Operator;
 import operators.PhysicalJoinOperator;
 import operators.PhysicalMatchOperator;
-import plan.PatternNode;
-import plan.RuleCall;
+import plan.*;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.*;
 
 public class JoinCommutativeRule implements TransformationRule, Serializable {
     private final String description;
@@ -40,7 +40,21 @@ public class JoinCommutativeRule implements TransformationRule, Serializable {
         final PhysicalMatchOperator leftMatchOpt = ruleCall.getMatchedOperator(1);
         final PhysicalMatchOperator rightMatchOpt = ruleCall.getMatchedOperator(2);
 
-        ruleCall.transformTo(physicalJoinOperator);
+        SetNode joinSetNode = new SetNode();
+        List<Operator> inputOperatorList = new ArrayList<>();
+        inputOperatorList.add(leftMatchOpt);
+        inputOperatorList.add(rightMatchOpt);
+        OperatorInput optInput = new OperatorInput(physicalJoinOperator, inputOperatorList);
+
+        joinSetNode.operatorList.add(optInput);
+
+        SetNode leftMatchNode = new SetNode(joinSetNode);
+        SetNode rightMatchNode = new SetNode(joinSetNode);
+
+        joinSetNode.addNode(leftMatchNode);
+        joinSetNode.addNode(rightMatchNode);
+
+        ruleCall.transformTo(joinSetNode);
 
 
     }

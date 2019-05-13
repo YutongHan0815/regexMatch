@@ -1,36 +1,66 @@
 package plan;
 
 
-import operators.Operator;
+
 
 import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class SetNode implements Serializable {
 
-    private int NodeId;
-    public List<Operator> operatorVector;
-    protected  List<SetNode> children;
-    protected SetNode parentSetNode;
+    private int nodeId;
+    private int nextId = 0;
+    public List<OperatorInput> operatorList;
+    private List<SetNode> children;
+    private SetNode parentSetNode;
 
-
-    public SetNode(int nodeId, Operator operator){
-        this.NodeId = nodeId;
+    public SetNode() {
+        this.nodeId = nextId++;
+        initOperatorList();
+        initChildList();
+    }
+    public SetNode(SetNode parentSetNode) {
+        this.nodeId = nextId++;
+        initOperatorList();
+        initChildList();
         this.parentSetNode = parentSetNode;
-        this.children = null;
-        this.operatorVector = new ArrayList<>();
-        operatorVector.add(operator);
+    }
 
+    public SetNode(List<OperatorInput> operatorList,
+                   List<SetNode> children, SetNode parentSetNode) {
+        nodeId = nextId++;
+        this.operatorList = operatorList;
+        this.children = children;
+        this.parentSetNode = parentSetNode;
+    }
+
+    public  void initChildList() {
+        if(children == null)
+            children = new ArrayList<>();
+    }
+    public  void initOperatorList() {
+        if(operatorList == null)
+            operatorList = new ArrayList<>();
     }
 
     public int getNodeId() {
-        return NodeId;
+        return nodeId;
     }
 
     public void setNodeId(int nodeId) {
-        NodeId = nodeId;
+        nodeId = nodeId;
+    }
+
+    public List<OperatorInput> getOperatorList() {
+        return operatorList;
+    }
+
+    public void setOperatorList(List<OperatorInput> operatorList) {
+        this.operatorList = operatorList;
     }
 
     public List<SetNode> getChildren() {
@@ -47,6 +77,47 @@ public class SetNode implements Serializable {
 
     public void setParentSetNode(SetNode parentSetNode) {
         this.parentSetNode = parentSetNode;
+    }
+
+    public void addNode(SetNode setNode){
+
+        setNode.getChildren().add(setNode);
+    }
+    public void deleteNode(SetNode setNode){
+        SetNode parentSetNode = setNode.getParentSetNode();
+        int id = setNode.getNodeId();
+
+        if (parentSetNode != null) {
+            deleteChildNode(setNode);
+        }
+    }
+
+    private void deleteChildNode(SetNode setNode) {
+        List<SetNode> childList = setNode.getChildren();
+        int childNumber = childList.size();
+        for (int i = 0; i < childNumber; i++) {
+            SetNode child = childList.get(i);
+            if (child.getNodeId() == setNode.getNodeId()) {
+                childList.remove(i);
+                return;
+            }
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SetNode setNode = (SetNode) o;
+        return nodeId == setNode.nodeId &&
+                Objects.equals(operatorList, setNode.operatorList) &&
+                Objects.equals(children, setNode.children) &&
+                Objects.equals(parentSetNode, setNode.parentSetNode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nodeId, operatorList, children, parentSetNode);
     }
 
     public boolean isLeafNode() {

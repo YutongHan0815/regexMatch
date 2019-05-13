@@ -26,9 +26,6 @@ public class RegexParser {
 
         LogicalMatchOperator mainLogMatchOpt = new LogicalMatchOperator(regex);
 
-        SetNode mainSetNode = new SetNode(1, mainLogMatchOpt);
-        AndOrTree andOrTree = new AndOrTree();
-        andOrTree.addNode(mainSetNode);
 
     }
 

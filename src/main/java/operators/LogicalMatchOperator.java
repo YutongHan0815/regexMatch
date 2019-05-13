@@ -2,7 +2,7 @@ package operators;
 
 
 import java.io.Serializable;
-
+import java.util.Objects;
 
 
 public class LogicalMatchOperator implements Operator, Serializable {
@@ -17,10 +17,26 @@ public class LogicalMatchOperator implements Operator, Serializable {
     public LogicalMatchOperator(String mainRegex){
         this.subRegex = mainRegex;
 
-
     }
 
+    public String getSubRegex() {
+        return subRegex;
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LogicalMatchOperator that = (LogicalMatchOperator) o;
+        return Objects.equals(subRegex, that.subRegex);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(getDigest());
+    }
 
+    public String getDigest() {
+        return "LogicalMatchOperator(" + subRegex + ")";
+    }
 }

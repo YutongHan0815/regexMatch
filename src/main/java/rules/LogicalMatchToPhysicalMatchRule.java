@@ -2,12 +2,15 @@ package rules;
 
 
 import operators.LogicalMatchOperator;
+import operators.PhysicalJoinOperator;
+import operators.PhysicalMatchOperator;
+import plan.OperatorInput;
 import plan.PatternNode;
 import plan.RuleCall;
+import plan.SetNode;
 
 import java.io.Serializable;
-
-
+import java.util.ArrayList;
 
 
 public class LogicalMatchToPhysicalMatchRule implements TransformationRule, Serializable {
@@ -34,9 +37,11 @@ public class LogicalMatchToPhysicalMatchRule implements TransformationRule, Seri
 
     @Override
     public void onMatch(RuleCall ruleCall) {
-        final LogicalMatchOperator logicalMatchOperator = ruleCall.getMatchedOperator(0);
-        //PhysicalMatchOperator physicalMatchOperator = new PhysicalMatchOperator();
-        //ruleCall.transformTo(physicalMatchOperator);
+        final PhysicalMatchOperator physicalMatchOperator = ruleCall.getMatchedOperator(0);
+        final SetNode matchSetNode = new SetNode();
+        OperatorInput optInput = new OperatorInput(physicalMatchOperator, new ArrayList<>());
+        matchSetNode.operatorList.add(optInput);
+        ruleCall.transformTo(matchSetNode);
 
     }
 }

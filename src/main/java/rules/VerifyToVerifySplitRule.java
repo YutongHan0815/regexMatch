@@ -5,12 +5,17 @@ import com.google.re2j.PublicRE2;
 import com.google.re2j.PublicRegexp;
 import com.google.re2j.PublicSimplify;
 
+import operators.Operator;
 import operators.PhysicalVerifyOperator;
+import plan.OperatorInput;
 import plan.PatternNode;
 import plan.RuleCall;
+import plan.SetNode;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class VerifyToVerifySplitRule implements TransformationRule, Serializable {
@@ -19,7 +24,7 @@ public class VerifyToVerifySplitRule implements TransformationRule, Serializable
 
     public VerifyToVerifySplitRule() {
         this.description = this.getClass().getName();
-        this.mainPattern = PatternNode.any(PhysicalVerifyOperator.class, VerifyToVerifySplitRule::isComposable);
+        this.mainPattern = PatternNode.any(PhysicalVerifyOperator.class, op -> isComposable(op));
     }
 
     public String getDescription() {
@@ -40,13 +45,27 @@ public class VerifyToVerifySplitRule implements TransformationRule, Serializable
         final PhysicalVerifyOperator physicalVerifyOperator = ruleCall.getMatchedOperator(0);
         final PhysicalVerifyOperator childVerifyOperator = ruleCall.getMatchedOperator(1);
 
-        ruleCall.transformTo(physicalVerifyOperator);
+        SetNode verifySetNode = new SetNode();
+        List<Operator> inputOperatorList = new ArrayList<>();
+        inputOperatorList.add(childVerifyOperator);
+
+        OperatorInput optInput = new OperatorInput(physicalVerifyOperator, inputOperatorList);
+
+        verifySetNode.operatorList.add(optInput);
+
+        SetNode childNode = new SetNode(verifySetNode);
+
+        verifySetNode.addNode(childNode);
+
+
+        ruleCall.transformTo(verifySetNode);
+
 
     }
 
-    public static boolean isComposable() {
+    public static boolean isComposable(PhysicalVerifyOperator op) {
 
-        final String regex = null;
+        final String regex = op.getSubRegex();
         PublicRegexp re = PublicParser.parse(regex, PublicRE2.PERL);
         re = PublicSimplify.simplify(re);
         return re.getOp() != PublicRegexp.PublicOp.CONCAT;

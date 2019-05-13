@@ -1,12 +1,17 @@
 package rules;
 
+import operators.Operator;
 import operators.PhysicalMatchOperator;
 import operators.PhysicalVerifyOperator;
+import plan.OperatorInput;
 import plan.PatternNode;
 import plan.RuleCall;
+import plan.SetNode;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MatchVerifyToVerifyMatchRule implements TransformationRule, Serializable {
 
@@ -28,7 +33,18 @@ public class MatchVerifyToVerifyMatchRule implements TransformationRule, Seriali
         final PhysicalMatchOperator physicalMatchOperator = ruleCall.getMatchedOperator(0);
         final PhysicalVerifyOperator physicalVerifyOperator = ruleCall.getMatchedOperator(1);
 
-        //ruleCall.transformTo();
+        SetNode matchSetNode = new SetNode();
+        List<Operator> inputOperatorList = new ArrayList<>();
+        inputOperatorList.add(physicalVerifyOperator);
+
+        OperatorInput optInput = new OperatorInput(physicalMatchOperator, inputOperatorList);
+
+        matchSetNode.operatorList.add(optInput);
+
+        SetNode verifyNode = new SetNode(matchSetNode);
+
+        matchSetNode.addNode(verifyNode);
+        ruleCall.transformTo(matchSetNode);
 
     }
 }
