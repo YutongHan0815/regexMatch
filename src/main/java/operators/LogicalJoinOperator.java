@@ -1,27 +1,17 @@
 package operators;
 
+import com.google.common.base.Preconditions;
+
 import java.io.Serializable;
 import java.util.Objects;
 
 public class LogicalJoinOperator implements Operator, Serializable {
 
-    private final Operator leftOperator;
-    private final Operator rightOperator;
-
     private final JoinCondition joinCondition;
 
-    public LogicalJoinOperator(Operator leftOperator, Operator rightOperator, JoinCondition joinCondition) {
-        this.leftOperator = leftOperator;
-        this.rightOperator = rightOperator;
+    public LogicalJoinOperator(JoinCondition joinCondition) {
+        Preconditions.checkNotNull(joinCondition);
         this.joinCondition = joinCondition;
-    }
-
-    public Operator getLeftOperator() {
-        return leftOperator;
-    }
-
-    public Operator getRightOperator() {
-        return rightOperator;
     }
 
     public JoinCondition getJoinCondition() {
@@ -33,18 +23,16 @@ public class LogicalJoinOperator implements Operator, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LogicalJoinOperator that = (LogicalJoinOperator) o;
-        return Objects.equals(leftOperator, that.leftOperator) &&
-                Objects.equals(rightOperator, that.rightOperator) &&
-                joinCondition == that.joinCondition;
+        return joinCondition == that.joinCondition;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getDigest());
+        return Objects.hash(joinCondition);
     }
 
     public String getDigest() {
-        return "LogicalJoinOperator(" + leftOperator.toString() + rightOperator.toString() + joinCondition + ")";
+        return "LogicalJoinOperator(" + joinCondition + ")";
     }
 
 }

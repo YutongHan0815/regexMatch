@@ -3,24 +3,14 @@ package regexMatcher;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Objects;
+
 class JsonConstants {
 
     private JsonConstants() { }
 
-    public static final String ATTRIBUTE_NAME = "attributeName";
-    public static final String ATTRIBUTE_TYPE = "attributeType";
-    public static final String ATTRIBUTES = "attributes";
-    public static final String SCHEMA = "schema";
-    public static final String TABLE_NAME = "tableName";
-
-    public static final String FIELDS = "fields";
-    public static final String FIELD_VALUE = "value";
-
     public static final String SPAN_START = "start";
     public static final String SPAN_END = "end";
-    public static final String SPAN_KEY = "key";
-    public static final String SPAN_VALUE = "value";
-    public static final String SPAN_TOKEN_OFFSET = "tokenOffset";
 
 }
 
@@ -31,12 +21,6 @@ public class Span {
     // The end position of the span, which is the offset of the gap after the
     // last character of the span.
     private int end;
-    // The key we are searching for eg: regex
-    private String key;
-    // The value matching the key
-    private String value;
-    // The token position of the span, starting from 0.
-    private int tokenOffset;
 
     /*
      * Example: Value = "The quick brown fox jumps over the lazy dog" Now the
@@ -51,23 +35,12 @@ public class Span {
             @JsonProperty(value = JsonConstants.SPAN_START, required = true)
             int start, 
             @JsonProperty(value = JsonConstants.SPAN_END, required = true)
-            int end,
-            @JsonProperty(value = JsonConstants.SPAN_KEY, required = true)
-            String key,
-            @JsonProperty(value = JsonConstants.SPAN_VALUE, required = true)
-            String value,
-            @JsonProperty(value = JsonConstants.SPAN_TOKEN_OFFSET, required = true)
-            int tokenOffset) {
+            int end
+          ) {
 
         this.start = start;
         this.end = end;
-        this.key = key;
-        this.value = value;
-        this.tokenOffset = tokenOffset;
-    }
 
-    public Span( int start, int end, String key, String value) {
-        this(start, end, key, value, INVALID_TOKEN_OFFSET);
     }
 
 
@@ -81,77 +54,27 @@ public class Span {
         return end;
     }
 
-    @JsonProperty(value = JsonConstants.SPAN_KEY)
-    public String getKey() {
-        return key;
-    }
 
-    @JsonProperty(value = JsonConstants.SPAN_VALUE)
-    public String getValue() {
-        return value;
-    }
-
-    @JsonProperty(value = JsonConstants.SPAN_TOKEN_OFFSET)
-    public int getTokenOffset() {
-        return tokenOffset;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Span span = (Span) o;
+        return start == span.start &&
+                end == span.end;
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + end;
-        result = prime * result + ((key == null) ? 0 : key.hashCode());
-        result = prime * result + start;
-        result = prime * result + ((value == null) ? 0 : value.hashCode());
-        result = prime * result + tokenOffset;
-        return result;
+        return Objects.hash(start, end);
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Span other = (Span) obj;
-
-
-        if (start != other.start)
-            return false;
-
-        if (end != other.end)
-            return false;
-
-        if (key == null) {
-            if (other.key != null)
-                return false;
-        } else if (!key.equals(other.key))
-            return false;
-
-        if (value == null) {
-            if (other.value != null)
-                return false;
-        } else if (!value.equals(other.value))
-            return false;
-
-        if (tokenOffset != other.tokenOffset)
-            return false;
-
-        return true;
-    }
-    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
         sb.append("start: " + this.getStart() + "\n");
         sb.append("end:   " + this.getEnd() + "\n");
-        sb.append("key:   " + this.getKey() + "\n");
-        sb.append("value: " + this.getValue() + "\n");
-        sb.append("token offset: " + this.getTokenOffset() + "\n");
 
         return sb.toString();
     }

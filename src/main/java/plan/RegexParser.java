@@ -26,7 +26,6 @@ public class RegexParser {
 
         LogicalMatchOperator mainLogMatchOpt = new LogicalMatchOperator(regex);
 
-
     }
 
 

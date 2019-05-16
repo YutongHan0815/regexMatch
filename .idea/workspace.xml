@@ -2,36 +2,36 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e67fa9bf-efaa-4eb9-9e63-862f704acb49" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/yutonghan.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/plan/OperatorInput.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/plan/Planner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/plan/RegexPlanner.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/plan/OperatorNode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/plan/OptimizerContext.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/plan/RuleQueue.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/plan/RuleSet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/regexMatcher/MatchRegex.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/regexMatcher/MatchSubRegex.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/regexMatcher/MatcherContext.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/regexMatcher/VerifySubRegex.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/operators/JoinCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/operators/JoinCondition.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/operators/LogicalJoinOperator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/operators/LogicalJoinOperator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/operators/LogicalMatchOperator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/operators/LogicalMatchOperator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/operators/LogicalVerifyOperator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/operators/LogicalVerifyOperator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/operators/Operator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/operators/Operator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/operators/PhysicalJoinOperator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/operators/PhysicalJoinOperator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/operators/PhysicalMatchOperator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/operators/PhysicalMatchOperator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/operators/PhysicalVerifyOperator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/operators/PhysicalVerifyOperator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/operators/VerifyCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/operators/VerifyCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/plan/AndOrTree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/plan/AndOrTree.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/plan/PatternNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/plan/PatternNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/plan/AndOrTree.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/plan/OperatorInput.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/plan/PatternRuleCall.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/plan/PatternRuleCall.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/plan/RegexParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/plan/RegexParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/plan/RegexPlanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/plan/RegexPlanner.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/plan/RuleCall.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/plan/RuleCall.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/plan/SetNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/plan/SetNode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/regexMatcher/Span.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/regexMatcher/Span.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/rules/JoinCommutativeRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/rules/JoinCommutativeRule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/rules/LogicalJoinToPhysicalJoinRules.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/rules/LogicalJoinToPhysicalJoinRules.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/rules/LogicalJoinToPhysicalJoinRules.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/rules/LogicalJoinToPhysicalJoinRule.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/rules/LogicalMatchToPhysicalMatchRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/rules/LogicalMatchToPhysicalMatchRule.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/rules/LogicalVerifyToPhysicalVerifyRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/rules/LogicalVerifyToPhysicalVerifyRule.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/rules/MatchToJoinRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/rules/MatchToJoinRule.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/rules/MatchToMatchVerifyRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/rules/MatchToMatchVerifyRule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/rules/MatchVerifyToVerifyMatchRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/rules/MatchVerifyToVerifyMatchRule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/rules/MatchVerifyToVerifyMatchRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/rules/MatchVerifyToReverseMatchVerifyRule.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/rules/VerifyToReverseVerifySplitRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/rules/VerifyToReverseVerifySplitRule.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/rules/VerifyToVerifySplitRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/rules/VerifyToVerifySplitRule.java" afterDir="false" />
     </list>
@@ -49,10 +49,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/operators/LogicalMatchOperator.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/rules/MatchVerifyToReverseMatchVerifyRule.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="13" column="30" lean-forward="true" selection-start-line="13" selection-start-column="30" selection-end-line="13" selection-end-column="30" />
+            <state relative-caret-position="150">
+              <caret line="10" column="29" lean-forward="true" selection-start-line="10" selection-start-column="29" selection-end-line="10" selection-end-column="29" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -63,20 +63,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/rules/MatchToMatchVerifyRule.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="604">
-              <caret line="64" column="44" lean-forward="true" selection-start-line="51" selection-start-column="8" selection-end-line="64" selection-end-column="44" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/rules/MatchVerifyToVerifyMatchRule.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="667">
-              <caret line="47" lean-forward="true" selection-start-line="47" selection-end-line="47" />
+            <state relative-caret-position="625">
+              <caret line="52" column="42" selection-start-line="52" selection-start-column="29" selection-end-line="52" selection-end-column="42" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -87,62 +75,10 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/rules/VerifyToReverseVerifySplitRule.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="417">
-              <caret line="57" lean-forward="true" selection-start-line="57" selection-end-line="57" />
+            <state relative-caret-position="765">
+              <caret line="57" column="43" selection-start-line="57" selection-start-column="29" selection-end-line="57" selection-end-column="43" />
               <folding>
                 <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/operators/PhysicalMatchOperator.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="19" column="4" lean-forward="true" selection-start-line="19" selection-start-column="4" selection-end-line="19" selection-end-column="4" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/operators/PhysicalVerifyOperator.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="322">
-              <caret line="23" column="33" lean-forward="true" selection-start-line="23" selection-start-column="33" selection-end-line="23" selection-end-column="33" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/rules/JoinCommutativeRule.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="556">
-              <caret line="48" column="47" lean-forward="true" selection-start-line="48" selection-start-column="47" selection-end-line="48" selection-end-column="47" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#2222#2223#0" expanded="true" />
-                <element signature="e#2283#2284#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/operators/PhysicalJoinOperator.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="226">
-              <caret line="18" column="50" lean-forward="true" selection-start-line="18" selection-start-column="50" selection-end-line="18" selection-end-column="50" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#1608#1609#0" expanded="true" />
-                <element signature="e#1656#1657#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -151,8 +87,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/rules/VerifyToVerifySplitRule.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="654">
-              <caret line="60" column="44" lean-forward="true" selection-start-line="47" selection-start-column="8" selection-end-line="60" selection-end-column="44" />
+            <state relative-caret-position="358">
+              <caret line="46" column="32" selection-start-line="46" selection-start-column="24" selection-end-line="46" selection-end-column="32" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -161,10 +97,37 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/plan/Planner.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/plan/PatternRuleCall.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="2" column="24" selection-start-line="2" selection-start-column="24" selection-end-line="2" selection-end-column="24" />
+            <state relative-caret-position="375">
+              <caret line="25" column="49" lean-forward="true" selection-start-line="25" selection-start-column="49" selection-end-line="25" selection-end-column="49" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/plan/RegexPlanner.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="764">
+              <caret line="113" selection-start-line="113" selection-end-line="113" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/plan/SetNode.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="210">
+              <caret line="14" column="31" selection-start-line="14" selection-start-column="31" selection-end-line="14" selection-end-column="31" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -175,10 +138,15 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Arquillian JUnit Test Class" />
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>operatorList</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -186,16 +154,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/rules/AbstractTransformationRule.java" />
-        <option value="$PROJECT_DIR$/src/main/java/plan/LogicalVerifyOperator.java" />
-        <option value="$PROJECT_DIR$/src/main/java/plan/LogicalJoinOperator.java" />
-        <option value="$PROJECT_DIR$/src/main/java/plan/ChildrenPolicy.java" />
-        <option value="$PROJECT_DIR$/src/main/java/rules/TransformationRule.java" />
-        <option value="$PROJECT_DIR$/src/main/java/regexMatcher/AbstractSubSequence.java" />
-        <option value="$PROJECT_DIR$/src/main/java/regexMatcher/Substring.java" />
-        <option value="$PROJECT_DIR$/src/main/java/rules/LogicalToPhysicalRule.java" />
-        <option value="$PROJECT_DIR$/src/main/java/rules/LogicalVerifyToPhysicalMatchRule.java" />
-        <option value="$PROJECT_DIR$/src/main/java/regexMatcher/Relation.java" />
         <option value="$PROJECT_DIR$/src/main/java/plan/VerifyCondition.java" />
         <option value="$PROJECT_DIR$/src/main/java/plan/JoinCondition.java" />
         <option value="$PROJECT_DIR$/src/main/java/plan/Condition.java" />
@@ -205,46 +163,56 @@
         <option value="$PROJECT_DIR$/src/main/java/regexMatcher/SubRegex.java" />
         <option value="$PROJECT_DIR$/src/main/java/plan/LogicalMatchOperator.java" />
         <option value="$PROJECT_DIR$/src/main/java/rules/PatternNode.java" />
-        <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/plan/Operator.java" />
         <option value="$PROJECT_DIR$/src/main/java/plan/PhysicalJoinOperator.java" />
         <option value="$PROJECT_DIR$/src/main/java/plan/PhysicalVerifyOperator.java" />
         <option value="$PROJECT_DIR$/src/main/java/plan/VolcanoPlanner.java" />
-        <option value="$PROJECT_DIR$/src/main/java/plan/RegexPlanner.java" />
         <option value="$PROJECT_DIR$/src/main/java/operators/JoinCondition.java" />
         <option value="$PROJECT_DIR$/src/main/java/operators/VerifyCondition.java" />
-        <option value="$PROJECT_DIR$/src/main/java/operators/Operator.java" />
         <option value="$PROJECT_DIR$/src/main/java/operators/LogicalMatchOperator.java" />
-        <option value="$PROJECT_DIR$/src/main/java/operators/LogicalVerifyOperator.java" />
         <option value="$PROJECT_DIR$/src/main/java/plan/PatternNode.java" />
-        <option value="$PROJECT_DIR$/src/main/java/operators/LogicalJoinOperator.java" />
+        <option value="$PROJECT_DIR$/src/main/java/rules/MatchVerifyToVerifyMatchRule.java" />
+        <option value="$PROJECT_DIR$/src/main/java/operators/PhysicalMatchOperator.java" />
         <option value="$PROJECT_DIR$/src/main/java/plan/AndOrTree.java" />
+        <option value="$PROJECT_DIR$/src/main/java/plan/OperatorInput.java" />
+        <option value="$PROJECT_DIR$/src/main/java/rules/TransformationRule.java" />
+        <option value="$PROJECT_DIR$/src/main/java/operators/Operator.java" />
+        <option value="$PROJECT_DIR$/src/main/java/operators/LogicalJoinOperator.java" />
         <option value="$PROJECT_DIR$/src/main/java/plan/RuleCall.java" />
-        <option value="$PROJECT_DIR$/src/main/java/plan/PatternRuleCall.java" />
+        <option value="$PROJECT_DIR$/src/main/java/plan/OptimizerContext.java" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/plan/RuleQueue.java" />
+        <option value="$PROJECT_DIR$/src/main/java/plan/OperatorNode.java" />
         <option value="$PROJECT_DIR$/src/main/java/plan/RegexParser.java" />
-        <option value="$PROJECT_DIR$/src/main/java/regexMatcher/Span.java" />
+        <option value="$PROJECT_DIR$/src/main/java/rules/LogicalJoinToPhysicalJoinRules.java" />
+        <option value="$PROJECT_DIR$/src/main/java/operators/PhysicalJoinOperator.java" />
+        <option value="$PROJECT_DIR$/src/main/java/operators/PhysicalVerifyOperator.java" />
+        <option value="$PROJECT_DIR$/src/main/java/operators/LogicalVerifyOperator.java" />
+        <option value="$PROJECT_DIR$/src/main/java/plan/RuleSet.java" />
         <option value="$PROJECT_DIR$/src/main/java/plan/SetNode.java" />
         <option value="$PROJECT_DIR$/src/main/java/rules/JoinCommutativeRule.java" />
+        <option value="$PROJECT_DIR$/src/main/java/rules/LogicalJoinToPhysicalJoinRule.java" />
         <option value="$PROJECT_DIR$/src/main/java/rules/LogicalMatchToPhysicalMatchRule.java" />
-        <option value="$PROJECT_DIR$/src/main/java/rules/LogicalJoinToPhysicalJoinRules.java" />
         <option value="$PROJECT_DIR$/src/main/java/rules/LogicalVerifyToPhysicalVerifyRule.java" />
         <option value="$PROJECT_DIR$/src/main/java/rules/MatchToJoinRule.java" />
-        <option value="$PROJECT_DIR$/src/main/java/plan/OperatorInput.java" />
         <option value="$PROJECT_DIR$/src/main/java/rules/MatchToMatchVerifyRule.java" />
-        <option value="$PROJECT_DIR$/src/main/java/rules/MatchVerifyToVerifyMatchRule.java" />
-        <option value="$PROJECT_DIR$/src/main/java/rules/VerifyToVerifySplitRule.java" />
         <option value="$PROJECT_DIR$/src/main/java/rules/VerifyToReverseVerifySplitRule.java" />
-        <option value="$PROJECT_DIR$/src/main/java/operators/PhysicalJoinOperator.java" />
-        <option value="$PROJECT_DIR$/src/main/java/operators/PhysicalMatchOperator.java" />
-        <option value="$PROJECT_DIR$/src/main/java/operators/PhysicalVerifyOperator.java" />
+        <option value="$PROJECT_DIR$/src/main/java/regexMatcher/Span.java" />
+        <option value="$PROJECT_DIR$/src/main/java/regexMatcher/MatcherContext.java" />
+        <option value="$PROJECT_DIR$/src/main/java/rules/MatchVerifyToReverseMatchVerifyRule.java" />
+        <option value="$PROJECT_DIR$/src/main/java/rules/VerifyToVerifySplitRule.java" />
+        <option value="$PROJECT_DIR$/src/main/java/regexMatcher/MatchSubRegex.java" />
+        <option value="$PROJECT_DIR$/src/main/java/regexMatcher/VerifySubRegex.java" />
+        <option value="$PROJECT_DIR$/src/main/java/plan/PatternRuleCall.java" />
+        <option value="$PROJECT_DIR$/src/main/java/plan/RegexPlanner.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1774" />
-    <option name="y" value="154" />
-    <option name="width" value="1333" />
-    <option name="height" value="926" />
+    <option name="x" value="1633" />
+    <option name="y" value="36" />
+    <option name="width" value="1583" />
+    <option name="height" value="1023" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -303,15 +271,6 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="regexMatcher" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="regexMatch" type="b2602c69:ProjectViewProjectNode" />
-              <item name="regexMatch" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="regexMatcher" type="462c0819:PsiDirectoryNode" />
-              <item name="Span.java" type="529ef68f:ClassesTreeStructureProvider$PsiClassOwnerTreeNode" />
             </path>
             <path>
               <item name="regexMatch" type="b2602c69:ProjectViewProjectNode" />
@@ -389,18 +348,18 @@
       <option name="presentableId" value="Default" />
       <updated>1556921468221</updated>
       <workItem from="1556921471933" duration="6049000" />
-      <workItem from="1557168407914" duration="117099000" />
+      <workItem from="1557168407914" duration="176467000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="123148000" />
+    <option name="totallyTimeSpent" value="182516000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1774" y="154" width="1333" height="926" extended-state="0" />
+    <frame x="1633" y="36" width="1583" height="1023" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2563904" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.22712524" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -419,7 +378,7 @@
       <window_info anchor="bottom" id="Version Control" order="9" />
       <window_info anchor="bottom" id="Database Changes" order="10" />
       <window_info anchor="bottom" id="Terminal" order="11" />
-      <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
+      <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" weight="0.32907802" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -435,84 +394,6 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/regexParser/re2j/PublicParser.java">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/regexParser/re2j/PublicRE2.java">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/regexParser/re2j/RE2J_LICENSE.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="37" selection-start-line="9" selection-start-column="37" selection-end-line="9" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/regexParser/re2j/PublicRegexp.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="600">
-          <caret line="40" column="40" selection-start-line="40" selection-start-column="34" selection-end-line="40" selection-end-column="40" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/google/re2j/RE2J_LICENSE.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="32" selection-start-line="32" selection-end-line="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../texera/core/pom.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../texera/core/dataflow/src/main/java/edu/uci/ics/texera/dataflow/regexmatcher/SubRegexGraph/GraphInterface.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="9" column="1" lean-forward="true" selection-start-line="9" selection-start-column="1" selection-end-line="9" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../texera/core/dataflow/src/main/java/edu/uci/ics/texera/dataflow/regexmatcher/SubRegexGraph/DirectedGraph.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="18" column="16" selection-start-line="18" selection-start-column="16" selection-end-line="18" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../texera/core/dataflow/src/main/java/edu/uci/ics/texera/dataflow/regexmatcher/SubRegexGraph/BasicGraphInterface.java">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/plan/TreeInterface.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="17" selection-start-line="2" selection-start-column="17" selection-end-line="2" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/google/re2j/PublicSimplify.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="36" selection-start-line="14" selection-start-column="36" selection-end-line="14" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/google/re2j/PublicRegexp.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="297">
-          <caret line="28" column="3" lean-forward="true" selection-start-line="28" selection-start-column="3" selection-end-line="28" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/google/re2j/PublicRE2.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="455">
-          <caret line="41" column="13" selection-start-line="41" selection-start-column="13" selection-end-line="41" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/regexMatcher/AbstractSubSequence.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
@@ -522,18 +403,6 @@
             <element signature="e#326#327#0" expanded="true" />
             <element signature="e#374#375#0" expanded="true" />
             <element signature="e#418#419#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/regexMatcher/Relation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#154#155#0" expanded="true" />
-            <element signature="e#203#204#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -566,93 +435,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/plan/ChildrenPolicy.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="7" lean-forward="true" selection-start-line="8" selection-start-column="7" selection-end-line="8" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/operators/JoinCondition.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" column="7" lean-forward="true" selection-start-line="16" selection-start-column="7" selection-end-line="16" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/operators/Operator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" selection-start-line="5" selection-end-line="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/operators/VerifyCondition.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="34" selection-start-line="6" selection-start-column="34" selection-end-line="6" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/operators/LogicalJoinOperator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="55" lean-forward="true" selection-start-line="12" selection-start-column="55" selection-end-line="12" selection-end-column="55" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/rules/TransformationRule.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="7" column="34" lean-forward="true" selection-start-line="7" selection-start-column="34" selection-end-line="7" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/plan/RuleCall.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" selection-start-line="15" selection-end-line="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/operators/LogicalVerifyOperator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" selection-start-line="8" selection-end-line="8" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#440#441#0" expanded="true" />
-            <element signature="e#471#472#0" expanded="true" />
-            <element signature="e#522#523#0" expanded="true" />
-            <element signature="e#560#561#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/plan/PatternRuleCall.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="305">
-          <caret line="28" column="18" selection-start-line="28" selection-start-column="18" selection-end-line="28" selection-end-column="18" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/plan/RegexParser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
-          <caret line="20" column="27" selection-start-line="20" selection-start-column="27" selection-end-line="20" selection-end-column="27" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#getRegexComplexity#0;class#RegexParser#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/regexMatcher/RegexMatcher.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="332">
@@ -663,33 +445,63 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/regexMatcher/Span.java">
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_171.jdk/Contents/Home/src.zip!/java/util/IdentityHashMap.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="881">
-          <caret line="60" lean-forward="true" selection-start-line="60" selection-end-line="60" />
+        <state relative-caret-position="392">
+          <caret line="138" column="28" selection-start-line="138" selection-start-column="13" selection-end-line="138" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/operators/Operator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/plan/ChildrenPolicy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="7" lean-forward="true" selection-start-line="8" selection-start-column="7" selection-end-line="8" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_171.jdk/Contents/Home/src.zip!/java/util/ArrayDeque.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2325">
+          <caret line="191" column="11" selection-start-line="191" selection-start-column="11" selection-end-line="191" selection-end-column="11" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1692#1693#0" expanded="true" />
-            <element signature="e#1718#1719#0" expanded="true" />
-            <element signature="e#1802#1803#0" expanded="true" />
-            <element signature="e#1830#1831#0" expanded="true" />
-            <element signature="e#1924#1925#0" expanded="true" />
-            <element signature="e#1958#1959#0" expanded="true" />
+            <element signature="e#6627#6628#0" expanded="true" />
+            <element signature="e#6668#6669#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_171.jdk/Contents/Home/src.zip!/java/util/Queue.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="298">
+          <caret line="142" column="3" lean-forward="true" selection-start-line="142" selection-start-column="3" selection-end-line="142" selection-end-column="3" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="25" column="21" selection-start-line="25" selection-start-column="21" selection-end-line="25" selection-end-column="21" />
+        <state relative-caret-position="195">
+          <caret line="13" column="35" lean-forward="true" selection-start-line="13" selection-start-column="35" selection-end-line="13" selection-end-column="35" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/plan/PatternNode.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/operators/VerifyCondition.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="519">
-          <caret line="51" column="44" selection-start-line="51" selection-start-column="31" selection-end-line="51" selection-end-column="44" />
+        <state relative-caret-position="60">
+          <caret line="4" column="27" selection-start-line="4" selection-start-column="12" selection-end-line="4" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/plan/OperatorInput.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="13" column="33" selection-start-line="13" selection-start-column="25" selection-end-line="13" selection-end-column="33" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -698,112 +510,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/plan/AndOrTree.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="22" lean-forward="true" selection-start-line="22" selection-end-line="22" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#155#156#0" expanded="true" />
-            <element signature="e#187#188#0" expanded="true" />
-            <element signature="e#219#220#0" expanded="true" />
-            <element signature="e#246#247#0" expanded="true" />
-            <element signature="e#287#288#0" expanded="true" />
-            <element signature="e#319#320#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/plan/SetNode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="26" column="31" lean-forward="true" selection-start-line="26" selection-start-column="31" selection-end-line="26" selection-end-column="31" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#694#695#0" expanded="true" />
-            <element signature="e#723#724#0" expanded="true" />
-            <element signature="e#764#765#0" expanded="true" />
-            <element signature="e#795#796#0" expanded="true" />
-            <element signature="e#865#866#0" expanded="true" />
-            <element signature="e#902#903#0" expanded="true" />
-            <element signature="e#1277#1278#0" expanded="true" />
-            <element signature="e#1325#1326#0" expanded="true" />
-            <element signature="e#1085#1086#0" expanded="true" />
-            <element signature="e#1116#1117#0" expanded="true" />
-            <element signature="e#1171#1172#0" expanded="true" />
-            <element signature="e#1211#1212#0" expanded="true" />
-            <element signature="e#1252#1253#0" expanded="true" />
-            <element signature="e#1288#1289#0" expanded="true" />
-            <element signature="e#1347#1348#0" expanded="true" />
-            <element signature="e#1397#1398#0" expanded="true" />
-            <element signature="e#1916#1917#0" expanded="true" />
-            <element signature="e#2000#2001#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/rules/LogicalJoinToPhysicalJoinRules.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="517">
-          <caret line="36" column="32" selection-start-line="36" selection-start-column="32" selection-end-line="36" selection-end-column="32" />
+        <state relative-caret-position="270">
+          <caret line="24" column="1" lean-forward="true" selection-start-line="24" selection-start-column="1" selection-end-line="24" selection-end-column="1" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/rules/LogicalMatchToPhysicalMatchRule.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="585">
-          <caret line="43" column="43" lean-forward="true" selection-start-line="40" selection-start-column="8" selection-end-line="43" selection-end-column="43" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/rules/LogicalVerifyToPhysicalVerifyRule.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="600">
-          <caret line="42" column="44" lean-forward="true" selection-start-line="42" selection-start-column="44" selection-end-line="42" selection-end-column="44" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/rules/MatchToJoinRule.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="451">
-          <caret line="47" lean-forward="true" selection-start-line="47" selection-end-line="47" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/plan/OperatorInput.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#384#385#0" expanded="true" />
-            <element signature="e#415#416#0" expanded="true" />
-            <element signature="e#465#466#0" expanded="true" />
-            <element signature="e#505#506#0" expanded="true" />
-            <element signature="e#557#558#0" expanded="true" />
-            <element signature="e#597#598#0" expanded="true" />
-            <element signature="e#671#672#0" expanded="true" />
-            <element signature="e#729#730#0" expanded="true" />
-            <element signature="e#1141#1142#0" expanded="true" />
-            <element signature="e#1205#1206#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/plan/RegexPlanner.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
         </state>
       </provider>
     </entry>
@@ -814,50 +525,87 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/rules/MatchVerifyToVerifyMatchRule.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/rules/TransformationRule.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="667">
-          <caret line="47" lean-forward="true" selection-start-line="47" selection-end-line="47" />
+        <state relative-caret-position="60">
+          <caret line="5" column="17" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/plan/PatternNode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="690">
+          <caret line="46" column="33" lean-forward="true" selection-start-line="46" selection-start-column="33" selection-end-line="46" selection-end-column="33" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/rules/MatchToMatchVerifyRule.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/plan/RegexParser.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="604">
-          <caret line="64" column="44" lean-forward="true" selection-start-line="51" selection-start-column="8" selection-end-line="64" selection-end-column="44" />
+        <state relative-caret-position="85">
+          <caret line="27" selection-start-line="27" selection-end-line="27" />
           <folding>
             <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/rules/VerifyToVerifySplitRule.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="654">
-          <caret line="60" column="44" lean-forward="true" selection-start-line="47" selection-start-column="8" selection-end-line="60" selection-end-column="44" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/rules/VerifyToReverseVerifySplitRule.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="417">
-          <caret line="57" lean-forward="true" selection-start-line="57" selection-end-line="57" />
-          <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="method#getRegexComplexity#0;class#RegexParser#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/operators/LogicalMatchOperator.java">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/operators/PhysicalMatchOperator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/operators/PhysicalVerifyOperator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="615">
+          <caret line="45" lean-forward="true" selection-start-line="45" selection-end-line="45" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1187#1188#0" expanded="true" />
+            <element signature="e#1278#1279#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/plan/RuleQueue.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/operators/LogicalJoinOperator.java">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
-          <caret line="13" column="30" lean-forward="true" selection-start-line="13" selection-start-column="30" selection-end-line="13" selection-end-column="30" />
+          <caret line="13" column="42" selection-start-line="13" selection-start-column="29" selection-end-line="13" selection-end-column="42" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/operators/LogicalVerifyOperator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="28" column="48" lean-forward="true" selection-start-line="28" selection-start-column="48" selection-end-line="28" selection-end-column="48" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -866,42 +614,247 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/operators/PhysicalJoinOperator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
-          <caret line="18" column="50" lean-forward="true" selection-start-line="18" selection-start-column="50" selection-end-line="18" selection-end-column="50" />
+        <state relative-caret-position="210">
+          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1608#1609#0" expanded="true" />
-            <element signature="e#1656#1657#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/operators/PhysicalMatchOperator.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/operators/JoinCondition.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
-          <caret line="19" column="4" lean-forward="true" selection-start-line="19" selection-start-column="4" selection-end-line="19" selection-end-column="4" />
+          <caret line="19" column="15" lean-forward="true" selection-start-line="19" selection-start-column="15" selection-end-line="19" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/regexMatcher/Relation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/plan/RuleSet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="24" column="1" lean-forward="true" selection-start-line="24" selection-start-column="1" selection-end-line="24" selection-end-column="1" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/plan/OperatorNode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="13" column="32" lean-forward="true" selection-start-line="13" selection-start-column="32" selection-end-line="13" selection-end-column="32" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/rules/MatchToJoinRule.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="578">
+          <caret line="58" column="63" lean-forward="true" selection-start-line="58" selection-start-column="63" selection-end-line="58" selection-end-column="63" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/rules/LogicalVerifyToPhysicalVerifyRule.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="630">
+          <caret line="44" lean-forward="true" selection-start-line="44" selection-end-line="44" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/rules/LogicalMatchToPhysicalMatchRule.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="615">
+          <caret line="45" column="43" lean-forward="true" selection-start-line="45" selection-start-column="43" selection-end-line="45" selection-end-column="43" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/rules/LogicalJoinToPhysicalJoinRule.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="555">
+          <caret line="37" column="42" lean-forward="true" selection-start-line="37" selection-start-column="42" selection-end-line="37" selection-end-column="42" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/regexMatcher/MatchRegex.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="27" selection-start-line="2" selection-start-column="27" selection-end-line="2" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/regexMatcher/Span.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="399">
+          <caret line="40" column="27" lean-forward="true" selection-start-line="40" selection-start-column="27" selection-end-line="40" selection-end-column="27" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1925#1926#0" expanded="true" />
+            <element signature="e#1972#1973#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/rules/MatchVerifyToReverseMatchVerifyRule.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="29" lean-forward="true" selection-start-line="10" selection-start-column="29" selection-end-line="10" selection-end-column="29" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/regexMatcher/VerifyRegex.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="28" selection-start-line="2" selection-start-column="28" selection-end-line="2" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/regexMatcher/MatcherContext.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="1" lean-forward="true" selection-start-line="5" selection-start-column="1" selection-end-line="5" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/regexMatcher/VerifySubRegex.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/regexMatcher/MatchSubRegex.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="24" selection-start-line="19" selection-start-column="11" selection-end-line="19" selection-end-column="24" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3571#3572#0" expanded="true" />
+            <element signature="e#3602#3603#0" expanded="true" />
+            <element signature="e#3650#3651#0" expanded="true" />
+            <element signature="e#3690#3691#0" expanded="true" />
+            <element signature="e#3725#3726#0" expanded="true" />
+            <element signature="e#3755#3756#0" expanded="true" />
+            <element signature="e#3802#3803#0" expanded="true" />
+            <element signature="e#3840#3841#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/rules/JoinCommutativeRule.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="556">
-          <caret line="48" column="47" lean-forward="true" selection-start-line="48" selection-start-column="47" selection-end-line="48" selection-end-column="47" />
+        <state relative-caret-position="505">
+          <caret line="53" column="67" lean-forward="true" selection-start-line="53" selection-start-column="67" selection-end-line="53" selection-end-column="67" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#2222#2223#0" expanded="true" />
-            <element signature="e#2283#2284#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/operators/PhysicalVerifyOperator.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/plan/OptimizerContext.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="322">
-          <caret line="23" column="33" lean-forward="true" selection-start-line="23" selection-start-column="33" selection-end-line="23" selection-end-column="33" />
+        <state relative-caret-position="255">
+          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/plan/RuleCall.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/rules/MatchToMatchVerifyRule.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="625">
+          <caret line="52" column="42" selection-start-line="52" selection-start-column="29" selection-end-line="52" selection-end-column="42" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/com/google/guava/guava/27.1-jre/guava-27.1-jre.jar!/com/google/common/collect/BiMap.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="14" column="17" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/rules/VerifyToReverseVerifySplitRule.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="765">
+          <caret line="57" column="43" selection-start-line="57" selection-start-column="29" selection-end-line="57" selection-end-column="43" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/rules/VerifyToVerifySplitRule.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="358">
+          <caret line="46" column="32" selection-start-line="46" selection-start-column="24" selection-end-line="46" selection-end-column="32" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/plan/PatternRuleCall.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="25" column="49" lean-forward="true" selection-start-line="25" selection-start-column="49" selection-end-line="25" selection-end-column="49" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/plan/SetNode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="31" selection-start-line="14" selection-start-column="31" selection-end-line="14" selection-end-column="31" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/plan/RegexPlanner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="764">
+          <caret line="113" selection-start-line="113" selection-end-line="113" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

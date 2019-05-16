@@ -3,18 +3,17 @@ package rules;
 import operators.LogicalVerifyOperator;
 
 import operators.PhysicalVerifyOperator;
-import plan.OperatorInput;
+import plan.OperatorNode;
 import plan.PatternNode;
 import plan.RuleCall;
 import plan.SetNode;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class LogicalVerifyToPhysicalVerifyRule implements TransformationRule, Serializable {
 
+    public static final LogicalVerifyToPhysicalVerifyRule INSTANCE = new LogicalVerifyToPhysicalVerifyRule();
     private final String description;
-
     private final PatternNode matchPattern;
 
     public LogicalVerifyToPhysicalVerifyRule() {
@@ -35,11 +34,13 @@ public class LogicalVerifyToPhysicalVerifyRule implements TransformationRule, Se
 
     @Override
     public void onMatch(RuleCall ruleCall) {
-        final PhysicalVerifyOperator physicalVerifyOperator = ruleCall.getMatchedOperator(0);
+        final LogicalVerifyOperator logicalVerifyOperator = ruleCall.getMatchedOperator(0);
+        PhysicalVerifyOperator physicalVerifyOperator = new PhysicalVerifyOperator(
+                logicalVerifyOperator.getSubRegex(), logicalVerifyOperator.getVerifyCondition());
+        OperatorNode verifyOperatorNode = OperatorNode.create(physicalVerifyOperator);
 
-        final SetNode verifySetNode = new SetNode();
-        OperatorInput optInput = new OperatorInput(physicalVerifyOperator, new ArrayList<>());
-        verifySetNode.operatorList.add(optInput);
+        SetNode verifySetNode = SetNode.create(verifyOperatorNode);
+
         ruleCall.transformTo(verifySetNode);
 
     }

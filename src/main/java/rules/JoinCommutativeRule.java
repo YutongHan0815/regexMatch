@@ -1,18 +1,18 @@
 package rules;
 
-import javafx.util.Pair;
-import operators.Operator;
-import operators.PhysicalJoinOperator;
-import operators.PhysicalMatchOperator;
+
+import operators.*;
 import plan.*;
 
 import java.io.Serializable;
 import java.util.*;
 
 public class JoinCommutativeRule implements TransformationRule, Serializable {
+
+    public static final JoinCommutativeRule INSTANCE = new JoinCommutativeRule();
+
     private final String description;
     private final PatternNode mainPattern;
-
 
     public JoinCommutativeRule() {
         this.description = this.getClass().getName();
@@ -34,25 +34,28 @@ public class JoinCommutativeRule implements TransformationRule, Serializable {
         return mainPattern;
     }
 
+
     @Override
     public void onMatch(RuleCall ruleCall) {
-        final PhysicalJoinOperator physicalJoinOperator = ruleCall.getMatchedOperator(0);
-        final PhysicalMatchOperator leftMatchOpt = ruleCall.getMatchedOperator(1);
-        final PhysicalMatchOperator rightMatchOpt = ruleCall.getMatchedOperator(2);
+        final LogicalJoinOperator logicalJoinOperator = ruleCall.getMatchedOperator(0);
+        final LogicalMatchOperator leftMatchOpt = ruleCall.getMatchedOperator(1);
+        final LogicalMatchOperator rightMatchOpt = ruleCall.getMatchedOperator(2);
+        JoinCondition condition = JoinCondition.JOIN_AFTER;
+       if(logicalJoinOperator.getJoinCondition() == JoinCondition.JOIN_BEFORE)
+            condition = JoinCondition.JOIN_AFTER;
 
-        SetNode joinSetNode = new SetNode();
-        List<Operator> inputOperatorList = new ArrayList<>();
-        inputOperatorList.add(leftMatchOpt);
-        inputOperatorList.add(rightMatchOpt);
-        OperatorInput optInput = new OperatorInput(physicalJoinOperator, inputOperatorList);
+        LogicalJoinOperator newJoin = new LogicalJoinOperator(condition);
+        LogicalMatchOperator newLeftMatch = new LogicalMatchOperator(rightMatchOpt.getSubRegex());
+        LogicalMatchOperator newRightMatch = new LogicalMatchOperator(leftMatchOpt.getSubRegex());
+        OperatorNode leftOperatorNode = OperatorNode.create(newLeftMatch);
+        OperatorNode rightOperatorNode = OperatorNode.create(newRightMatch);
 
-        joinSetNode.operatorList.add(optInput);
+        SetNode leftMatchNode = SetNode.create(leftOperatorNode);
+        SetNode rightMatchNode = SetNode.create(rightOperatorNode);
 
-        SetNode leftMatchNode = new SetNode(joinSetNode);
-        SetNode rightMatchNode = new SetNode(joinSetNode);
+        OperatorNode joinOperatorNode = OperatorNode.create(newJoin, Arrays.asList(leftMatchNode, rightMatchNode));
 
-        joinSetNode.addNode(leftMatchNode);
-        joinSetNode.addNode(rightMatchNode);
+        SetNode joinSetNode = SetNode.create(joinOperatorNode);
 
         ruleCall.transformTo(joinSetNode);
 

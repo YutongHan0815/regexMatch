@@ -2,9 +2,8 @@ package rules;
 
 
 import operators.LogicalMatchOperator;
-import operators.PhysicalJoinOperator;
 import operators.PhysicalMatchOperator;
-import plan.OperatorInput;
+import plan.OperatorNode;
 import plan.PatternNode;
 import plan.RuleCall;
 import plan.SetNode;
@@ -15,8 +14,8 @@ import java.util.ArrayList;
 
 public class LogicalMatchToPhysicalMatchRule implements TransformationRule, Serializable {
 
+    public static final LogicalMatchToPhysicalMatchRule INSTANCE = new LogicalMatchToPhysicalMatchRule();
     private final String description;
-
     private final PatternNode matchPattern;
 
     public LogicalMatchToPhysicalMatchRule() {
@@ -37,10 +36,13 @@ public class LogicalMatchToPhysicalMatchRule implements TransformationRule, Seri
 
     @Override
     public void onMatch(RuleCall ruleCall) {
-        final PhysicalMatchOperator physicalMatchOperator = ruleCall.getMatchedOperator(0);
-        final SetNode matchSetNode = new SetNode();
-        OperatorInput optInput = new OperatorInput(physicalMatchOperator, new ArrayList<>());
-        matchSetNode.operatorList.add(optInput);
+        final LogicalMatchOperator logicalMatchOperator = ruleCall.getMatchedOperator(0);
+
+        PhysicalMatchOperator physicalMatchOperator = new PhysicalMatchOperator(logicalMatchOperator.getSubRegex());
+        OperatorNode matchOperatorNode = OperatorNode.create(physicalMatchOperator);
+
+        SetNode matchSetNode = SetNode.create(matchOperatorNode);
+
         ruleCall.transformTo(matchSetNode);
 
     }

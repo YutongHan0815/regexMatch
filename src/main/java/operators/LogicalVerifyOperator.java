@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class LogicalVerifyOperator implements Operator, Serializable {
+
     private final String subRegex;
     private final VerifyCondition verifyCondition;
 
@@ -36,7 +37,7 @@ public class LogicalVerifyOperator implements Operator, Serializable {
     }
 
     public String getDigest() {
-        return "LogicalVerifyOperator(" + subRegex + ")";
+        return "LogicalVerifyOperator(" + subRegex + verifyCondition+ ")";
     }
 
 

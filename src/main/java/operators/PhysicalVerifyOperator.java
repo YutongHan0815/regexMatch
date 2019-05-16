@@ -12,18 +12,17 @@ public class PhysicalVerifyOperator implements Operator, Serializable {
 
     private final String subRegex;
     private final VerifyCondition verifyCondition;
-    private final boolean verifyOptOr;
 
 
 
-    public PhysicalVerifyOperator(String subRegex, VerifyCondition verifyCondition, boolean verifyOptOr) {
+
+    public PhysicalVerifyOperator(String subRegex, VerifyCondition verifyCondition) {
         Preconditions.checkNotNull(subRegex);
         Preconditions.checkNotNull(verifyCondition);
-        Preconditions.checkNotNull(verifyOptOr);
+
 
         this.subRegex = subRegex;
         this.verifyCondition = verifyCondition;
-        this.verifyOptOr = verifyOptOr;
     }
 
     public String getSubRegex() {
@@ -50,7 +49,7 @@ public class PhysicalVerifyOperator implements Operator, Serializable {
         return Objects.hash(getDigest());
     }
     public String getDigest() {
-        return "PhysicalVerifyOperator(subRegex=" + subRegex + ")";
+        return "PhysicalVerifyOperator(subRegex=" + subRegex + verifyCondition + ")";
     }
 }
 
