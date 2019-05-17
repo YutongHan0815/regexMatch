@@ -64,7 +64,7 @@ public class MatchSubRegex implements MatchRegex, Serializable {
 
         List<Span> matchingResults = new ArrayList<>();
         for(Span span : spanList) {
-            if(javaMatcher.find(span.getEnd()) && javaMatcher.start() == span.getEnd()){
+            if(javaMatcher.find(span.getEnd()) && javaMatcher.start() == span.getEnd()) {
                 int start = javaMatcher.start();
                 int end = javaMatcher.end();
                 matchingResults.add(new Span(start, end));
@@ -83,12 +83,13 @@ public class MatchSubRegex implements MatchRegex, Serializable {
         List<Span> matchingResults = new ArrayList<>();
         Matcher javaMatcher = pattern.matcher(reverseFieldValue);
 
-        //Todo
         for(Span span : spanList) {
-            if(javaMatcher.find(span.getEnd()) && javaMatcher.start() == span.getEnd()){
-                int start = javaMatcher.start();
-                int end = javaMatcher.end();
-                matchingResults.add(new Span(start, end));
+            if(javaMatcher.find()) {
+                int end = fieldValue.length() - javaMatcher.start();
+                int start = fieldValue.length() - javaMatcher.end();
+                if(end == span.getStart()) {
+                    matchingResults.add(new Span(start, end));
+                }
             }
         }
         return matchingResults;

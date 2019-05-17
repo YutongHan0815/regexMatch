@@ -4,12 +4,12 @@ import java.io.Serializable;
 
 public class OptimizerContext implements Serializable {
 
-    private final RegexPlanner regexPlanner;
+    private final OptimizerPlanner optimizerPlanner;
     private int nextOperatorID = 0;
     private int nextSetID = 0;
 
-    public OptimizerContext(RegexPlanner regexPlanner) {
-        this.regexPlanner = regexPlanner;
+    public OptimizerContext(OptimizerPlanner optimizerPlanner) {
+        this.optimizerPlanner = optimizerPlanner;
     }
 
     public int nextOperatorID() {

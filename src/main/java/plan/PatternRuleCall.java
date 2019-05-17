@@ -13,18 +13,18 @@ import java.util.Map;
 
 public class PatternRuleCall implements RuleCall, Serializable {
 
-    private final RegexPlanner regexPlanner;
+    private final OptimizerPlanner planner;
     protected final PatternNode mainPattern;
     protected Map<PatternNode, List<PatternNode>> nodeListMap;
     public List<Operator> matchedOperators;
 
 
-    private PatternRuleCall(RegexPlanner planner, PatternNode mainPattern, Map<PatternNode, List<PatternNode>> nodeListMap,
+    private PatternRuleCall(OptimizerPlanner planner, PatternNode mainPattern, Map<PatternNode, List<PatternNode>> nodeListMap,
                             List<Operator> matchedOperators) {
         this.mainPattern = mainPattern;
         this.nodeListMap = nodeListMap;
         this.matchedOperators = matchedOperators;
-        this.regexPlanner = planner;
+        this.planner = planner;
     }
 
     public TransformationRule getMatchedRule() {
@@ -32,21 +32,13 @@ public class PatternRuleCall implements RuleCall, Serializable {
     }
 
     @Override
-    public <T extends Operator> T getMatchedOperator(int ordinal) {
+    public OperatorNode getMatchedOperator(int ordinal) {
         return null;
     }
 
     @Override
-    public void transformTo(Operator equivalentOperator) {
-
-
+    public void transformTo(OperatorNode equivalentOperator) {
+        this.planner.addToEquivSet(SetNode.create(equivalentOperator), 0);
     }
 
-    @Override
-    public void transformTo(SetNode setNode) {
-
-        regexPlanner.registerSet(setNode, 1);
-
-
-    }
 }

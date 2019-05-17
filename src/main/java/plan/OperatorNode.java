@@ -32,8 +32,8 @@ public class OperatorNode implements Serializable {
     }
 
 
-    public Operator getOperator() {
-        return operator;
+    public <T extends Operator> T getOperator() {
+        return (T) operator;
     }
 
     public List<SetNode> getInputs() {

@@ -38,7 +38,7 @@ public class MatchToMatchVerifyRule implements TransformationRule, Serializable 
 
     @Override
     public void onMatch(RuleCall ruleCall) {
-        final LogicalMatchOperator logicalMatchOperator = ruleCall.getMatchedOperator(0);
+        final LogicalMatchOperator logicalMatchOperator = ruleCall.getMatchedOperator(0).getOperator();
 
         List<String> subRegexList = decompose(logicalMatchOperator);
 
@@ -48,9 +48,8 @@ public class MatchToMatchVerifyRule implements TransformationRule, Serializable 
 
         SetNode matchSetNode = SetNode.create(matchOperatorNode);
         OperatorNode verifyOperatorNode = OperatorNode.create(newVerify, Collections.singletonList(matchSetNode));
-        SetNode verifySetNode = SetNode.create(verifyOperatorNode);
 
-        ruleCall.transformTo(verifySetNode);
+        ruleCall.transformTo(verifyOperatorNode);
 
     }
 

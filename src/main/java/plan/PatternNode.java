@@ -7,6 +7,7 @@ import operators.Operator;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 
@@ -31,9 +32,7 @@ public class PatternNode implements Serializable {
         this.predicate = predicate;
         this.children = ImmutableList.copyOf(children);
         this.childrenPolicy = childrenPolicy;
-
     }
-
 
     public static <T extends Operator> PatternNode exact(Class<? extends Operator> operatorClass, List<PatternNode> children) {
         return exact(operatorClass, op -> true, children);
@@ -66,6 +65,11 @@ public class PatternNode implements Serializable {
 
     public ChildrenPolicy getChildrenPolicy() {
         return childrenPolicy;
+    }
+
+    public void visit(Consumer<PatternNode> visitor) {
+        this.children.forEach(children -> children.visit(visitor));
+        visitor.accept(this);
     }
 
     @Override

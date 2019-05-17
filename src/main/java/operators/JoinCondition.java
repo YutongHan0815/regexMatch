@@ -17,5 +17,5 @@ public enum JoinCondition implements Condition, Serializable {
     /**
      * Verify regex: regex is exactly match the Span
      */
-    JOIN_EQUAL,
+    JOIN_EQUAL
 }
