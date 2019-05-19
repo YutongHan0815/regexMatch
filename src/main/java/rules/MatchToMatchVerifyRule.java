@@ -44,7 +44,7 @@ public class MatchToMatchVerifyRule implements TransformationRule, Serializable 
 
         LogicalVerifyOperator newVerify = new LogicalVerifyOperator(subRegexList.get(0), VerifyCondition.VERIFY_AFTER);
         LogicalMatchOperator newMatch = new LogicalMatchOperator(subRegexList.get(1));
-        OperatorNode matchOperatorNode = OperatorNode.create(newMatch);
+        OperatorNode matchOperatorNode = OperatorNode.create(newMatch, ruleCall.getMatchedOperator(0).getInputs());
 
         SetNode matchSetNode = SetNode.create(matchOperatorNode);
         OperatorNode verifyOperatorNode = OperatorNode.create(newVerify, Collections.singletonList(matchSetNode));

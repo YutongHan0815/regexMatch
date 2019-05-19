@@ -42,20 +42,18 @@ public class VerifyToReverseVerifySplitRule implements TransformationRule, Seria
 
     @Override
     public void onMatch(RuleCall ruleCall) {
-        final LogicalVerifyOperator logicalVerifyOperator = ruleCall.getMatchedOperator(0);
+        final LogicalVerifyOperator logicalVerifyOperator = ruleCall.getMatchedOperator(0).getOperator();
 
         List<String> subRegexList = decompose(logicalVerifyOperator);
 
         LogicalVerifyOperator newVerify0 = new LogicalVerifyOperator(subRegexList.get(0), VerifyCondition.VERIFY_BEFORE);
         LogicalVerifyOperator newVerify1 = new LogicalVerifyOperator(subRegexList.get(1), logicalVerifyOperator.getVerifyCondition());
 
-        OperatorNode verifyOperatorNode1 = OperatorNode.create(newVerify1);
+        OperatorNode verifyOperatorNode1 = OperatorNode.create(newVerify1, ruleCall.getMatchedOperator(0).getInputs());
         SetNode verifySetNode = SetNode.create(verifyOperatorNode1);
         OperatorNode verifyOperatorNode0 = OperatorNode.create(newVerify0, Collections.singletonList(verifySetNode));
-        SetNode verifySetNdoe0 = SetNode.create(verifyOperatorNode0);
 
-
-        ruleCall.transformTo(verifySetNdoe0);
+        ruleCall.transformTo(verifyOperatorNode0);
     }
 
     public static List<String> decompose(LogicalVerifyOperator op) {

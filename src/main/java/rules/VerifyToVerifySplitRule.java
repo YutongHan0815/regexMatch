@@ -45,20 +45,17 @@ public class VerifyToVerifySplitRule implements TransformationRule, Serializable
 
     @Override
     public void onMatch(RuleCall ruleCall) {
-        final LogicalVerifyOperator logicalVerifyOperator = ruleCall.getMatchedOperator(0);
+        final LogicalVerifyOperator logicalVerifyOperator = ruleCall.getMatchedOperator(0).getOperator();
 
         List<String> subRegexList = decompose(logicalVerifyOperator);
 
         LogicalVerifyOperator newVerify0 = new LogicalVerifyOperator(subRegexList.get(1), VerifyCondition.VERIFY_AFTER);
         LogicalVerifyOperator newVerify1 = new LogicalVerifyOperator(subRegexList.get(0), logicalVerifyOperator.getVerifyCondition());
 
-        OperatorNode verifyOperatorNode1 = OperatorNode.create(newVerify1);
+        OperatorNode verifyOperatorNode1 = OperatorNode.create(newVerify1, ruleCall.getMatchedOperator(0).getInputs());
         SetNode verifySetNode = SetNode.create(verifyOperatorNode1);
         OperatorNode verifyOperatorNode0 = OperatorNode.create(newVerify0, Collections.singletonList(verifySetNode));
-        SetNode verifySetNode0 = SetNode.create(verifyOperatorNode0);
-
-
-        ruleCall.transformTo(verifySetNode0);
+        ruleCall.transformTo(verifyOperatorNode0);
     }
 
     public static List<String> decompose(LogicalVerifyOperator op) {

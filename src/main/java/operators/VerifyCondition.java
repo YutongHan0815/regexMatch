@@ -17,6 +17,6 @@ public enum VerifyCondition implements Condition, Serializable {
     /**
      * Verify regex: regex is exactly match the Span
      */
-    VERIFY_EQUAL,
+    VERIFY_EQUAL
 
 }

@@ -34,14 +34,11 @@ public class LogicalVerifyToPhysicalVerifyRule implements TransformationRule, Se
 
     @Override
     public void onMatch(RuleCall ruleCall) {
-        final LogicalVerifyOperator logicalVerifyOperator = ruleCall.getMatchedOperator(0);
+        final LogicalVerifyOperator logicalVerifyOperator = ruleCall.getMatchedOperator(0).getOperator();
         PhysicalVerifyOperator physicalVerifyOperator = new PhysicalVerifyOperator(
                 logicalVerifyOperator.getSubRegex(), logicalVerifyOperator.getVerifyCondition());
-        OperatorNode verifyOperatorNode = OperatorNode.create(physicalVerifyOperator);
-
-        SetNode verifySetNode = SetNode.create(verifyOperatorNode);
-
-        ruleCall.transformTo(verifySetNode);
+        OperatorNode verifyOperatorNode = OperatorNode.create(physicalVerifyOperator, ruleCall.getMatchedOperator(0).getInputs());
+        ruleCall.transformTo(verifyOperatorNode);
 
     }
 

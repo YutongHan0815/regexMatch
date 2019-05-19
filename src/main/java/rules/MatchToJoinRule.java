@@ -41,23 +41,21 @@ public class MatchToJoinRule implements TransformationRule, Serializable {
 
     @Override
     public void onMatch(RuleCall ruleCall) {
-        final LogicalMatchOperator logicalMatchOperator = ruleCall.getMatchedOperator(0);
+        final LogicalMatchOperator logicalMatchOperator = ruleCall.getMatchedOperator(0).getOperator();
 
         LogicalJoinOperator newJoin = new LogicalJoinOperator(JoinCondition.JOIN_AFTER);
         List<String> subRegexList = decompose(logicalMatchOperator);
         LogicalMatchOperator newLeftMatch = new LogicalMatchOperator(subRegexList.get(0));
         LogicalMatchOperator newRightMatch = new LogicalMatchOperator(subRegexList.get(1));
 
-        OperatorNode leftOperatorNode = OperatorNode.create(newLeftMatch);
-        OperatorNode rightOperatorNode = OperatorNode.create(newRightMatch);
+        OperatorNode leftOperatorNode = OperatorNode.create(newLeftMatch, ruleCall.getMatchedOperator(0).getInputs());
+        OperatorNode rightOperatorNode = OperatorNode.create(newRightMatch, ruleCall.getMatchedOperator(0).getInputs());
 
         SetNode leftMatchSetNode = SetNode.create(leftOperatorNode);
         SetNode rightMatchSetNode = SetNode.create(rightOperatorNode);
 
         OperatorNode joinOperatorNode = OperatorNode.create(newJoin, Arrays.asList(leftMatchSetNode,rightMatchSetNode));
-
-        SetNode joinSetNode = SetNode.create(joinOperatorNode);
-        ruleCall.transformTo(joinSetNode);
+        ruleCall.transformTo(joinOperatorNode);
 
 
     }

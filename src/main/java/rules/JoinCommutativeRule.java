@@ -37,27 +37,26 @@ public class JoinCommutativeRule implements TransformationRule, Serializable {
 
     @Override
     public void onMatch(RuleCall ruleCall) {
-        final LogicalJoinOperator logicalJoinOperator = ruleCall.getMatchedOperator(0);
-        final LogicalMatchOperator leftMatchOpt = ruleCall.getMatchedOperator(1);
-        final LogicalMatchOperator rightMatchOpt = ruleCall.getMatchedOperator(2);
+
+        final LogicalJoinOperator logicalJoinOperator = ruleCall.getMatchedOperator(0).getOperator();
+        final LogicalMatchOperator leftMatchOpt = ruleCall.getMatchedOperator(1).getOperator();
+        final LogicalMatchOperator rightMatchOpt = ruleCall.getMatchedOperator(2).getOperator();
         JoinCondition condition = JoinCondition.JOIN_AFTER;
-       if(logicalJoinOperator.getJoinCondition() == JoinCondition.JOIN_BEFORE)
+        if(logicalJoinOperator.getJoinCondition() == JoinCondition.JOIN_BEFORE)
             condition = JoinCondition.JOIN_AFTER;
 
         LogicalJoinOperator newJoin = new LogicalJoinOperator(condition);
         LogicalMatchOperator newLeftMatch = new LogicalMatchOperator(rightMatchOpt.getSubRegex());
         LogicalMatchOperator newRightMatch = new LogicalMatchOperator(leftMatchOpt.getSubRegex());
-        OperatorNode leftOperatorNode = OperatorNode.create(newLeftMatch);
-        OperatorNode rightOperatorNode = OperatorNode.create(newRightMatch);
+        OperatorNode leftOperatorNode = OperatorNode.create(newLeftMatch, ruleCall.getMatchedOperator(1).getInputs());
+        OperatorNode rightOperatorNode = OperatorNode.create(newRightMatch, ruleCall.getMatchedOperator(0).getInputs());
 
         SetNode leftMatchNode = SetNode.create(leftOperatorNode);
         SetNode rightMatchNode = SetNode.create(rightOperatorNode);
 
         OperatorNode joinOperatorNode = OperatorNode.create(newJoin, Arrays.asList(leftMatchNode, rightMatchNode));
 
-        SetNode joinSetNode = SetNode.create(joinOperatorNode);
-
-        ruleCall.transformTo(joinSetNode);
+        ruleCall.transformTo(joinOperatorNode);
 
 
     }

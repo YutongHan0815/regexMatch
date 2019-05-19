@@ -36,14 +36,12 @@ public class LogicalMatchToPhysicalMatchRule implements TransformationRule, Seri
 
     @Override
     public void onMatch(RuleCall ruleCall) {
-        final LogicalMatchOperator logicalMatchOperator = ruleCall.getMatchedOperator(0);
+        final LogicalMatchOperator logicalMatchOperator = ruleCall.getMatchedOperator(0).getOperator();
 
         PhysicalMatchOperator physicalMatchOperator = new PhysicalMatchOperator(logicalMatchOperator.getSubRegex());
-        OperatorNode matchOperatorNode = OperatorNode.create(physicalMatchOperator);
+        OperatorNode matchOperatorNode = OperatorNode.create(physicalMatchOperator, ruleCall.getMatchedOperator(0).getInputs());
 
-        SetNode matchSetNode = SetNode.create(matchOperatorNode);
-
-        ruleCall.transformTo(matchSetNode);
+        ruleCall.transformTo(matchOperatorNode);
 
     }
 }

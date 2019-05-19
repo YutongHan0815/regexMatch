@@ -26,7 +26,6 @@ public class OptimizerPlanner implements Planner, Serializable {
     private final BiMap<Integer, SetNode> sets = HashBiMap.create();
     private final BiMap<Integer, OperatorNode> operators = HashBiMap.create();
     private final BiMap<Integer, Integer> operatorToSet = HashBiMap.create();
-   // private final Multimap<Class<? extends>>
 
     private final List<TransformationRule> ruleSet = new ArrayList<>();
     private final Multimap<Class<? extends Operator>, TransformationRule> operatorRuleIndex = HashMultimap.create();
@@ -135,7 +134,16 @@ public class OptimizerPlanner implements Planner, Serializable {
 
 
     private void fireRules(OperatorNode operatorNode, int setID) {
+        List<TransformationRule> ruleList = new ArrayList<>(operatorRuleIndex.get(operatorNode.getOperator().getClass()));
 
+        for(TransformationRule rule : ruleList) {
+            PatternNode patternNode = rule.
+            final PatternRuleCall ruleCall;
+            if(patternNode.match(operatorNode)) {
+                ruleCall = PatternRuleCall.
+            }
+            ruleCall.match(operatorNode);
+        }
 
 
     }

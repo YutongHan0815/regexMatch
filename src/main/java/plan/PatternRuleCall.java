@@ -1,13 +1,14 @@
 package plan;
 
 
-import operators.Operator;
+import com.google.common.collect.ImmutableList;
 import rules.JoinCommutativeRule;
 import rules.TransformationRule;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
 
 
 
@@ -15,25 +16,34 @@ public class PatternRuleCall implements RuleCall, Serializable {
 
     private final OptimizerPlanner planner;
     protected final PatternNode mainPattern;
-    protected Map<PatternNode, List<PatternNode>> nodeListMap;
-    public List<Operator> matchedOperators;
+    public List<OperatorNode> matchedOperators;
 
 
-    private PatternRuleCall(OptimizerPlanner planner, PatternNode mainPattern, Map<PatternNode, List<PatternNode>> nodeListMap,
-                            List<Operator> matchedOperators) {
-        this.mainPattern = mainPattern;
-        this.nodeListMap = nodeListMap;
-        this.matchedOperators = matchedOperators;
-        this.planner = planner;
+    public PatternRuleCall create(OptimizerPlanner planner, PatternNode mainPattern) {
+        return new PatternRuleCall(planner, mainPattern, new ArrayList<>());
     }
+    public PatternRuleCall create(OptimizerPlanner planner, PatternNode mainPattern, List<OperatorNode> matchedOperators) {
+        return new PatternRuleCall(planner,mainPattern, matchedOperators);
+    }
+    public PatternRuleCall(OptimizerPlanner planner, PatternNode mainPattern, List<OperatorNode> matchedOperators) {
+        this.mainPattern = mainPattern;
+        this.planner = planner;
+        this.matchedOperators = ImmutableList.copyOf(matchedOperators);
+    }
+
 
     public TransformationRule getMatchedRule() {
         return new JoinCommutativeRule();
     }
 
+    //TODO
+    void match(OperatorNode operatorNode) {
+
+    }
     @Override
     public OperatorNode getMatchedOperator(int ordinal) {
-        return null;
+
+        return matchedOperators.get(ordinal);
     }
 
     @Override

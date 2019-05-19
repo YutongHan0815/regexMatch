@@ -28,20 +28,17 @@ public class MatchVerifyToReverseMatchVerifyRule implements TransformationRule, 
 
     @Override
     public void onMatch(RuleCall ruleCall) {
-        final LogicalMatchOperator logicalMatchOperator = ruleCall.getMatchedOperator(0);
-        final LogicalVerifyOperator logicalVerifyOperator = ruleCall.getMatchedOperator(1);
+        final LogicalMatchOperator logicalMatchOperator = ruleCall.getMatchedOperator(0).getOperator();
+        final LogicalVerifyOperator logicalVerifyOperator = ruleCall.getMatchedOperator(1).getOperator();
 
         LogicalVerifyOperator newVerify = new LogicalVerifyOperator(logicalMatchOperator.getSubRegex(), VerifyCondition.VERIFY_BEFORE);
         LogicalMatchOperator newMatch = new LogicalMatchOperator(logicalVerifyOperator.getSubRegex());
 
-        OperatorNode matchOperatorNode = OperatorNode.create(newMatch);
+        OperatorNode matchOperatorNode = OperatorNode.create(newMatch, ruleCall.getMatchedOperator(0).getInputs());
 
         SetNode matchSetNode = SetNode.create(matchOperatorNode);
         OperatorNode verifyOperatorNode = OperatorNode.create(newVerify, Collections.singletonList(matchSetNode));
-        SetNode verifySetNode = SetNode.create(verifyOperatorNode);
-
-
-        ruleCall.transformTo(verifySetNode);
+        ruleCall.transformTo(verifyOperatorNode);
 
     }
 }

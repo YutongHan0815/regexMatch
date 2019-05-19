@@ -72,6 +72,11 @@ public class PatternNode implements Serializable {
         visitor.accept(this);
     }
 
+    public  boolean match(OperatorNode operatorNode) {
+        //TODO
+
+        return true;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

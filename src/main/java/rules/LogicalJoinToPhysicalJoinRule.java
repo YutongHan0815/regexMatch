@@ -29,13 +29,11 @@ public class LogicalJoinToPhysicalJoinRule implements TransformationRule{
 
     @Override
     public void onMatch(RuleCall ruleCall) {
-        final LogicalJoinOperator logicalJoinOperator = ruleCall.getMatchedOperator(0);
+        final LogicalJoinOperator logicalJoinOperator = ruleCall.getMatchedOperator(0).getOperator();
         PhysicalJoinOperator physicalJoinOperator = new PhysicalJoinOperator(logicalJoinOperator.getJoinCondition());
-        OperatorNode joinOperatorNode = OperatorNode.create(physicalJoinOperator);
+        OperatorNode joinOperatorNode = OperatorNode.create(physicalJoinOperator, ruleCall.getMatchedOperator(0).getInputs());
 
-        SetNode joinSetNode = SetNode.create(joinOperatorNode);
-
-        ruleCall.transformTo(joinSetNode);
+        ruleCall.transformTo(joinOperatorNode);
 
     }
 
