@@ -1,4 +1,4 @@
-package plan;
+package plan.rule;
 
 
 import com.google.common.collect.ImmutableList;

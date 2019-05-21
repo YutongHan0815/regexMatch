@@ -5,8 +5,8 @@ import operators.PhysicalJoinOperator;
 
 import plan.OperatorNode;
 import plan.PatternNode;
-import plan.RuleCall;
-import plan.SetNode;
+import plan.rule.RuleCall;
+import plan.SubsetNode;
 
 
 
@@ -33,9 +33,9 @@ public class LogicalJoinToPhysicalJoinRule implements TransformationRule{
         PhysicalJoinOperator physicalJoinOperator = new PhysicalJoinOperator(logicalJoinOperator.getJoinCondition());
         OperatorNode joinOperatorNode = OperatorNode.create(physicalJoinOperator);
 
-        SetNode joinSetNode = SetNode.create(joinOperatorNode);
+        SubsetNode joinSubsetNode = SubsetNode.create(joinOperatorNode);
 
-        ruleCall.transformTo(joinSetNode);
+        ruleCall.transformTo(joinSubsetNode);
 
     }
 

@@ -1,5 +1,6 @@
-package plan;
+package plan.rule;
 
+import plan.OperatorNode;
 import rules.TransformationRule;
 
 public interface RuleCall {

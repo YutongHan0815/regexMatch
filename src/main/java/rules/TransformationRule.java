@@ -1,7 +1,7 @@
 package rules;
 
 import plan.PatternNode;
-import plan.RuleCall;
+import plan.rule.RuleCall;
 
 public interface TransformationRule {
 

@@ -3,8 +3,8 @@ package rules;
 import operators.*;
 import plan.OperatorNode;
 import plan.PatternNode;
-import plan.RuleCall;
-import plan.SetNode;
+import plan.rule.RuleCall;
+import plan.SubsetNode;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -36,12 +36,12 @@ public class MatchVerifyToReverseMatchVerifyRule implements TransformationRule, 
 
         OperatorNode matchOperatorNode = OperatorNode.create(newMatch);
 
-        SetNode matchSetNode = SetNode.create(matchOperatorNode);
-        OperatorNode verifyOperatorNode = OperatorNode.create(newVerify, Collections.singletonList(matchSetNode));
-        SetNode verifySetNode = SetNode.create(verifyOperatorNode);
+        SubsetNode matchSubsetNode = SubsetNode.create(matchOperatorNode);
+        OperatorNode verifyOperatorNode = OperatorNode.create(newVerify, Collections.singletonList(matchSubsetNode));
+        SubsetNode verifySubsetNode = SubsetNode.create(verifyOperatorNode);
 
 
-        ruleCall.transformTo(verifySetNode);
+        ruleCall.transformTo(verifySubsetNode);
 
     }
 }

@@ -5,11 +5,10 @@ import operators.LogicalMatchOperator;
 import operators.PhysicalMatchOperator;
 import plan.OperatorNode;
 import plan.PatternNode;
-import plan.RuleCall;
-import plan.SetNode;
+import plan.rule.RuleCall;
+import plan.SubsetNode;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 
 public class LogicalMatchToPhysicalMatchRule implements TransformationRule, Serializable {
@@ -41,9 +40,9 @@ public class LogicalMatchToPhysicalMatchRule implements TransformationRule, Seri
         PhysicalMatchOperator physicalMatchOperator = new PhysicalMatchOperator(logicalMatchOperator.getSubRegex());
         OperatorNode matchOperatorNode = OperatorNode.create(physicalMatchOperator);
 
-        SetNode matchSetNode = SetNode.create(matchOperatorNode);
+        SubsetNode matchSubsetNode = SubsetNode.create(matchOperatorNode);
 
-        ruleCall.transformTo(matchSetNode);
+        ruleCall.transformTo(matchSubsetNode);
 
     }
 }

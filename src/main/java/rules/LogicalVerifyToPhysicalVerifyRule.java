@@ -5,8 +5,8 @@ import operators.LogicalVerifyOperator;
 import operators.PhysicalVerifyOperator;
 import plan.OperatorNode;
 import plan.PatternNode;
-import plan.RuleCall;
-import plan.SetNode;
+import plan.rule.RuleCall;
+import plan.SubsetNode;
 
 import java.io.Serializable;
 
@@ -39,9 +39,9 @@ public class LogicalVerifyToPhysicalVerifyRule implements TransformationRule, Se
                 logicalVerifyOperator.getSubRegex(), logicalVerifyOperator.getVerifyCondition());
         OperatorNode verifyOperatorNode = OperatorNode.create(physicalVerifyOperator);
 
-        SetNode verifySetNode = SetNode.create(verifyOperatorNode);
+        SubsetNode verifySubsetNode = SubsetNode.create(verifyOperatorNode);
 
-        ruleCall.transformTo(verifySetNode);
+        ruleCall.transformTo(verifySubsetNode);
 
     }
 

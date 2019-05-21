@@ -7,8 +7,8 @@ import com.google.re2j.PublicSimplify;
 import operators.*;
 import plan.OperatorNode;
 import plan.PatternNode;
-import plan.RuleCall;
-import plan.SetNode;
+import plan.rule.RuleCall;
+import plan.SubsetNode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -51,13 +51,13 @@ public class MatchToJoinRule implements TransformationRule, Serializable {
         OperatorNode leftOperatorNode = OperatorNode.create(newLeftMatch);
         OperatorNode rightOperatorNode = OperatorNode.create(newRightMatch);
 
-        SetNode leftMatchSetNode = SetNode.create(leftOperatorNode);
-        SetNode rightMatchSetNode = SetNode.create(rightOperatorNode);
+        SubsetNode leftMatchSubsetNode = SubsetNode.create(leftOperatorNode);
+        SubsetNode rightMatchSubsetNode = SubsetNode.create(rightOperatorNode);
 
-        OperatorNode joinOperatorNode = OperatorNode.create(newJoin, Arrays.asList(leftMatchSetNode,rightMatchSetNode));
+        OperatorNode joinOperatorNode = OperatorNode.create(newJoin, Arrays.asList(leftMatchSubsetNode, rightMatchSubsetNode));
 
-        SetNode joinSetNode = SetNode.create(joinOperatorNode);
-        ruleCall.transformTo(joinSetNode);
+        SubsetNode joinSubsetNode = SubsetNode.create(joinOperatorNode);
+        ruleCall.transformTo(joinSubsetNode);
 
 
     }

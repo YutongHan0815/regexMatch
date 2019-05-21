@@ -1,4 +1,4 @@
-package plan;
+package plan.rule;
 
 import java.io.Serializable;
 

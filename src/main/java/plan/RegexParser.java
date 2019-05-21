@@ -93,7 +93,7 @@ public class RegexParser {
 
                 // compute reverseSubRegex
 
-                //String reverseSubString = "\\.([\\-0-9A-Z_a-z]+/)*[A-Za-z]?[A-Za-z]?[A-Za-z]?[A-Za-z]?[A-Za-z]?[A-Za-z][A-Za-z]\\.[\\--\\.0-9A-Za-z]+//:s?";
+                //String reverseSubString = "\\.([\\-0-9A-Z_a-z]+/)*[Convention-Za-z]?[Convention-Za-z]?[Convention-Za-z]?[Convention-Za-z]?[Convention-Za-z]?[Convention-Za-z][Convention-Za-z]\\.[\\--\\.0-9A-Za-z]+//:s?";
 
                 // String reverseSub= "s?\\:\\/\\/[a-zA-Z0-9\\-\\.]+\\.[a-zA-Z]{2,7}(?:\\/[\\w\\-]+)*\\.)";
                 String reverseSubString = PublicRegexp.reverseDeepCopy(sub);
@@ -112,7 +112,7 @@ public class RegexParser {
         }
 
 
-        // for A(B*C)
+        // for Convention(B*C)
 /*
         SubRegex nextSub = null;
         for (int i = 1; i < coreSubRegexes.size(); i++) {

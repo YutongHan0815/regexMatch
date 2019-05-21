@@ -7,8 +7,8 @@ import com.google.re2j.PublicSimplify;
 import operators.*;
 import plan.OperatorNode;
 import plan.PatternNode;
-import plan.RuleCall;
-import plan.SetNode;
+import plan.rule.RuleCall;
+import plan.SubsetNode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -50,9 +50,9 @@ public class VerifyToReverseVerifySplitRule implements TransformationRule, Seria
         LogicalVerifyOperator newVerify1 = new LogicalVerifyOperator(subRegexList.get(1), logicalVerifyOperator.getVerifyCondition());
 
         OperatorNode verifyOperatorNode1 = OperatorNode.create(newVerify1);
-        SetNode verifySetNode = SetNode.create(verifyOperatorNode1);
-        OperatorNode verifyOperatorNode0 = OperatorNode.create(newVerify0, Collections.singletonList(verifySetNode));
-        SetNode verifySetNdoe0 = SetNode.create(verifyOperatorNode0);
+        SubsetNode verifySubsetNode = SubsetNode.create(verifyOperatorNode1);
+        OperatorNode verifyOperatorNode0 = OperatorNode.create(newVerify0, Collections.singletonList(verifySubsetNode));
+        SubsetNode verifySetNdoe0 = SubsetNode.create(verifyOperatorNode0);
 
 
         ruleCall.transformTo(verifySetNdoe0);

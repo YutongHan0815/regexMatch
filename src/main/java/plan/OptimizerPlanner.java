@@ -9,6 +9,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import operators.Operator;
 import org.jetbrains.annotations.NotNull;
+import plan.rule.RuleCall;
 import rules.TransformationRule;
 
 import java.io.Serializable;
@@ -21,12 +22,14 @@ import static java.util.stream.Collectors.toList;
 public class OptimizerPlanner implements Planner, Serializable {
 
     private final OptimizerContext context;
-    private final SetNode root;
+    private final SubsetNode root;
 
-    private final BiMap<Integer, SetNode> sets = HashBiMap.create();
+    private final BiMap<Integer, MetaSet> sets = HashBiMap.create();
     private final BiMap<Integer, OperatorNode> operators = HashBiMap.create();
     private final BiMap<Integer, Integer> operatorToSet = HashBiMap.create();
    // private final Multimap<Class<? extends>>
+
+    private final Multimap<Integer, Integer> operatorParentMap = HashMultimap.create();
 
     private final List<TransformationRule> ruleSet = new ArrayList<>();
     private final Multimap<Class<? extends Operator>, TransformationRule> operatorRuleIndex = HashMultimap.create();
@@ -34,14 +37,14 @@ public class OptimizerPlanner implements Planner, Serializable {
     private final Queue<RuleCall> ruleCallQueue = new ArrayDeque<>();
 
 
-    public static OptimizerPlanner create(SetNode root) {
+    public static OptimizerPlanner create(SubsetNode root) {
         return new OptimizerPlanner(root);
     }
 
-    private OptimizerPlanner(SetNode root) {
+    private OptimizerPlanner(SubsetNode root) {
         this.context = new OptimizerContext(this);
         this.root = root;
-        this.registerSet(root);
+        this.registerNewSet(root.getMetaSet());
     }
 
     public void optimize() {
@@ -70,39 +73,25 @@ public class OptimizerPlanner implements Planner, Serializable {
     }
 
     /**
-     * Adds all OperatorNodes in the SetNode into the set with setID.
-     * The SetNode will not be registered into the planner.
-     * Returns the setID that the operators are added into.
-     *
-     * @param node
-     * @param setID
-     * @return
-     */
-    public int addToEquivSet(@NotNull SetNode node, int setID) {
-        node.getOperators().forEach(op -> registerOperator(op, setID));
-        return setID;
-    }
-
-    /**
-     * Registers a new SetNode into the planner.
+     * Adds a new SubsetNode into the planner.
      *
      * @return the setID of the newly registered set
      */
-    public int registerSet(@NotNull SetNode node) {
+    public int registerNewSet(@NotNull MetaSet node) {
         // check for duplicate
         if (this.sets.values().contains(node)) {
             return this.sets.inverse().get(node);
         }
 
         int newSetID = this.context.nextSetID();
-        SetNode newSetNode = SetNode.create(new ArrayList<>());
-        this.sets.put(newSetID, newSetNode);
+        MetaSet newMetaSet = MetaSet.create(new ArrayList<>());
+        this.sets.put(newSetID, newMetaSet);
 
         // register operators in this set
         List<Integer> registeredOperators = node.getOperators().stream()
                 .map(op -> this.registerOperator(op, newSetID)).collect(toList());
 
-        registeredOperators.forEach(opID -> newSetNode.addOperatorNode(this.operators.get(opID)));
+        registeredOperators.forEach(opID -> newMetaSet.addOperatorNode(this.operators.get(opID)));
         registeredOperators.forEach(opID -> operatorToSet.put(opID, newSetID));
 
         return  newSetID;
@@ -111,11 +100,14 @@ public class OptimizerPlanner implements Planner, Serializable {
 
     public int registerOperator(@NotNull OperatorNode operator, int setID) {
         // recursively add children
-        List<SetNode> registeredChildren = operator.getInputs().stream()
-                .map(set -> registerSet(set)).map(childSetID -> this.sets.get(childSetID)).collect(toList());
+        List<SubsetNode> registeredChildren = operator.getInputs().stream()
+                .map(subset -> {
+                    MetaSet metaSet = this.sets.get(this.registerNewSet(subset.getMetaSet()));
+                    return metaSet.getSubset(subset.getTraitSet());
+                }).collect(toList());
 
         // newOperator is operator with all children already registered into the planner
-        OperatorNode newOperator = OperatorNode.create(operator.getOperator(), registeredChildren);
+        OperatorNode newOperator = OperatorNode.create(operator.getOperator(), operator.getTraitSet(), registeredChildren);
 
         // check duplicate
         if (this.operators.values().contains(newOperator)) {
@@ -126,6 +118,12 @@ public class OptimizerPlanner implements Planner, Serializable {
         this.operators.put(newOperatorID, newOperator);
         this.sets.get(setID).addOperatorNode(newOperator);
         this.operatorToSet.put(newOperatorID, setID);
+
+        // add backwards parent pointers from children to this
+        newOperator.getInputs().stream().flatMap(subset -> subset.getOperators().stream()).forEach(child -> {
+            int childOpID = this.operators.inverse().get(child);
+            this.operatorParentMap.put(childOpID, newOperatorID);
+        });
 
         // TODO: fire rule
         fireRules(newOperator, setID);

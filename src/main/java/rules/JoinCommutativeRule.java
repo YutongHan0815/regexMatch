@@ -3,6 +3,7 @@ package rules;
 
 import operators.*;
 import plan.*;
+import plan.rule.RuleCall;
 
 import java.io.Serializable;
 import java.util.*;
@@ -50,14 +51,14 @@ public class JoinCommutativeRule implements TransformationRule, Serializable {
         OperatorNode leftOperatorNode = OperatorNode.create(newLeftMatch);
         OperatorNode rightOperatorNode = OperatorNode.create(newRightMatch);
 
-        SetNode leftMatchNode = SetNode.create(leftOperatorNode);
-        SetNode rightMatchNode = SetNode.create(rightOperatorNode);
+        SubsetNode leftMatchNode = SubsetNode.create(leftOperatorNode);
+        SubsetNode rightMatchNode = SubsetNode.create(rightOperatorNode);
 
         OperatorNode joinOperatorNode = OperatorNode.create(newJoin, Arrays.asList(leftMatchNode, rightMatchNode));
 
-        SetNode joinSetNode = SetNode.create(joinOperatorNode);
+        SubsetNode joinSubsetNode = SubsetNode.create(joinOperatorNode);
 
-        ruleCall.transformTo(joinSetNode);
+        ruleCall.transformTo(joinSubsetNode);
 
 
     }

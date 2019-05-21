@@ -2,6 +2,7 @@ package plan;
 
 
 import operators.Operator;
+import plan.rule.RuleCall;
 import rules.JoinCommutativeRule;
 import rules.TransformationRule;
 
@@ -38,7 +39,7 @@ public class PatternRuleCall implements RuleCall, Serializable {
 
     @Override
     public void transformTo(OperatorNode equivalentOperator) {
-        this.planner.addToEquivSet(SetNode.create(equivalentOperator), 0);
+        this.planner.registerOperator(equivalentOperator, 0);
     }
 
 }

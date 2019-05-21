@@ -10,8 +10,8 @@ import operators.PhysicalVerifyOperator;
 import operators.VerifyCondition;
 import plan.OperatorNode;
 import plan.PatternNode;
-import plan.RuleCall;
-import plan.SetNode;
+import plan.rule.RuleCall;
+import plan.SubsetNode;
 
 
 import java.io.Serializable;
@@ -53,12 +53,12 @@ public class VerifyToVerifySplitRule implements TransformationRule, Serializable
         LogicalVerifyOperator newVerify1 = new LogicalVerifyOperator(subRegexList.get(0), logicalVerifyOperator.getVerifyCondition());
 
         OperatorNode verifyOperatorNode1 = OperatorNode.create(newVerify1);
-        SetNode verifySetNode = SetNode.create(verifyOperatorNode1);
-        OperatorNode verifyOperatorNode0 = OperatorNode.create(newVerify0, Collections.singletonList(verifySetNode));
-        SetNode verifySetNode0 = SetNode.create(verifyOperatorNode0);
+        SubsetNode verifySubsetNode = SubsetNode.create(verifyOperatorNode1);
+        OperatorNode verifyOperatorNode0 = OperatorNode.create(newVerify0, Collections.singletonList(verifySubsetNode));
+        SubsetNode verifySubsetNode0 = SubsetNode.create(verifyOperatorNode0);
 
 
-        ruleCall.transformTo(verifySetNode0);
+        ruleCall.transformTo(verifySubsetNode0);
     }
 
     public static List<String> decompose(LogicalVerifyOperator op) {
