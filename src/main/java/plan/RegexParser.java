@@ -5,7 +5,6 @@ import com.google.re2j.PublicRE2;
 import com.google.re2j.PublicRegexp;
 import com.google.re2j.PublicSimplify;
 import operators.LogicalMatchOperator;
-import regexMatcher.SubRegex;
 
 import java.util.ArrayList;
 import java.util.List;
