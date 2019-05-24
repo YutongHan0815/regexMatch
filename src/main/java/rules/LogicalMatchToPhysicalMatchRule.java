@@ -7,6 +7,7 @@ import plan.OperatorNode;
 import plan.PatternNode;
 import plan.rule.RuleCall;
 import plan.SubsetNode;
+import plan.triat.Convention;
 
 import java.io.Serializable;
 
@@ -35,14 +36,13 @@ public class LogicalMatchToPhysicalMatchRule implements TransformationRule, Seri
 
     @Override
     public void onMatch(RuleCall ruleCall) {
-        final LogicalMatchOperator logicalMatchOperator = ruleCall.getMatchedOperator(0);
+        final OperatorNode logicalMatchOpN = ruleCall.getMatchedOperator(0);
+        final LogicalMatchOperator logicalMatchOperator = logicalMatchOpN.getOperator();
 
         PhysicalMatchOperator physicalMatchOperator = new PhysicalMatchOperator(logicalMatchOperator.getSubRegex());
-        OperatorNode matchOperatorNode = OperatorNode.create(physicalMatchOperator);
+        OperatorNode matchOperatorNode = OperatorNode.create(physicalMatchOperator, logicalMatchOpN.getTraitSet().replace(Convention.PHYSICAL));
 
-        SubsetNode matchSubsetNode = SubsetNode.create(matchOperatorNode);
-
-        ruleCall.transformTo(matchSubsetNode);
+        ruleCall.transformTo(matchOperatorNode);
 
     }
 }

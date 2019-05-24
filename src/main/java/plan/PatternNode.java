@@ -1,12 +1,14 @@
 package plan;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Verify;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import operators.Operator;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -47,7 +49,7 @@ public class PatternNode implements Serializable {
         return any(operatorClass, op -> true);
     }
 
-    public static <T extends Operator> PatternNode any (Class<T> operatorClass, Predicate<T> predicate) {
+    public static <T extends Operator> PatternNode any(Class<T> operatorClass, Predicate<T> predicate) {
         return new PatternNode(operatorClass, predicate, ImmutableList.of(), ChildrenPolicy.ANY);
     }
 
@@ -67,8 +69,20 @@ public class PatternNode implements Serializable {
         return childrenPolicy;
     }
 
-    public void visit(Consumer<PatternNode> visitor) {
-        this.children.forEach(children -> children.visit(visitor));
+    public Map<PatternNode, PatternNode> inverse() {
+        HashMap<PatternNode, PatternNode> parentMap = new HashMap<>();
+        this.accept(node -> node.getChildren().forEach(child -> parentMap.put(child, this)));
+        return parentMap;
+    }
+
+    public Set<PatternNode> getAllNodes() {
+        Set<PatternNode> nodes = new HashSet<>();
+        this.accept(nodes::add);
+        return nodes;
+    }
+
+    public void accept(Consumer<PatternNode> visitor) {
+        this.children.forEach(children -> children.accept(visitor));
         visitor.accept(this);
     }
 

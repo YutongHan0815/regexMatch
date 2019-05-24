@@ -17,7 +17,7 @@ public class RuleSet implements Serializable {
                     JoinCommutativeRule.INSTANCE,
                     MatchToMatchVerifyRule.INSTANCE,
                     MatchToJoinRule.INSTANCE,
-                    MatchVerifyToReverseMatchVerifyRule.INSTANCE,
+                    MatchVerifyToMatchVerifyRule.INSTANCE,
                     VerifyToVerifySplitRule.INSTANCE,
                     VerifyToReverseVerifySplitRule.INSTANCE
             );

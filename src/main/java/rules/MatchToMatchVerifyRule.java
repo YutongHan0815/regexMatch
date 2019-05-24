@@ -6,6 +6,7 @@ import com.google.re2j.PublicRE2;
 import com.google.re2j.PublicRegexp;
 import com.google.re2j.PublicSimplify;
 import operators.*;
+import plan.MetaSet;
 import plan.OperatorNode;
 import plan.PatternNode;
 import plan.rule.RuleCall;
@@ -38,16 +39,17 @@ public class MatchToMatchVerifyRule implements TransformationRule, Serializable 
 
     @Override
     public void onMatch(RuleCall ruleCall) {
-        final LogicalMatchOperator logicalMatchOperator = ruleCall.getMatchedOperator(0).getOperator();
+        final OperatorNode logicalMatchOpN = ruleCall.getMatchedOperator(0);
+        final LogicalMatchOperator logicalMatchOperator = logicalMatchOpN.getOperator();
 
         List<String> subRegexList = decompose(logicalMatchOperator);
 
         LogicalVerifyOperator newVerify = new LogicalVerifyOperator(subRegexList.get(0), VerifyCondition.VERIFY_AFTER);
         LogicalMatchOperator newMatch = new LogicalMatchOperator(subRegexList.get(1));
-        OperatorNode matchOperatorNode = OperatorNode.create(newMatch);
-
-        SubsetNode matchSubsetNode = SubsetNode.create(matchOperatorNode);
-        OperatorNode verifyOperatorNode = OperatorNode.create(newVerify, Collections.singletonList(matchSubsetNode));
+        OperatorNode matchOperatorNode = OperatorNode.create(newMatch, logicalMatchOpN.getTraitSet());
+        MetaSet matchMetaSet = MetaSet.create(matchOperatorNode);
+        SubsetNode matchSubsetNode = SubsetNode.create(matchMetaSet, matchOperatorNode.getTraitSet());
+        OperatorNode verifyOperatorNode = OperatorNode.create(newVerify, matchOperatorNode.getTraitSet(), Collections.singletonList(matchSubsetNode));
 
         ruleCall.transformTo(verifyOperatorNode);
 

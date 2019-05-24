@@ -20,16 +20,24 @@ public class MatchSubRegexTest {
         String fieldValue = tuples.get(0);
         String query = RegexTestConstantsText.getQueries().get(0);
         List<Span> expectedResults = new ArrayList<>();
-        expectedResults.add(new Span(1,3));
+        expectedResults.add(new Span(0,10));
         MatchSubRegex matchSubRegex = new MatchSubRegex(query, true, fieldValue);
         List<Span> exactedResult = matchSubRegex.computeMatchingResult();
 
         Assert.assertTrue(TestUtils.equals(exactedResult, expectedResults));
 
     }
+
     @Test
-    public void testComputeMatchingResultWithRelation() {
+    public void testComputeReverseMatchingResult() throws Exception{
+        List<String> tuples = RegexTestConstantsText.getTuples();
+        String fieldValue = tuples.get(0);
+        String query = RegexTestConstantsText.getQueries().get(0);
+        List<Span> expectedResults = new ArrayList<>();
+        expectedResults.add(new Span(0,10));
+        MatchSubRegex matchSubRegex = new MatchSubRegex(query, true, fieldValue);
+        List<Span> exactedResult = matchSubRegex.computeReverseMatchingResult();
 
-
+        Assert.assertTrue(TestUtils.equals(exactedResult, expectedResults));
     }
 }

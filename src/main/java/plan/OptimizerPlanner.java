@@ -1,12 +1,9 @@
 package plan;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
+import com.google.common.collect.*;
 
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import operators.Operator;
 import org.jetbrains.annotations.NotNull;
 import plan.rule.RuleCall;
@@ -21,41 +18,44 @@ import static java.util.stream.Collectors.toList;
 
 public class OptimizerPlanner implements Planner, Serializable {
 
-    private final OptimizerContext context;
-    private final SubsetNode root;
+    final OptimizerContext context;
+    final SubsetNode root;
 
-    private final BiMap<Integer, MetaSet> sets = HashBiMap.create();
-    private final BiMap<Integer, OperatorNode> operators = HashBiMap.create();
-    private final BiMap<Integer, Integer> operatorToSet = HashBiMap.create();
-   // private final Multimap<Class<? extends>>
+    final BiMap<Integer, MetaSet> sets = HashBiMap.create();
+    final BiMap<Integer, OperatorNode> operators = HashBiMap.create();
+    final BiMap<Integer, Integer> operatorToSet = HashBiMap.create();
 
-    private final Multimap<Integer, Integer> operatorParentMap = HashMultimap.create();
+    final Multimap<Integer, Integer> operatorParentMap = HashMultimap.create();
 
-    private final List<TransformationRule> ruleSet = new ArrayList<>();
-    private final Multimap<Class<? extends Operator>, TransformationRule> operatorRuleIndex = HashMultimap.create();
+    final List<TransformationRule> ruleSet = new ArrayList<>();
+    final Multimap<Class<? extends Operator>, TransformationRule> operatorRuleIndex = HashMultimap.create();
 
-    private final Queue<RuleCall> ruleCallQueue = new ArrayDeque<>();
+    final Queue<RuleCall> ruleCallQueue = new ArrayDeque<>();
 
 
-    public static OptimizerPlanner create(SubsetNode root) {
-        return new OptimizerPlanner(root);
+    public static OptimizerPlanner create(SubsetNode root, Set<TransformationRule> rules) {
+        return new OptimizerPlanner(root, rules);
     }
 
-    private OptimizerPlanner(SubsetNode root) {
+    private OptimizerPlanner(SubsetNode root, Set<TransformationRule> rules) {
         this.context = new OptimizerContext(this);
         this.root = root;
+        rules.forEach(rule -> this.addRule(rule));
         this.registerNewSet(root.getMetaSet());
     }
 
     public void optimize() {
-
+        while (! ruleCallQueue.isEmpty()) {
+            RuleCall ruleCall = ruleCallQueue.poll();
+            ruleCall.getMatchedRule().onMatch(ruleCall);
+        }
     }
 
     public void addRule(TransformationRule rule) {
         Preconditions.checkArgument(! this.ruleSet.contains(rule));
         this.ruleSet.add(rule);
 
-        rule.getMatchPattern().visit(pattern -> {
+        rule.getMatchPattern().accept(pattern -> {
             this.operatorRuleIndex.put(pattern.getOperatorClass(), rule);
         });
     }
@@ -77,10 +77,25 @@ public class OptimizerPlanner implements Planner, Serializable {
      *
      * @return the setID of the newly registered set
      */
-    public int registerNewSet(@NotNull MetaSet node) {
+    private int registerNewSet(@NotNull MetaSet set) {
         // check for duplicate
-        if (this.sets.values().contains(node)) {
-            return this.sets.inverse().get(node);
+        if (this.sets.values().contains(set)) {
+            return this.sets.inverse().get(set);
+        }
+
+        List<Integer> existingEquivSets = set.getOperators().stream()
+                .filter(op -> this.operators.containsValue(op))
+                .map(op -> this.operatorToSet.get(this.operators.inverse().get(op)))
+                .collect(toList());
+
+        if (! (existingEquivSets.size() == 0 || existingEquivSets.size() == 1)) {
+            throw new UnsupportedOperationException("TODO: a set equivalent to multiple other sets is not handled yet");
+        }
+
+        if (existingEquivSets.size() == 1) {
+            int currentSetID = existingEquivSets.get(0);
+            set.getOperators().forEach(op -> this.sets.get(currentSetID).addOperatorNode(op));
+            return currentSetID;
         }
 
         int newSetID = this.context.nextSetID();
@@ -88,7 +103,7 @@ public class OptimizerPlanner implements Planner, Serializable {
         this.sets.put(newSetID, newMetaSet);
 
         // register operators in this set
-        List<Integer> registeredOperators = node.getOperators().stream()
+        List<Integer> registeredOperators = set.getOperators().stream()
                 .map(op -> this.registerOperator(op, newSetID)).collect(toList());
 
         registeredOperators.forEach(opID -> newMetaSet.addOperatorNode(this.operators.get(opID)));
@@ -111,7 +126,12 @@ public class OptimizerPlanner implements Planner, Serializable {
 
         // check duplicate
         if (this.operators.values().contains(newOperator)) {
-            return this.operators.inverse().get(newOperator);
+            int duplicateOpID = this.operators.inverse().get(newOperator);
+            int duplicateOpSet = this.operatorToSet.get(duplicateOpID);
+            if (duplicateOpSet != setID) {
+                throw new UnsupportedOperationException("TODO: set merge is not implemented yet");
+            }
+            return duplicateOpID;
         }
 
         int newOperatorID = this.context.nextOperatorID();
@@ -125,18 +145,22 @@ public class OptimizerPlanner implements Planner, Serializable {
             this.operatorParentMap.put(childOpID, newOperatorID);
         });
 
-        // TODO: fire rule
-        fireRules(newOperator, setID);
+        fireRules(newOperator);
 
         return newOperatorID;
     }
 
 
-    private void fireRules(OperatorNode operatorNode, int setID) {
+    private void fireRules(OperatorNode operatorNode) {
+        Collection<TransformationRule> relevantRules = operatorRuleIndex.get(operatorNode.getOperator().getClass());
 
-
-
+        relevantRules.stream().map(rule -> new RuleMatcher(this, operatorNode, rule).match())
+                .forEach(ruleCall -> ruleCall.ifPresent(this.ruleCallQueue::add));
     }
+
+
+
+
 
 
 
