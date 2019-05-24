@@ -13,8 +13,7 @@ import java.util.*;
 public class MetaSet {
 
     private final Set<OperatorNode> operatorNodes = new HashSet<>();
-    private final Multimap<SubsetNode, OperatorNode> subsets = HashMultimap.create();
-    private final BiMap<TraitSet, SubsetNode> subsetTraits = HashBiMap.create();
+    private final Multimap<TraitSet, OperatorNode> traits = HashMultimap.create();
 
     public static MetaSet create(OperatorNode operatorNode) {
         return create(Collections.singletonList(operatorNode));
@@ -30,16 +29,17 @@ public class MetaSet {
 
     public void addOperatorNode(OperatorNode operatorNode) {
         Preconditions.checkNotNull(operatorNode);
-        Preconditions.checkArgument(! this.operatorNodes.contains(operatorNode));
+        // check duplicate operatorNode in this set
+        if (this.operatorNodes.contains(operatorNode)) {
+            return;
+        }
 
         this.operatorNodes.add(operatorNode);
         TraitSet traitSet = operatorNode.getTraitSet();
-        if (! this.subsetTraits.containsKey(traitSet)) {
-            subsetTraits.put(traitSet, SubsetNode.create(this, traitSet));
-        }
-        subsets.keySet().forEach(subset -> {
-            if (traitSet.satisfy(subset.getTraitSet())) {
-                subsets.put(subset, operatorNode);
+        traits.put(traitSet, operatorNode);
+        traits.keySet().forEach(otherTrait -> {
+            if (! otherTrait.equals(traitSet) && traitSet.satisfy(otherTrait)) {
+                traits.put(otherTrait, operatorNode);
             }
         });
     }
@@ -49,17 +49,11 @@ public class MetaSet {
     }
 
     public SubsetNode getSubset(TraitSet traitSet) {
-        if (! this.subsetTraits.containsKey(traitSet)) {
-            return SubsetNode.create(this, traitSet);
-        }
-        return this.subsetTraits.get(traitSet);
+        return SubsetNode.create(this, traitSet);
     }
 
     public Set<OperatorNode> getOperators(TraitSet traitSet) {
-        if (! this.subsetTraits.containsKey(traitSet)) {
-            return new HashSet<>();
-        }
-        return new HashSet<>(this.subsets.get(this.subsetTraits.get(traitSet)));
+        return new HashSet<>(this.traits.get(traitSet));
     }
 
     @Override

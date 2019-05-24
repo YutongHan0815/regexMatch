@@ -7,6 +7,7 @@ import plan.OperatorNode;
 import plan.PatternNode;
 import plan.rule.RuleCall;
 import plan.SubsetNode;
+import plan.triat.Convention;
 
 import java.io.Serializable;
 
@@ -34,14 +35,14 @@ public class LogicalVerifyToPhysicalVerifyRule implements TransformationRule, Se
 
     @Override
     public void onMatch(RuleCall ruleCall) {
-        final LogicalVerifyOperator logicalVerifyOperator = ruleCall.getMatchedOperator(0);
+        final OperatorNode logicalVerifyOpN = ruleCall.getMatchedOperator(0);
+        final LogicalVerifyOperator logicalVerifyOperator = logicalVerifyOpN.getOperator();
         PhysicalVerifyOperator physicalVerifyOperator = new PhysicalVerifyOperator(
                 logicalVerifyOperator.getSubRegex(), logicalVerifyOperator.getVerifyCondition());
-        OperatorNode verifyOperatorNode = OperatorNode.create(physicalVerifyOperator);
+        OperatorNode verifyOperatorNode = OperatorNode.create(physicalVerifyOperator, logicalVerifyOpN.getTraitSet().replace(Convention.PHYSICAL));
 
-        SubsetNode verifySubsetNode = SubsetNode.create(verifyOperatorNode);
 
-        ruleCall.transformTo(verifySubsetNode);
+        ruleCall.transformTo(verifyOperatorNode);
 
     }
 

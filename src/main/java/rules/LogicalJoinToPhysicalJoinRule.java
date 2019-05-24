@@ -7,8 +7,13 @@ import plan.OperatorNode;
 import plan.PatternNode;
 import plan.rule.RuleCall;
 import plan.SubsetNode;
+import plan.triat.Convention;
+import plan.triat.Trait;
+import plan.triat.TraitDef;
+import plan.triat.TraitSet;
 
-
+import java.util.Arrays;
+import java.util.List;
 
 
 public class LogicalJoinToPhysicalJoinRule implements TransformationRule{
@@ -29,13 +34,19 @@ public class LogicalJoinToPhysicalJoinRule implements TransformationRule{
 
     @Override
     public void onMatch(RuleCall ruleCall) {
-        final LogicalJoinOperator logicalJoinOperator = ruleCall.getMatchedOperator(0);
-        PhysicalJoinOperator physicalJoinOperator = new PhysicalJoinOperator(logicalJoinOperator.getJoinCondition());
-        OperatorNode joinOperatorNode = OperatorNode.create(physicalJoinOperator);
+        final  OperatorNode logicalJoinOpN = ruleCall.getMatchedOperator(0);
+        final LogicalJoinOperator logicalJoinOperator = logicalJoinOpN.getOperator();
+        final List<SubsetNode> inputs = logicalJoinOpN.getInputs();
 
-        SubsetNode joinSubsetNode = SubsetNode.create(joinOperatorNode);
+        if(inputs.stream().allMatch(subsetNode -> subsetNode.getTraitSet().equals(Convention.PHYSICAL))) {
 
-        ruleCall.transformTo(joinSubsetNode);
+            PhysicalJoinOperator physicalJoinOperator = new PhysicalJoinOperator(logicalJoinOperator.getJoinCondition());
+
+
+            OperatorNode joinOperatorNode = OperatorNode.create(physicalJoinOperator, logicalJoinOpN.getTraitSet().replace(Convention.PHYSICAL));
+
+            ruleCall.transformTo(joinOperatorNode);
+        }
 
     }
 

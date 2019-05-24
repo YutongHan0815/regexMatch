@@ -5,6 +5,7 @@ import com.google.re2j.PublicRE2;
 import com.google.re2j.PublicRegexp;
 import com.google.re2j.PublicSimplify;
 import operators.*;
+import plan.MetaSet;
 import plan.OperatorNode;
 import plan.PatternNode;
 import plan.rule.RuleCall;
@@ -42,20 +43,20 @@ public class VerifyToReverseVerifySplitRule implements TransformationRule, Seria
 
     @Override
     public void onMatch(RuleCall ruleCall) {
-        final LogicalVerifyOperator logicalVerifyOperator = ruleCall.getMatchedOperator(0);
+        final OperatorNode logicalVerifyOpN = ruleCall.getMatchedOperator(0);
+        final LogicalVerifyOperator logicalVerifyOperator = logicalVerifyOpN.getOperator();
 
         List<String> subRegexList = decompose(logicalVerifyOperator);
 
         LogicalVerifyOperator newVerify0 = new LogicalVerifyOperator(subRegexList.get(0), VerifyCondition.VERIFY_BEFORE);
         LogicalVerifyOperator newVerify1 = new LogicalVerifyOperator(subRegexList.get(1), logicalVerifyOperator.getVerifyCondition());
 
-        OperatorNode verifyOperatorNode1 = OperatorNode.create(newVerify1);
-        SubsetNode verifySubsetNode = SubsetNode.create(verifyOperatorNode1);
-        OperatorNode verifyOperatorNode0 = OperatorNode.create(newVerify0, Collections.singletonList(verifySubsetNode));
-        SubsetNode verifySetNdoe0 = SubsetNode.create(verifyOperatorNode0);
+        OperatorNode verifyOperatorNode1 = OperatorNode.create(newVerify1, logicalVerifyOpN.getTraitSet());
+        MetaSet  verifyMetaSet = MetaSet.create(verifyOperatorNode1);
+        SubsetNode verifySubsetNode = SubsetNode.create(verifyMetaSet, verifyOperatorNode1.getTraitSet());
+        OperatorNode verifyOperatorNode0 = OperatorNode.create(newVerify0, verifyOperatorNode1.getTraitSet(), Collections.singletonList(verifySubsetNode));
 
-
-        ruleCall.transformTo(verifySetNdoe0);
+        ruleCall.transformTo(verifyOperatorNode0);
     }
 
     public static List<String> decompose(LogicalVerifyOperator op) {

@@ -14,6 +14,10 @@ public class SubsetNode implements Serializable {
         return new SubsetNode(metaSet, traitSet);
     }
 
+    public static SubsetNode create(OperatorNode operator) {
+        return new SubsetNode(MetaSet.create(operator), operator.getTraitSet());
+    }
+
     private final MetaSet metaSet;
     private final TraitSet traitSet;
 
