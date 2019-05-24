@@ -1,14 +1,15 @@
 package regexMatcherTest;
 
-import Utils.TestUtils;
-import org.junit.Assert;
-import org.junit.Test;
-import regexMatcher.MatchSubRegex;
-import regexMatcher.Span;
+
+import edu.ics.uci.regex.regexMatcher.MatchSubRegex;
+import edu.ics.uci.regex.regexMatcher.Span;
+import org.junit.jupiter.api.Test;
 
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class MatchSubRegexTest {
@@ -24,7 +25,7 @@ public class MatchSubRegexTest {
         MatchSubRegex matchSubRegex = new MatchSubRegex(query, true, fieldValue);
         List<Span> exactedResult = matchSubRegex.computeMatchingResult();
 
-        Assert.assertTrue(TestUtils.equals(exactedResult, expectedResults));
+        assertTrue(TestUtils.equals(exactedResult, expectedResults));
 
     }
 
@@ -38,6 +39,6 @@ public class MatchSubRegexTest {
         MatchSubRegex matchSubRegex = new MatchSubRegex(query, true, fieldValue);
         List<Span> exactedResult = matchSubRegex.computeReverseMatchingResult();
 
-        Assert.assertTrue(TestUtils.equals(exactedResult, expectedResults));
+        assertTrue(TestUtils.equals(exactedResult, expectedResults));
     }
 }
