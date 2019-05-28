@@ -21,9 +21,9 @@ public class JoinCommutativeRule implements TransformRule, Serializable {
 
     public JoinCommutativeRule() {
         this.description = this.getClass().getName();
-        this.mainPattern = PatternNode.exact(PhysicalJoinOperator.class,
-                Arrays.asList(PatternNode.any(PhysicalMatchOperator.class),
-                        PatternNode.any(PhysicalMatchOperator.class)));
+        this.mainPattern = PatternNode.exact(LogicalJoinOperator.class,
+                Arrays.asList(PatternNode.any(LogicalMatchOperator.class),
+                        PatternNode.any(LogicalMatchOperator.class)));
     }
 
     public String getDescription() {
@@ -56,8 +56,8 @@ public class JoinCommutativeRule implements TransformRule, Serializable {
         LogicalJoinOperator newJoin = new LogicalJoinOperator(condition);
         LogicalMatchOperator newLeftMatch = new LogicalMatchOperator(rightMatchOpt.getSubRegex());
         LogicalMatchOperator newRightMatch = new LogicalMatchOperator(leftMatchOpt.getSubRegex());
-        OperatorNode leftOperatorNode = OperatorNode.create(newLeftMatch, rightMatchOpN.getTraitSet());
-        OperatorNode rightOperatorNode = OperatorNode.create(newRightMatch, leftMatchOpN.getTraitSet());
+        OperatorNode leftOperatorNode = OperatorNode.create(newLeftMatch, rightMatchOpN.getTraitSet(), rightMatchOpN.getInputs());
+        OperatorNode rightOperatorNode = OperatorNode.create(newRightMatch, leftMatchOpN.getTraitSet(), leftMatchOpN.getInputs());
 
         MetaSet leftMatchNode = MetaSet.create(leftOperatorNode);
         MetaSet rightMatchNode = MetaSet.create(rightOperatorNode);

@@ -29,7 +29,7 @@ public class VerifyToVerifySplitRule implements TransformRule, Serializable {
 
     public VerifyToVerifySplitRule() {
         this.description = this.getClass().getName();
-        this.mainPattern = PatternNode.any(PhysicalVerifyOperator.class, op -> isComposable(op));
+        this.mainPattern = PatternNode.any(LogicalVerifyOperator.class, op -> isComposable(op));
     }
 
     public String getDescription() {
@@ -87,12 +87,12 @@ public class VerifyToVerifySplitRule implements TransformRule, Serializable {
         return subRegexList;
     }
 
-    public static boolean isComposable(PhysicalVerifyOperator op) {
+    public static boolean isComposable(LogicalVerifyOperator op) {
 
         final String regex = op.getSubRegex();
         PublicRegexp re = PublicParser.parse(regex, PublicRE2.PERL);
         re = PublicSimplify.simplify(re);
-        return re.getOp() != PublicRegexp.PublicOp.CONCAT;
+        return re.getOp() == PublicRegexp.PublicOp.CONCAT;
     }
 
     @Override

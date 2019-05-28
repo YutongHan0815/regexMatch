@@ -109,6 +109,7 @@ public class OptimizerPlanner implements Serializable {
         }
 
         int newSetID = this.context.nextSetID();
+
         MetaSet newMetaSet = MetaSet.create(new ArrayList<>());
         this.sets.put(newSetID, newMetaSet);
 
@@ -143,11 +144,13 @@ public class OptimizerPlanner implements Serializable {
             }
             return duplicateOpID;
         }
+       // TODO: else invalid setID
 
         int newOperatorID = this.context.nextOperatorID();
         this.operators.put(newOperatorID, newOperator);
         this.sets.get(setID).addOperatorNode(newOperator);
         this.operatorToSet.put(newOperatorID, setID);
+
 
         // add backwards parent pointers from children to this
         newOperator.getInputs().stream().flatMap(subset -> subset.getOperators().stream()).forEach(child -> {

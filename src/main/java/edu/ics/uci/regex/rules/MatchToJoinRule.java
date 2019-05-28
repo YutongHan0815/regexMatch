@@ -22,7 +22,7 @@ public class MatchToJoinRule implements TransformRule, Serializable {
 
     public MatchToJoinRule() {
         this.description = this.getClass().getName();
-        this.mainPattern = PatternNode.any(PhysicalMatchOperator.class, op->isComposable(op));
+        this.mainPattern = PatternNode.any(LogicalMatchOperator.class, op->isComposable(op));
     }
 
     public String getDescription() {
@@ -48,8 +48,8 @@ public class MatchToJoinRule implements TransformRule, Serializable {
         LogicalMatchOperator newLeftMatch = new LogicalMatchOperator(subRegexList.get(0));
         LogicalMatchOperator newRightMatch = new LogicalMatchOperator(subRegexList.get(1));
 
-        OperatorNode leftOperatorNode = OperatorNode.create(newLeftMatch, logicalMatchOpN.getTraitSet());
-        OperatorNode rightOperatorNode = OperatorNode.create(newRightMatch, logicalMatchOpN.getTraitSet());
+        OperatorNode leftOperatorNode = OperatorNode.create(newLeftMatch, logicalMatchOpN.getTraitSet(), logicalMatchOpN.getInputs());
+        OperatorNode rightOperatorNode = OperatorNode.create(newRightMatch, logicalMatchOpN.getTraitSet(), logicalMatchOpN.getInputs());
         MetaSet leftMetaSet = MetaSet.create(leftOperatorNode);
         MetaSet rightMetaSet = MetaSet.create(rightOperatorNode);
 
@@ -85,12 +85,12 @@ public class MatchToJoinRule implements TransformRule, Serializable {
 
         return subRegexList;
     }
-    public static boolean isComposable(PhysicalMatchOperator op) {
+    public static boolean isComposable(LogicalMatchOperator op) {
 
         final String regex = op.getSubRegex();
         PublicRegexp re = PublicParser.parse(regex, PublicRE2.PERL);
         re = PublicSimplify.simplify(re);
-        return re.getOp() != PublicRegexp.PublicOp.CONCAT;
+        return re.getOp() == PublicRegexp.PublicOp.CONCAT;
     }
 
     @Override

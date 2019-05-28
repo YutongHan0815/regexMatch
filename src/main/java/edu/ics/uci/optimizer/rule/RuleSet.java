@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 public class RuleSet implements Serializable {
 
-    private static final ImmutableList<TransformRule> DEFAULT_RULES=
+    public static final ImmutableList<TransformRule> DEFAULT_RULES=
             ImmutableList.of(
                     LogicalJoinToPhysicalJoinRule.INSTANCE,
                     LogicalVerifyToPhysicalVerifyRule.INSTANCE,

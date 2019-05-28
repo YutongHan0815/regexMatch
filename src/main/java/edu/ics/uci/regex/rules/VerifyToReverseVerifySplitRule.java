@@ -26,7 +26,7 @@ public class VerifyToReverseVerifySplitRule implements TransformRule, Serializab
 
     public VerifyToReverseVerifySplitRule() {
         this.description = this.getClass().getName();
-        this.mainPattern = PatternNode.any(PhysicalVerifyOperator.class, op -> isComposable(op));
+        this.mainPattern = PatternNode.any(LogicalVerifyOperator.class, op -> isComposable(op));
     }
 
     public String getDescription() {
@@ -52,7 +52,7 @@ public class VerifyToReverseVerifySplitRule implements TransformRule, Serializab
         LogicalVerifyOperator newVerify0 = new LogicalVerifyOperator(subRegexList.get(0), VerifyCondition.VERIFY_BEFORE);
         LogicalVerifyOperator newVerify1 = new LogicalVerifyOperator(subRegexList.get(1), logicalVerifyOperator.getVerifyCondition());
 
-        OperatorNode verifyOperatorNode1 = OperatorNode.create(newVerify1, logicalVerifyOpN.getTraitSet());
+        OperatorNode verifyOperatorNode1 = OperatorNode.create(newVerify1, logicalVerifyOpN.getTraitSet(), logicalVerifyOpN.getInputs());
         MetaSet  verifyMetaSet = MetaSet.create(verifyOperatorNode1);
         SubsetNode verifySubsetNode = SubsetNode.create(verifyMetaSet, verifyOperatorNode1.getTraitSet());
         OperatorNode verifyOperatorNode0 = OperatorNode.create(newVerify0, verifyOperatorNode1.getTraitSet(), Collections.singletonList(verifySubsetNode));
@@ -82,12 +82,12 @@ public class VerifyToReverseVerifySplitRule implements TransformRule, Serializab
 
         return subRegexList;
     }
-    public static boolean isComposable(PhysicalVerifyOperator op) {
+    public static boolean isComposable(LogicalVerifyOperator op) {
 
         final String regex = op.getSubRegex();
         PublicRegexp re = PublicParser.parse(regex, PublicRE2.PERL);
         re = PublicSimplify.simplify(re);
-        return re.getOp() != PublicRegexp.PublicOp.CONCAT;
+        return re.getOp() == PublicRegexp.PublicOp.CONCAT;
     }
 
 

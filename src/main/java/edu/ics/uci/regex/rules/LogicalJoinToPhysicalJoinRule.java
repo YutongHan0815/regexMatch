@@ -35,15 +35,12 @@ public class LogicalJoinToPhysicalJoinRule implements TransformRule {
         final LogicalJoinOperator logicalJoinOperator = logicalJoinOpN.getOperator();
         final List<SubsetNode> inputs = logicalJoinOpN.getInputs();
 
-        if(inputs.stream().allMatch(subsetNode -> subsetNode.getTraitSet().equals(Convention.PHYSICAL))) {
+        PhysicalJoinOperator physicalJoinOperator = new PhysicalJoinOperator(logicalJoinOperator.getJoinCondition());
+        inputs.forEach(subsetNode -> subsetNode.getTraitSet().replace(Convention.PHYSICAL));
+        OperatorNode joinOperatorNode = OperatorNode.create(physicalJoinOperator,
+                logicalJoinOpN.getTraitSet().replace(Convention.PHYSICAL), inputs);
 
-            PhysicalJoinOperator physicalJoinOperator = new PhysicalJoinOperator(logicalJoinOperator.getJoinCondition());
-
-
-            OperatorNode joinOperatorNode = OperatorNode.create(physicalJoinOperator, logicalJoinOpN.getTraitSet().replace(Convention.PHYSICAL));
-
-            ruleCall.transformTo(joinOperatorNode);
-        }
+        ruleCall.transformTo(joinOperatorNode);
 
     }
 

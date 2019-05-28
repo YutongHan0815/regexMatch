@@ -65,7 +65,6 @@ public class RuleMatcher implements Serializable {
             patternOrdinals.put(patternNode, ordinal);
             ordinal++;
         }
-
         BiMap<Integer, OperatorNode> matchedOperators = HashBiMap.create();
 
         allPatternNodes.forEach(patternNode -> {
@@ -80,7 +79,6 @@ public class RuleMatcher implements Serializable {
             }
             matchedOperators.put(patternOrdinals.get(patternNode), matchedOperatorNode);
         });
-
 
         RuleCall ruleCall = new RuleCall(planner, rule, matchedOperators);
         return Optional.of(ruleCall);

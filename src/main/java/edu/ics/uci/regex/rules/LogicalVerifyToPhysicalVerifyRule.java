@@ -1,5 +1,6 @@
 package edu.ics.uci.regex.rules;
 
+import edu.ics.uci.optimizer.operator.SubsetNode;
 import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.TransformRule;
 import edu.ics.uci.regex.operators.LogicalVerifyOperator;
@@ -10,6 +11,7 @@ import edu.ics.uci.optimizer.rule.PatternNode;
 import edu.ics.uci.optimizer.triat.Convention;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class LogicalVerifyToPhysicalVerifyRule implements TransformRule, Serializable {
 
@@ -37,9 +39,12 @@ public class LogicalVerifyToPhysicalVerifyRule implements TransformRule, Seriali
     public void onMatch(RuleCall ruleCall) {
         final OperatorNode logicalVerifyOpN = ruleCall.getOperator(0);
         final LogicalVerifyOperator logicalVerifyOperator = logicalVerifyOpN.getOperator();
+        final List<SubsetNode> inputs = logicalVerifyOpN.getInputs();
+
         PhysicalVerifyOperator physicalVerifyOperator = new PhysicalVerifyOperator(
                 logicalVerifyOperator.getSubRegex(), logicalVerifyOperator.getVerifyCondition());
-        OperatorNode verifyOperatorNode = OperatorNode.create(physicalVerifyOperator, logicalVerifyOpN.getTraitSet().replace(Convention.PHYSICAL));
+        OperatorNode verifyOperatorNode = OperatorNode.create(physicalVerifyOperator,
+                logicalVerifyOpN.getTraitSet().replace(Convention.PHYSICAL),inputs);
 
         ruleCall.transformTo(verifyOperatorNode);
 

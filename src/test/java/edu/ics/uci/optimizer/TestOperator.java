@@ -11,6 +11,9 @@ public abstract class TestOperator implements Operator {
     public TestOperator(String property) {
         this.property = property;
     }
+    public String getDigest() {
+        return "TestOperator(" + property + ")";
+    }
 
     @Override
     public boolean equals(Object o) {

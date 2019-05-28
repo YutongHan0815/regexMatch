@@ -31,7 +31,7 @@ public class LogicalJoinOperator implements Operator, Serializable {
     public int hashCode() {
         return Objects.hash(joinCondition);
     }
-
+    @Override
     public String getDigest() {
         return "LogicalJoinOperator(" + joinCondition + ")";
     }

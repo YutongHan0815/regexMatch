@@ -1,11 +1,6 @@
 package edu.ics.uci.regex.regexMatcher;
 
 
-
-
-import edu.ics.uci.regex.RegexParser;
-
-
 public class RegexMatcher {
 
     private String regex;

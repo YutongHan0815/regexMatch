@@ -45,9 +45,9 @@ public class MatchToMatchVerifyRule implements TransformRule, Serializable {
 
         List<String> subRegexList = decompose(logicalMatchOperator);
 
-        LogicalVerifyOperator newVerify = new LogicalVerifyOperator(subRegexList.get(0), VerifyCondition.VERIFY_AFTER);
-        LogicalMatchOperator newMatch = new LogicalMatchOperator(subRegexList.get(1));
-        OperatorNode matchOperatorNode = OperatorNode.create(newMatch, logicalMatchOpN.getTraitSet());
+        LogicalVerifyOperator newVerify = new LogicalVerifyOperator(subRegexList.get(1), VerifyCondition.VERIFY_AFTER);
+        LogicalMatchOperator newMatch = new LogicalMatchOperator(subRegexList.get(0));
+        OperatorNode matchOperatorNode = OperatorNode.create(newMatch, logicalMatchOpN.getTraitSet(), logicalMatchOpN.getInputs());
         MetaSet matchMetaSet = MetaSet.create(matchOperatorNode);
         SubsetNode matchSubsetNode = SubsetNode.create(matchMetaSet, matchOperatorNode.getTraitSet());
         OperatorNode verifyOperatorNode = OperatorNode.create(newVerify, matchOperatorNode.getTraitSet(), Collections.singletonList(matchSubsetNode));
@@ -84,7 +84,7 @@ public class MatchToMatchVerifyRule implements TransformRule, Serializable {
         final String regex = op.getSubRegex();
         PublicRegexp re = PublicParser.parse(regex, PublicRE2.PERL);
         re = PublicSimplify.simplify(re);
-        return re.getOp() != PublicRegexp.PublicOp.CONCAT;
+        return re.getOp() == PublicRegexp.PublicOp.CONCAT;
     }
     @Override
     public boolean equals(Object o) {

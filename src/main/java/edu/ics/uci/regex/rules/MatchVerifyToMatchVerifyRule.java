@@ -20,8 +20,8 @@ public class MatchVerifyToMatchVerifyRule implements TransformRule, Serializable
 
     public MatchVerifyToMatchVerifyRule() {
         this.description = this.getClass().getName();
-        this.mainPattern = PatternNode.exact(PhysicalVerifyOperator.class,
-                Arrays.asList(PatternNode.any(PhysicalMatchOperator.class)));
+        this.mainPattern = PatternNode.exact(LogicalVerifyOperator.class,
+                Arrays.asList(PatternNode.any(LogicalMatchOperator.class)));
     }
     @Override
     public PatternNode getMatchPattern() {
@@ -31,8 +31,8 @@ public class MatchVerifyToMatchVerifyRule implements TransformRule, Serializable
     @Override
     public void onMatch(RuleCall ruleCall) {
 
-        final OperatorNode logicalMatchOpN = ruleCall.getOperator(0);
-        final OperatorNode logicalVerifyOpN = ruleCall.getOperator(1);
+        final OperatorNode logicalVerifyOpN = ruleCall.getOperator(0);
+        final OperatorNode logicalMatchOpN= ruleCall.getOperator(1);
 
         final LogicalMatchOperator logicalMatchOperator = logicalMatchOpN.getOperator();
         final LogicalVerifyOperator logicalVerifyOperator = logicalVerifyOpN.getOperator();
@@ -40,7 +40,7 @@ public class MatchVerifyToMatchVerifyRule implements TransformRule, Serializable
         LogicalVerifyOperator newVerify = new LogicalVerifyOperator(logicalMatchOperator.getSubRegex(), VerifyCondition.VERIFY_BEFORE);
         LogicalMatchOperator newMatch = new LogicalMatchOperator(logicalVerifyOperator.getSubRegex());
 
-        OperatorNode matchOperatorNode = OperatorNode.create(newMatch, logicalMatchOpN.getTraitSet());
+        OperatorNode matchOperatorNode = OperatorNode.create(newMatch, logicalMatchOpN.getTraitSet(), logicalMatchOpN.getInputs());
 
         MetaSet matchMetaSet = MetaSet.create(matchOperatorNode);
         SubsetNode matchSubsetNode = SubsetNode.create(matchMetaSet, matchOperatorNode.getTraitSet());
