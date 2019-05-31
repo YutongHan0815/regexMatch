@@ -151,6 +151,15 @@ public class OptimizerPlanner implements Serializable {
         }
        // TODO: else invalid setID
 
+        //add forwards parents pointers from this to parents
+        Set<OperatorNode> operatorNodes = this.getSets().get(setID).getOperators();
+        Set<OperatorNode> parents = new HashSet<>();
+        operatorNodes.forEach(operatorNode -> {
+            parents.addAll(this.operatorParentMap.get(operatorNode));
+        });
+        parents.forEach(parent->this.operatorParentMap.put(newOperator, parent));
+
+        // new operatorNode
         int newOperatorID = this.context.nextOperatorID();
         this.operators.put(newOperatorID, newOperator);
         this.sets.get(setID).addOperatorNode(newOperator);
@@ -160,6 +169,10 @@ public class OptimizerPlanner implements Serializable {
         newOperator.getInputs().stream().flatMap(subset -> subset.getOperators().stream()).forEach(child -> {
             this.operatorParentMap.put(child, newOperator);
         });
+
+
+
+
 
         fireRules(newOperator);
 

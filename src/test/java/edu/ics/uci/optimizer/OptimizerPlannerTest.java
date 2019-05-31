@@ -440,7 +440,6 @@ public class OptimizerPlannerTest {
     /**
      * Test RuleCall Join Rules
      */
-    //TODO
     @Test
     public void testRuleCallMultiJoinRule() {
         SubsetNode root = constructSimpleChain(planner, new LogicalMatchOperator("[0-9]+PM"));
@@ -469,11 +468,7 @@ public class OptimizerPlannerTest {
         planner.addRule(MatchVerifyToMatchVerifyRule.INSTANCE);
         planner.setRoot(root);
         planner.optimize();
-/*
-        Iterator<OperatorNode> iterator = planner.getOperators().values().iterator();
-        while (iterator.hasNext())
-            System.out.println(iterator.next().getOperator().getDigest());
-*/
+
         assertEquals(0, planner.getRuleCallQueue().size());
         assertEquals(5, planner.getOperators().size());
     }
@@ -527,9 +522,15 @@ public class OptimizerPlannerTest {
         assertEquals(0, planner.getRuleCallQueue().size());
     }
     @Test
-    //TODO
     public void testMatchAscending() {
+        SubsetNode root = constructSimpleChain(planner, new LogicalMatchOperator("a1"), new LogicalVerifyOperator("b1", Condition.AFTER));
 
+        planner.addRule(MatchVerifyToMatchVerifyRule.INSTANCE);
+        planner.setRoot(root);
+
+        OperatorNode operatorNodeA = OperatorNode.create(new LogicalMatchOperator("a2"), planner.defaultTraitSet());
+        planner.registerOperator(operatorNodeA, 1);
+        assertEquals(1, planner.getRuleCallQueue().size());
 
     }
 
@@ -540,6 +541,7 @@ public class OptimizerPlannerTest {
         RuleSet.DEFAULT_RULES.stream().forEach(transformRule -> planner.addRule(transformRule));
         planner.setRoot(root);
         planner.optimize();
+        System.out.println(planner.getOperators().size());
         assertEquals(0, planner.getRuleCallQueue().size());
     }
 
