@@ -3,6 +3,7 @@ package edu.ics.uci.optimizer.operator;
 import edu.ics.uci.optimizer.triat.TraitSet;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -40,4 +41,18 @@ public class SubsetNode implements Serializable {
         visitor.visitSetNode(this);
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SubsetNode that = (SubsetNode) o;
+        return Objects.equals(metaSet, that.metaSet) &&
+                Objects.equals(traitSet, that.traitSet);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(metaSet, traitSet);
+    }
 }

@@ -6,13 +6,12 @@ import com.google.re2j.PublicRegexp;
 import com.google.re2j.PublicSimplify;
 
 import edu.ics.uci.optimizer.rule.RuleCall;
+import edu.ics.uci.optimizer.rule.PatternNode;
 import edu.ics.uci.optimizer.rule.TransformRule;
+import edu.ics.uci.regex.operators.Condition;
 import edu.ics.uci.regex.operators.LogicalVerifyOperator;
-import edu.ics.uci.regex.operators.PhysicalVerifyOperator;
-import edu.ics.uci.regex.operators.VerifyCondition;
 import edu.ics.uci.optimizer.operator.MetaSet;
 import edu.ics.uci.optimizer.operator.OperatorNode;
-import edu.ics.uci.optimizer.rule.PatternNode;
 import edu.ics.uci.optimizer.operator.SubsetNode;
 
 
@@ -52,8 +51,8 @@ public class VerifyToVerifySplitRule implements TransformRule, Serializable {
 
         List<String> subRegexList = decompose(logicalVerifyOperator);
 
-        LogicalVerifyOperator newVerify0 = new LogicalVerifyOperator(subRegexList.get(1), VerifyCondition.VERIFY_AFTER);
-        LogicalVerifyOperator newVerify1 = new LogicalVerifyOperator(subRegexList.get(0), logicalVerifyOperator.getVerifyCondition());
+        LogicalVerifyOperator newVerify0 = new LogicalVerifyOperator(subRegexList.get(1), Condition.AFTER);
+        LogicalVerifyOperator newVerify1 = new LogicalVerifyOperator(subRegexList.get(0), logicalVerifyOperator.getCondition());
 
         OperatorNode verifyOperatorNode1 = OperatorNode.create(newVerify1, logicalVerifyOpN.getTraitSet());
         MetaSet verifyMetaSet = MetaSet.create(verifyOperatorNode1);

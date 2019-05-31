@@ -11,15 +11,14 @@ public class RuleSet implements Serializable {
 
     public static final ImmutableList<TransformRule> DEFAULT_RULES=
             ImmutableList.of(
-                    LogicalJoinToPhysicalJoinRule.INSTANCE,
-                    LogicalVerifyToPhysicalVerifyRule.INSTANCE,
-                    LogicalMatchToPhysicalMatchRule.INSTANCE,
                     JoinCommutativeRule.INSTANCE,
-                    MatchToMatchVerifyRule.INSTANCE,
+                    //MatchToMatchVerifyRule.INSTANCE,
                     MatchToJoinRule.INSTANCE,
-                    MatchVerifyToMatchVerifyRule.INSTANCE,
-                    VerifyToVerifySplitRule.INSTANCE,
-                    VerifyToReverseVerifySplitRule.INSTANCE
+//                    VerifyToVerifySplitRule.INSTANCE,
+//                    VerifyToReverseVerifySplitRule.INSTANCE,
+                   // LogicalJoinToPhysicalJoinRule.INSTANCE,
+                    //LogicalVerifyToPhysicalVerifyRule.INSTANCE,
+                    LogicalMatchToPhysicalMatchRule.INSTANCE
             );
 
 }

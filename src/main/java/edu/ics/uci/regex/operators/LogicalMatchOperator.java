@@ -35,7 +35,7 @@ public class LogicalMatchOperator implements Operator, Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getDigest());
+        return Objects.hash(subRegex);
     }
 
     public String getDigest() {

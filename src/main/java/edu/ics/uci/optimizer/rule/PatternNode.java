@@ -33,24 +33,24 @@ public class PatternNode implements Serializable {
         this.childrenPolicy = childrenPolicy;
     }
 
-    public static <T extends Operator> PatternNode leaf(Class<? extends Operator> operatorClass) {
+    public static <T extends Operator> PatternNode leaf(Class<T> operatorClass) {
         return leaf(operatorClass, op -> true);
     }
 
-    public static <T extends Operator> PatternNode leaf(Class<? extends Operator> operatorClass, Predicate<T> predicate) {
-        return exact(operatorClass, op -> true, new ArrayList<>());
+    public static <T extends Operator> PatternNode leaf(Class<T> operatorClass, Predicate<T> predicate) {
+        return exact(operatorClass, predicate, new ArrayList<>());
     }
 
-    public static <T extends Operator> PatternNode exact(Class<? extends Operator> operatorClass, PatternNode children) {
+    public static <T extends Operator> PatternNode exact(Class<T> operatorClass, PatternNode children) {
         return exact(operatorClass, op -> true, Collections.singletonList(children));
     }
 
-    public static <T extends Operator> PatternNode exact(Class<? extends Operator> operatorClass, List<PatternNode> children) {
+    public static <T extends Operator> PatternNode exact(Class<T> operatorClass, List<PatternNode> children) {
         return exact(operatorClass, op -> true, children);
     }
 
-    public static <T extends Operator> PatternNode exact(Class<? extends Operator> operatorClass,
-                                    Predicate<? extends Operator> predicate, List<PatternNode> children) {
+    public static <T extends Operator> PatternNode exact(Class<T> operatorClass,
+                                                         Predicate<T> predicate, List<PatternNode> children) {
         return new PatternNode(operatorClass, predicate, children, ChildrenPolicy.EXACT);
     }
 

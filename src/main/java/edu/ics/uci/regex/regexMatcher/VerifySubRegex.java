@@ -1,6 +1,6 @@
 package edu.ics.uci.regex.regexMatcher;
 
-import edu.ics.uci.regex.operators.VerifyCondition;
+import edu.ics.uci.regex.operators.Condition;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -8,19 +8,19 @@ import java.util.List;
 import java.util.regex.Matcher;
 
 public class VerifySubRegex implements MatchRegex, Serializable {
-    private final VerifyCondition condition;
+    private final Condition condition;
     private final boolean verifyOr;
     private final String fieldValue;
     private final String regex;
 
-    public VerifySubRegex(VerifyCondition condition, boolean verifyOr, String fieldValue, String regex) {
+    public VerifySubRegex(Condition condition, boolean verifyOr, String fieldValue, String regex) {
         this.condition = condition;
         this.verifyOr = verifyOr;
         this.fieldValue = fieldValue;
         this.regex = regex;
     }
 
-    public VerifyCondition getCondition() {
+    public Condition getCondition() {
         return condition;
     }
 
@@ -37,7 +37,7 @@ public class VerifySubRegex implements MatchRegex, Serializable {
     }
 
 
-    // VerifyCondition: AFTER verifyOr = true
+    // Condition: AFTER verifyOr = true
     public List<Span> verifyResultsAFTER(List<Span> spanList) {
 
         List<Span> matchingResults = new ArrayList<>();
@@ -55,7 +55,7 @@ public class VerifySubRegex implements MatchRegex, Serializable {
 
     }
 
-    // VerifyCondition: AFTER verifyOr = false
+    // Condition: AFTER verifyOr = false
     public List<Span> verifyResultsAFTEROr(List<Span> spanList) {
         List<Span> matchingResults = new ArrayList<>();
         String reverseFieldValue = RegexMatchUtils.getReverseFieldValue(fieldValue);
@@ -71,7 +71,7 @@ public class VerifySubRegex implements MatchRegex, Serializable {
         return matchingResults;
     }
 
-    //VerifyCondition: BEFORE verifyOr = false
+    //Condition: BEFORE verifyOr = false
     public List<Span> verifyResultsBEFORE(List<Span> spanList) {
         List<Span> matchingResults = new ArrayList<>();
         String reverseFieldValue = RegexMatchUtils.getReverseFieldValue(fieldValue);
@@ -89,7 +89,7 @@ public class VerifySubRegex implements MatchRegex, Serializable {
 
     }
 
-    //VerifyCondition: BEFORE verifyOr = true
+    //Condition: BEFORE verifyOr = true
     public  List<Span> verifyResultsBEFOREOr(List<Span> spanList) {
         List<Span> matchingResults = new ArrayList<>();
 
@@ -104,7 +104,7 @@ public class VerifySubRegex implements MatchRegex, Serializable {
         return matchingResults;
 
     }
-    //VerifyCondition: EQUAL verifyOr = true
+    //Condition: EQUAL verifyOr = true
     public List<Span> verifyResultsEQUAL(List<Span> spanList) {
 
         List<Span> matchingResults = new ArrayList<>();
@@ -119,7 +119,7 @@ public class VerifySubRegex implements MatchRegex, Serializable {
         return matchingResults;
 
     }
-    //VerifyCondition: EQUAL verifyOr = false
+    //Condition: EQUAL verifyOr = false
     public List<Span> verifyResultsEQUALOr(List<Span> spanList) {
         List<Span> matchingResults = new ArrayList<>();
         String reverseFieldValue = RegexMatchUtils.getReverseFieldValue(fieldValue);

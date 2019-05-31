@@ -8,19 +8,19 @@ import java.util.Objects;
 public class LogicalVerifyOperator implements Operator, Serializable {
 
     private final String subRegex;
-    private final VerifyCondition verifyCondition;
+    private final Condition condition;
 
-    public LogicalVerifyOperator(String subRegex, VerifyCondition verifyCondition) {
+    public LogicalVerifyOperator(String subRegex, Condition condition) {
         this.subRegex = subRegex;
-        this.verifyCondition = verifyCondition;
+        this.condition = condition;
     }
 
     public String getSubRegex() {
         return subRegex;
     }
 
-    public VerifyCondition getVerifyCondition() {
-        return verifyCondition;
+    public Condition getCondition() {
+        return condition;
     }
 
     @Override
@@ -28,18 +28,17 @@ public class LogicalVerifyOperator implements Operator, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LogicalVerifyOperator that = (LogicalVerifyOperator) o;
-        return subRegex.equals(that.subRegex) &&
-                verifyCondition == that.verifyCondition;
+        return Objects.equals(subRegex, that.subRegex) &&
+                condition == that.condition;
     }
-
 
     @Override
     public int hashCode() {
-        return Objects.hash(getDigest());
+        return Objects.hash(subRegex, condition);
     }
 
     public String getDigest() {
-        return "LogicalVerifyOperator(" + subRegex + verifyCondition+ ")";
+        return "LogicalVerifyOperator(" + subRegex + condition + ")";
     }
 
 

@@ -8,9 +8,6 @@ import com.google.common.collect.Multimap;
 import edu.ics.uci.optimizer.OptimizerPlanner;
 import edu.ics.uci.optimizer.operator.OperatorNode;
 import edu.ics.uci.optimizer.operator.SubsetNode;
-import edu.ics.uci.optimizer.rule.PatternNode;
-import edu.ics.uci.optimizer.rule.RuleCall;
-import edu.ics.uci.optimizer.rule.TransformRule;
 
 import java.io.Serializable;
 import java.util.*;
@@ -54,7 +51,6 @@ public class RuleMatcher implements Serializable {
         }
 
         BiMap<PatternNode, Integer> patternOrdinals = HashBiMap.create();
-
         int ordinal = 0;
         Queue<PatternNode> toVisit = new LinkedList<>();
         toVisit.add(rule.getMatchPattern());
@@ -67,9 +63,9 @@ public class RuleMatcher implements Serializable {
         }
         BiMap<Integer, OperatorNode> matchedOperators = HashBiMap.create();
 
-        allPatternNodes.forEach(patternNode -> {
+        for (PatternNode patternNode : allPatternNodes) {
             Collection<OperatorNode> operatorNodes = this.lookupTable.get(patternNode);
-            Verify.verify(! operatorNodes.isEmpty());
+            Verify.verify(!operatorNodes.isEmpty());
             if (operatorNodes.size() > 1) {
                 throw new UnsupportedOperationException("matching multiple edu.ics.uci.regex.operators per pattern node not implemented");
             }
@@ -77,8 +73,8 @@ public class RuleMatcher implements Serializable {
             if (temporaryOperators.containsKey(matchedOperatorNode)) {
                 matchedOperatorNode = temporaryOperators.get(matchedOperatorNode);
             }
-            matchedOperators.put(patternOrdinals.get(patternNode), matchedOperatorNode);
-        });
+             matchedOperators.put(patternOrdinals.get(patternNode), matchedOperatorNode);
+        }
 
         RuleCall ruleCall = new RuleCall(planner, rule, matchedOperators);
         return Optional.of(ruleCall);

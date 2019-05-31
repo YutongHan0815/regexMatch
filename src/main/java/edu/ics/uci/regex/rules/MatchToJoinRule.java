@@ -4,12 +4,12 @@ import com.google.re2j.PublicParser;
 import com.google.re2j.PublicRE2;
 import com.google.re2j.PublicRegexp;
 import com.google.re2j.PublicSimplify;
+import edu.ics.uci.optimizer.rule.PatternNode;
 import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.TransformRule;
 import edu.ics.uci.regex.operators.*;
 import edu.ics.uci.optimizer.operator.MetaSet;
 import edu.ics.uci.optimizer.operator.OperatorNode;
-import edu.ics.uci.optimizer.rule.PatternNode;
 import edu.ics.uci.optimizer.operator.SubsetNode;
 
 import java.io.Serializable;
@@ -43,7 +43,7 @@ public class MatchToJoinRule implements TransformRule, Serializable {
         final OperatorNode logicalMatchOpN = ruleCall.getOperator(0);
         final LogicalMatchOperator logicalMatchOperator = logicalMatchOpN.getOperator();
 
-        LogicalJoinOperator newJoin = new LogicalJoinOperator(JoinCondition.JOIN_AFTER);
+        LogicalJoinOperator newJoin = new LogicalJoinOperator(Condition.AFTER);
         List<String> subRegexList = decompose(logicalMatchOperator);
         LogicalMatchOperator newLeftMatch = new LogicalMatchOperator(subRegexList.get(0));
         LogicalMatchOperator newRightMatch = new LogicalMatchOperator(subRegexList.get(1));
