@@ -1,4 +1,4 @@
-package regexMatcherTest;
+package edu.ics.uci.regex;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -4,12 +4,12 @@ import com.google.re2j.PublicParser;
 import com.google.re2j.PublicRE2;
 import com.google.re2j.PublicRegexp;
 import com.google.re2j.PublicSimplify;
+import edu.ics.uci.optimizer.rule.PatternNode;
 import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.TransformRule;
 import edu.ics.uci.regex.operators.*;
 import edu.ics.uci.optimizer.operator.MetaSet;
 import edu.ics.uci.optimizer.operator.OperatorNode;
-import edu.ics.uci.optimizer.rule.PatternNode;
 import edu.ics.uci.optimizer.operator.SubsetNode;
 
 import java.io.Serializable;
@@ -26,7 +26,7 @@ public class VerifyToReverseVerifySplitRule implements TransformRule, Serializab
 
     public VerifyToReverseVerifySplitRule() {
         this.description = this.getClass().getName();
-        this.mainPattern = PatternNode.any(PhysicalVerifyOperator.class, op -> isComposable(op));
+        this.mainPattern = PatternNode.any(LogicalVerifyOperator.class, op -> isComposable(op));
     }
 
     public String getDescription() {
@@ -48,11 +48,11 @@ public class VerifyToReverseVerifySplitRule implements TransformRule, Serializab
         final LogicalVerifyOperator logicalVerifyOperator = logicalVerifyOpN.getOperator();
 
         List<String> subRegexList = decompose(logicalVerifyOperator);
+        //TODO Condition of newVerify Operators
+        LogicalVerifyOperator newVerify0 = new LogicalVerifyOperator(subRegexList.get(0), Condition.BEFORE);
+        LogicalVerifyOperator newVerify1 = new LogicalVerifyOperator(subRegexList.get(1), logicalVerifyOperator.getCondition());
 
-        LogicalVerifyOperator newVerify0 = new LogicalVerifyOperator(subRegexList.get(0), VerifyCondition.VERIFY_BEFORE);
-        LogicalVerifyOperator newVerify1 = new LogicalVerifyOperator(subRegexList.get(1), logicalVerifyOperator.getVerifyCondition());
-
-        OperatorNode verifyOperatorNode1 = OperatorNode.create(newVerify1, logicalVerifyOpN.getTraitSet());
+        OperatorNode verifyOperatorNode1 = OperatorNode.create(newVerify1, logicalVerifyOpN.getTraitSet(), logicalVerifyOpN.getInputs());
         MetaSet  verifyMetaSet = MetaSet.create(verifyOperatorNode1);
         SubsetNode verifySubsetNode = SubsetNode.create(verifyMetaSet, verifyOperatorNode1.getTraitSet());
         OperatorNode verifyOperatorNode0 = OperatorNode.create(newVerify0, verifyOperatorNode1.getTraitSet(), Collections.singletonList(verifySubsetNode));
@@ -82,12 +82,12 @@ public class VerifyToReverseVerifySplitRule implements TransformRule, Serializab
 
         return subRegexList;
     }
-    public static boolean isComposable(PhysicalVerifyOperator op) {
+    public static boolean isComposable(LogicalVerifyOperator op) {
 
         final String regex = op.getSubRegex();
         PublicRegexp re = PublicParser.parse(regex, PublicRE2.PERL);
         re = PublicSimplify.simplify(re);
-        return re.getOp() != PublicRegexp.PublicOp.CONCAT;
+        return re.getOp() == PublicRegexp.PublicOp.CONCAT;
     }
 
 

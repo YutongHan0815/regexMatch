@@ -1,9 +1,13 @@
-package edu.ics.uci.regex;
+package edu.ics.uci.regex.regexMatcher;
 
 import com.google.re2j.PublicParser;
 import com.google.re2j.PublicRE2;
 import com.google.re2j.PublicRegexp;
 import com.google.re2j.PublicSimplify;
+import edu.ics.uci.optimizer.operator.OperatorNode;
+import edu.ics.uci.optimizer.operator.SubsetNode;
+import edu.ics.uci.optimizer.triat.Convention;
+import edu.ics.uci.optimizer.triat.TraitSet;
 import edu.ics.uci.regex.operators.LogicalMatchOperator;
 import edu.ics.uci.regex.regexMatcher.SubRegex;
 
@@ -13,18 +17,21 @@ import java.util.List;
 
 public class RegexParser {
 
-    private String regex;
+    private final String regex;
 
 
 
-    public RegexParser(String regex){
+    public RegexParser(String regex) {
         this.regex = regex;
 
     }
-    // transform a query regex Q into logicalMatch(Q)
-    public void parser(){
+    // transform a query regex Q into SubSetNode
+    public SubsetNode parser() {
 
         LogicalMatchOperator mainLogMatchOpt = new LogicalMatchOperator(regex);
+        OperatorNode operatorNode= OperatorNode.create(mainLogMatchOpt, TraitSet.of(Convention.LOGICAL));
+        SubsetNode root = SubsetNode.create(operatorNode);
+        return root;
 
     }
 

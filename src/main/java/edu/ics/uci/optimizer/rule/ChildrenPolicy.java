@@ -11,5 +11,6 @@ public enum ChildrenPolicy {
      * child operands, in order.
      */
     EXACT,
+    LEAF,
 
 }

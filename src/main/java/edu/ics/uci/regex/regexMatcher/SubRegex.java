@@ -1,8 +1,5 @@
 package edu.ics.uci.regex.regexMatcher;
 
-
-//import com.google.re2j.Pattern;
-
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -13,9 +10,6 @@ public class SubRegex extends AbstractSubSequence{
         Low
     }
     Pattern regexPattern;
-    Pattern startWithRegexPattern;
-    Pattern startToEndRegexPattern;
-    Pattern endWithRegexPattern;
     String regex;
     ComplexityLevel complexity;
     SubRegex reverseSubRegex;
@@ -24,19 +18,12 @@ public class SubRegex extends AbstractSubSequence{
     int maxlength;
     int originalSubId;
 
-    public Double getSelectivity() {
-        return selectivity;
-    }
-
     public SubRegex(String regex){
         super(-1, -1);
         super.setOriginalSubCount(-1);
         this.regex = regex;
         originalSubId = 0;
         regexPattern = null;
-        startWithRegexPattern = null;
-        startToEndRegexPattern = null;
-        endWithRegexPattern = null;
         this.complexity = ComplexityLevel.High;
         reverseSubRegex = null;
         minLength = 0;
@@ -46,25 +33,10 @@ public class SubRegex extends AbstractSubSequence{
     }
 
 
-    public String getsubRegexPredicate() {
-        return regex;
-    }
-
-    public void setRegex(String predicate) {
-        this.regex = predicate;
-    }
-
-    public void setSelectivity(Double selectivity) {
-        this.selectivity = selectivity;
-    }
-
     public SubRegex(String regex, int startingCSRIndex, int numberOfCSRs, ComplexityLevel complexity, int  originalSubId, int minLength, int maxlength){
         super(startingCSRIndex, numberOfCSRs);
         super.setOriginalSubCount(0);
         regexPattern = regexPattern.compile(regex);
-        startWithRegexPattern = startWithRegexPattern.compile("^" + regex);
-        startToEndRegexPattern = startToEndRegexPattern.compile("^" + regex + "$");
-        endWithRegexPattern = endWithRegexPattern.compile(regex + "$");
         this.regex = regex;
         this.complexity = complexity;
         this.reverseSubRegex = reverseSubRegex;
@@ -74,6 +46,62 @@ public class SubRegex extends AbstractSubSequence{
         this.originalSubId = originalSubId;
         selectivity = 0d;
 
+    }
+
+    public Pattern getRegexPattern() {
+        return regexPattern;
+    }
+
+    public void setRegexPattern(Pattern regexPattern) {
+        this.regexPattern = regexPattern;
+    }
+
+    public String getRegex() {
+        return regex;
+    }
+
+    public void setRegex(String regex) {
+        this.regex = regex;
+    }
+
+    public ComplexityLevel getComplexity() {
+        return complexity;
+    }
+
+    public void setComplexity(ComplexityLevel complexity) {
+        this.complexity = complexity;
+    }
+
+    public Double getSelectivity() {
+        return selectivity;
+    }
+
+    public void setSelectivity(Double selectivity) {
+        this.selectivity = selectivity;
+    }
+
+    public int getMinLength() {
+        return minLength;
+    }
+
+    public void setMinLength(int minLength) {
+        this.minLength = minLength;
+    }
+
+    public int getMaxlength() {
+        return maxlength;
+    }
+
+    public void setMaxlength(int maxlength) {
+        this.maxlength = maxlength;
+    }
+
+    public int getOriginalSubId() {
+        return originalSubId;
+    }
+
+    public void setOriginalSubId(int originalSubId) {
+        this.originalSubId = originalSubId;
     }
 
     public void setOriginalSubCount(int count){
@@ -108,6 +136,7 @@ public class SubRegex extends AbstractSubSequence{
     public boolean isSubRegex() {
         return true;
     }
+
 
 
 }

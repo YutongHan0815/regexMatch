@@ -14,9 +14,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 
 public class OptimizerPlanner implements Serializable {
@@ -82,22 +84,25 @@ public class OptimizerPlanner implements Serializable {
      */
     private int registerNewSet(@NotNull MetaSet set) {
 
-        List<Integer> existingEquivSets = set.getOperators().stream()
+        Set<Integer> existingEquivSets = set.getOperators().stream()
                 .filter(op -> this.operators.containsValue(op))
                 .map(op -> this.operatorToSet.get(this.operators.inverse().get(op)))
-                .collect(toList());
+                .collect(toSet());
 
         if (! (existingEquivSets.size() == 0 || existingEquivSets.size() == 1)) {
             throw new UnsupportedOperationException("TODO: a set equivalent to multiple other sets is not handled yet");
+
+
         }
 
         if (existingEquivSets.size() == 1) {
-            int currentSetID = existingEquivSets.get(0);
+            int currentSetID = existingEquivSets.iterator().next();
             set.getOperators().forEach(op -> this.sets.get(currentSetID).addOperatorNode(op));
             return currentSetID;
         }
 
         int newSetID = this.context.nextSetID();
+
         MetaSet newMetaSet = MetaSet.create(new ArrayList<>());
         this.sets.put(newSetID, newMetaSet);
 
@@ -124,15 +129,26 @@ public class OptimizerPlanner implements Serializable {
         OperatorNode newOperator = OperatorNode.create(operator.getOperator(), operator.getTraitSet(), registeredChildren);
 
         // check duplicate
-        if (this.operators.values().contains(newOperator)) {
-            int duplicateOpID = this.operators.inverse().get(newOperator);
+       // if (this.operators.values().contains(newOperator)) {
+            if(this.getOperators().values().contains(newOperator)){
+            int duplicateOpID = this.getOperators().inverse().get(newOperator);
             int duplicateOpSet = this.operatorToSet.get(duplicateOpID);
             if (duplicateOpSet != setID) {
                 throw new UnsupportedOperationException("TODO: set merge is not implemented yet");
             }
             return duplicateOpID;
         }
+       // TODO: else invalid setID
 
+        //add forwards parents pointers from this to parents
+        Set<OperatorNode> operatorNodes = this.getSets().get(setID).getOperators();
+        Set<OperatorNode> parents = new HashSet<>();
+        operatorNodes.forEach(operatorNode -> {
+            parents.addAll(this.operatorParentMap.get(operatorNode));
+        });
+        parents.forEach(parent->this.operatorParentMap.put(newOperator, parent));
+
+        // new operatorNode
         int newOperatorID = this.context.nextOperatorID();
         this.operators.put(newOperatorID, newOperator);
         this.sets.get(setID).addOperatorNode(newOperator);
@@ -142,6 +158,10 @@ public class OptimizerPlanner implements Serializable {
         newOperator.getInputs().stream().flatMap(subset -> subset.getOperators().stream()).forEach(child -> {
             this.operatorParentMap.put(child, newOperator);
         });
+
+
+
+
 
         fireRules(newOperator);
 

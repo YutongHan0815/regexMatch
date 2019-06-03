@@ -12,26 +12,26 @@ import java.util.Objects;
 public class PhysicalVerifyOperator implements Operator, Serializable {
 
     private final String subRegex;
-    private final VerifyCondition verifyCondition;
+    private final Condition condition;
 
 
 
 
-    public PhysicalVerifyOperator(String subRegex, VerifyCondition verifyCondition) {
+    public PhysicalVerifyOperator(String subRegex, Condition condition) {
         Preconditions.checkNotNull(subRegex);
-        Preconditions.checkNotNull(verifyCondition);
+        Preconditions.checkNotNull(condition);
 
 
         this.subRegex = subRegex;
-        this.verifyCondition = verifyCondition;
+        this.condition = condition;
     }
 
     public String getSubRegex() {
         return subRegex;
     }
 
-    public VerifyCondition getVerifyCondition() {
-        return verifyCondition;
+    public Condition getCondition() {
+        return condition;
     }
 
 
@@ -42,7 +42,7 @@ public class PhysicalVerifyOperator implements Operator, Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         PhysicalVerifyOperator that = (PhysicalVerifyOperator) o;
         return subRegex.equals(that.subRegex) &&
-                verifyCondition == that.verifyCondition;
+                condition == that.condition;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class PhysicalVerifyOperator implements Operator, Serializable {
         return Objects.hash(getDigest());
     }
     public String getDigest() {
-        return "PhysicalVerifyOperator(subRegex=" + subRegex + verifyCondition + ")";
+        return "PhysicalVerifyOperator(subRegex=" + subRegex + condition + ")";
     }
 }
 

@@ -8,15 +8,15 @@ import java.util.Objects;
 
 public class LogicalJoinOperator implements Operator, Serializable {
 
-    private final JoinCondition joinCondition;
+    private final Condition condition;
 
-    public LogicalJoinOperator(JoinCondition joinCondition) {
-        Preconditions.checkNotNull(joinCondition);
-        this.joinCondition = joinCondition;
+    public LogicalJoinOperator(Condition condition) {
+        Preconditions.checkNotNull(condition);
+        this.condition = condition;
     }
 
-    public JoinCondition getJoinCondition() {
-        return joinCondition;
+    public Condition getCondition() {
+        return condition;
     }
 
     @Override
@@ -24,16 +24,16 @@ public class LogicalJoinOperator implements Operator, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LogicalJoinOperator that = (LogicalJoinOperator) o;
-        return joinCondition == that.joinCondition;
+        return condition == that.condition;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(joinCondition);
+        return Objects.hash(getDigest());
     }
-
+    @Override
     public String getDigest() {
-        return "LogicalJoinOperator(" + joinCondition + ")";
+        return "LogicalJoinOperator(" + condition + ")";
     }
 
 }

@@ -8,20 +8,20 @@ import java.util.Objects;
 
 public class PhysicalJoinOperator implements Operator, Serializable {
 
-    private final JoinCondition joinCondition;
+    private final Condition condition;
 
 
-    public PhysicalJoinOperator(JoinCondition joinCondition) {
-        Preconditions.checkNotNull(joinCondition);
+    public PhysicalJoinOperator(Condition condition) {
+        Preconditions.checkNotNull(condition);
 
-        this.joinCondition = joinCondition;
+        this.condition = condition;
 
     }
 
-
-    public JoinCondition getJoinCondition() {
-        return joinCondition;
+    public Condition getJoinCondition() {
+        return condition;
     }
+
 
 
     @Override
@@ -29,15 +29,15 @@ public class PhysicalJoinOperator implements Operator, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PhysicalJoinOperator that = (PhysicalJoinOperator) o;
-        return joinCondition.equals(that.joinCondition);
+        return condition == that.condition;
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(getDigest());
     }
+    @Override
     public String getDigest() {
-        return "PhysicalJoinOperator(" + joinCondition + ")";
+        return "PhysicalJoinOperator(" + condition + ")";
     }
-
 }
