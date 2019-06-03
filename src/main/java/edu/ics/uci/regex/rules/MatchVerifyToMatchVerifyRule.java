@@ -36,13 +36,15 @@ public class MatchVerifyToMatchVerifyRule implements TransformRule, Serializable
 
         final LogicalMatchOperator logicalMatchOperator = logicalMatchOpN.getOperator();
         final LogicalVerifyOperator logicalVerifyOperator = logicalVerifyOpN.getOperator();
+
         LogicalVerifyOperator newVerify = new LogicalVerifyOperator(logicalMatchOperator.getSubRegex(), Condition.BEFORE);
         LogicalMatchOperator newMatch = new LogicalMatchOperator(logicalVerifyOperator.getSubRegex());
+
         OperatorNode matchOperatorNode = OperatorNode.create(newMatch, logicalMatchOpN.getTraitSet(), logicalMatchOpN.getInputs());
 
         MetaSet matchMetaSet = MetaSet.create(matchOperatorNode);
         SubsetNode matchSubsetNode = SubsetNode.create(matchMetaSet, matchOperatorNode.getTraitSet());
-        OperatorNode verifyOperatorNode = OperatorNode.create(newVerify, matchOperatorNode.getTraitSet(), Collections.singletonList(matchSubsetNode));
+        OperatorNode verifyOperatorNode = OperatorNode.create(newVerify, matchOperatorNode.getTraitSet(), matchSubsetNode);
 
         ruleCall.transformTo(verifyOperatorNode);
 

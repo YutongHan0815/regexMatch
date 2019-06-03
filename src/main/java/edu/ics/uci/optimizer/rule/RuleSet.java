@@ -13,12 +13,15 @@ public class RuleSet implements Serializable {
             ImmutableList.of(
                     JoinCommutativeRule.INSTANCE,
                     MatchToMatchVerifyRule.INSTANCE,
+                    MatchVerifyToMatchVerifyRule.INSTANCE,
+                    MatchVerifyToReverseVerifyRule.INSTANCE,
                     MatchToJoinRule.INSTANCE,
                     VerifyToVerifySplitRule.INSTANCE,
-                    VerifyToReverseVerifySplitRule.INSTANCE,
                     LogicalJoinToPhysicalJoinRule.INSTANCE,
                     LogicalVerifyToPhysicalVerifyRule.INSTANCE,
-                    LogicalMatchToPhysicalMatchRule.INSTANCE
+                   LogicalMatchToPhysicalMatchRule.INSTANCE,
+                    VerifyToJoinRule.INSTANCE
+
             );
 
 }

@@ -22,8 +22,8 @@ public class OptimizerPlanTest {
         RuleSet.DEFAULT_RULES.forEach(rule -> optimizerPlanner.addRule(rule));
         optimizerPlanner.setRoot(root);
         //optimizerPlanner.optimize();
-        System.out.println(optimizerPlanner.getOperators().size());
-        System.out.println(optimizerPlanner.getSets().size());
+        System.out.println(optimizerPlanner.getAndOrTree().getOperators().size());
+        System.out.println(optimizerPlanner.getAndOrTree().getSets().size());
 
     }
 }

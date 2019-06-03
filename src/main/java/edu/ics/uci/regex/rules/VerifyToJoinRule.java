@@ -11,6 +11,7 @@ import edu.ics.uci.regex.operators.LogicalMatchOperator;
 import edu.ics.uci.regex.operators.LogicalVerifyOperator;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class VerifyToJoinRule implements TransformRule, Serializable {
@@ -42,15 +43,16 @@ public class VerifyToJoinRule implements TransformRule, Serializable {
         final OperatorNode logicalVerifyOpN = ruleCall.getOperator(0);
         final LogicalVerifyOperator logicalVerifyOperator = logicalVerifyOpN.getOperator();
         String subRegex = logicalVerifyOperator.getSubRegex();
-        List<SubsetNode> inputs = logicalVerifyOpN.getInputs();
+
 
         LogicalMatchOperator matchOperator= new LogicalMatchOperator(subRegex);
         OperatorNode newMatchOpN = OperatorNode.create(matchOperator, logicalVerifyOpN.getTraitSet());
         SubsetNode subsetNode = SubsetNode.create(newMatchOpN);
-
-        inputs.add(subsetNode);
+        List<SubsetNode> newSubsets = new ArrayList<>();
+        logicalVerifyOpN.getInputs().forEach(subsetNode1->newSubsets.add(subsetNode1));
+        newSubsets.add(subsetNode);
         LogicalJoinOperator joinOperator = new LogicalJoinOperator(logicalVerifyOperator.getCondition());
-        OperatorNode joinOperatorNode = OperatorNode.create(joinOperator, logicalVerifyOpN.getTraitSet(), inputs);
+        OperatorNode joinOperatorNode = OperatorNode.create(joinOperator, logicalVerifyOpN.getTraitSet(), newSubsets);
 
         ruleCall.transformTo(joinOperatorNode);
 

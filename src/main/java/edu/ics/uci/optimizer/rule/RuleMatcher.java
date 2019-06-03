@@ -99,7 +99,7 @@ public class RuleMatcher implements Serializable {
             return;
         }
 
-        Collection<OperatorNode> parents = planner.getOperatorParents(operatorNode);
+        Collection<OperatorNode> parents = planner.getAndOrTree().getOperatorParents(operatorNode);
 
         boolean parentAnyMatch = false;
         for (OperatorNode parent: parents) {

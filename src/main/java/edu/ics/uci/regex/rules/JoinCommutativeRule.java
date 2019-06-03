@@ -62,25 +62,9 @@ public class JoinCommutativeRule implements TransformRule, Serializable {
                 condition = Condition.GAP_AFTER;
                 break;
         }
-//
-//        final OperatorNode leftMatchOpN = ruleCall.getOperator(1);
-//        final OperatorNode rightMatchOpN = ruleCall.getOperator(2);
-//        final LogicalMatchOperator leftMatchOpt = leftMatchOpN.getOperator();
-//        final LogicalMatchOperator rightMatchOpt = rightMatchOpN.getOperator();
-//
-//
-          LogicalJoinOperator newJoin = new LogicalJoinOperator(condition);
-//        LogicalMatchOperator newLeftMatch = new LogicalMatchOperator(rightMatchOpt.getSubRegex());
-//        LogicalMatchOperator newRightMatch = new LogicalMatchOperator(leftMatchOpt.getSubRegex());
-//        OperatorNode leftOperatorNode = OperatorNode.create(newLeftMatch, rightMatchOpN.getTraitSet(), rightMatchOpN.getInputs());
-//        OperatorNode rightOperatorNode = OperatorNode.create(newRightMatch, leftMatchOpN.getTraitSet(), leftMatchOpN.getInputs());
-//
-//        MetaSet leftMatchNode = MetaSet.create(leftOperatorNode);
-//        MetaSet rightMatchNode = MetaSet.create(rightOperatorNode);
-//        SubsetNode leftSetNode = SubsetNode.create(leftMatchNode, leftOperatorNode.getTraitSet());
-//        SubsetNode rightSetNode = SubsetNode.create(rightMatchNode, rightOperatorNode.getTraitSet());
+        LogicalJoinOperator newJoin = new LogicalJoinOperator(condition);
 
-        OperatorNode joinOperatorNode = OperatorNode.create(newJoin, logicalJoinOpN.getTraitSet(),Arrays.asList(inputs.get(1), inputs.get(0)));
+        OperatorNode joinOperatorNode = OperatorNode.create(newJoin, logicalJoinOpN.getTraitSet(), Arrays.asList(inputs.get(1), inputs.get(0)));
 
         ruleCall.transformTo(joinOperatorNode);
 

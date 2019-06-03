@@ -29,7 +29,8 @@ public class RuleCall implements Serializable {
     }
 
     public void transformTo(OperatorNode equivalentOperator) {
-        this.planner.registerOperator(equivalentOperator, planner.getOperatorToSet().get(planner.getOperators().inverse().get(matchedOperators.get(0))));
+        int equivSetID = planner.getAndOrTree().getOperatorSetID(matchedOperators.get(0));
+        this.planner.registerOperator(equivalentOperator, equivSetID);
     }
 
     @Override

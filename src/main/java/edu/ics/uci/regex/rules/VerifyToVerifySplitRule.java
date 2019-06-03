@@ -5,6 +5,7 @@ import com.google.re2j.PublicRE2;
 import com.google.re2j.PublicRegexp;
 import com.google.re2j.PublicSimplify;
 
+import edu.ics.uci.optimizer.operator.Operator;
 import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.PatternNode;
 import edu.ics.uci.optimizer.rule.TransformRule;
@@ -28,7 +29,8 @@ public class VerifyToVerifySplitRule implements TransformRule, Serializable {
 
     public VerifyToVerifySplitRule() {
         this.description = this.getClass().getName();
-        this.mainPattern = PatternNode.any(LogicalVerifyOperator.class, op -> isComposable(op));
+        this.mainPattern = PatternNode.any(LogicalVerifyOperator.class,
+                op -> op.isComposable() && !op.getCondition().equals(Condition.EQUAL));
     }
 
     public String getDescription() {
@@ -49,7 +51,7 @@ public class VerifyToVerifySplitRule implements TransformRule, Serializable {
         final OperatorNode logicalVerifyOpN = ruleCall.getOperator(0);
         final LogicalVerifyOperator logicalVerifyOperator = logicalVerifyOpN.getOperator();
 
-        List<String> subRegexList = decompose(logicalVerifyOperator);
+        List<String> subRegexList = logicalVerifyOperator.decompose();
 
         LogicalVerifyOperator newVerify0 = new LogicalVerifyOperator(subRegexList.get(1), Condition.AFTER);
         LogicalVerifyOperator newVerify1 = new LogicalVerifyOperator(subRegexList.get(0), logicalVerifyOperator.getCondition());
@@ -63,36 +65,6 @@ public class VerifyToVerifySplitRule implements TransformRule, Serializable {
         ruleCall.transformTo(verifyOperatorNode0);
     }
 
-    public static List<String> decompose(LogicalVerifyOperator op) {
-        List<String> subRegexList = new ArrayList<>();
-
-        PublicRegexp re = PublicParser.parse(op.getSubRegex(), PublicRE2.PERL);
-        re = PublicSimplify.simplify(re);
-        if(re.getOp() != PublicRegexp.PublicOp.CONCAT) {
-
-        }
-        else {
-            PublicRegexp[] subs = re.getSubs();
-            String subRegex1 = subs[0].toString();
-            String subRegex2 = new String();
-            subRegexList.add(subRegex1);
-            for(int i=1; i<subs.length; i++) {
-                subRegex2 += subs[i].toString();
-            }
-            subRegexList.add(subRegex2);
-        }
-
-
-        return subRegexList;
-    }
-
-    public static boolean isComposable(LogicalVerifyOperator op) {
-
-        final String regex = op.getSubRegex();
-        PublicRegexp re = PublicParser.parse(regex, PublicRE2.PERL);
-        re = PublicSimplify.simplify(re);
-        return re.getOp() == PublicRegexp.PublicOp.CONCAT;
-    }
 
     @Override
     public boolean equals(Object o) {
