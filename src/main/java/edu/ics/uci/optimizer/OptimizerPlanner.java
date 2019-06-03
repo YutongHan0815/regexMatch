@@ -4,10 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.*;
 
 
-import edu.ics.uci.optimizer.operator.MetaSet;
-import edu.ics.uci.optimizer.operator.OperatorNode;
-import edu.ics.uci.optimizer.operator.SubsetNode;
-import edu.ics.uci.optimizer.operator.Operator;
+import edu.ics.uci.optimizer.operator.*;
 import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.RuleMatcher;
 import edu.ics.uci.optimizer.rule.TransformRule;
@@ -28,20 +25,12 @@ public class OptimizerPlanner implements Serializable {
 
     private final List<TraitDef> traitDefs = new ArrayList<>();
 
+    private final AndOrTree andOrTree = AndOrTree.create();
+
     private final Set<TransformRule> ruleSet = new HashSet<>();
     private final Multimap<Class<? extends Operator>, TransformRule> operatorRuleIndex = HashMultimap.create();
 
     private final Queue<RuleCall> ruleCallQueue = new ArrayDeque<>();
-
-
-    private SubsetNode root;
-
-    private final Map<Integer, MetaSet> sets = new HashMap<>();
-    private final BiMap<Integer, OperatorNode> operators = HashBiMap.create();
-    private final Map<Integer, Integer> operatorToSet = new HashMap<>();
-
-    private final Multimap<OperatorNode, OperatorNode> operatorParentMap = HashMultimap.create();
-
 
     public static OptimizerPlanner create() {
         return new OptimizerPlanner();
@@ -52,7 +41,7 @@ public class OptimizerPlanner implements Serializable {
     }
 
     public void setRoot(SubsetNode root) {
-        this.root = root;
+//        this.root = root;
         this.registerNewSet(root.getMetaSet());
     }
 
@@ -172,14 +161,6 @@ public class OptimizerPlanner implements Serializable {
         return context;
     }
 
-    public SubsetNode getRoot() {
-        return root;
-    }
-
-    public Collection<OperatorNode> getOperatorParents(OperatorNode operatorNode) {
-        return new HashSet<>(this.operatorParentMap.get(operatorNode));
-    }
-
     public List<TransformRule> getRuleSet() {
         return new ArrayList<>(ruleSet);
     }
@@ -188,15 +169,4 @@ public class OptimizerPlanner implements Serializable {
         return new LinkedList<>(ruleCallQueue);
     }
 
-    public Map<Integer, MetaSet> getSets() {
-        return new HashMap<>(sets);
-    }
-
-    public BiMap<Integer, OperatorNode> getOperators() {
-        return HashBiMap.create(operators);
-    }
-
-    public Map<Integer, Integer> getOperatorToSet() {
-        return new HashMap<>(operatorToSet);
-    }
 }
