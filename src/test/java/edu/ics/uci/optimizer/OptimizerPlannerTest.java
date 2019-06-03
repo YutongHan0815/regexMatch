@@ -70,10 +70,10 @@ public class OptimizerPlannerTest {
 
         planner.setRoot(root);
 
-        assertEquals(1, planner.getSets().size());
-        assertEquals(1, planner.getOperators().size());
-        assertEquals(planner.getSets().keySet().iterator().next(),
-                planner.getOperatorToSet().get(planner.getOperators().keySet().iterator().next()));
+        assertEquals(1, planner.getAndOrTree().getSets().size());
+        assertEquals(1, planner.getAndOrTree().getOperators().size());
+        assertEquals(planner.getAndOrTree().getSets().keySet().iterator().next(),
+                planner.getAndOrTree().getOperatorSetID(planner.getAndOrTree().getOperators().values().iterator().next()));
 
     }
 
@@ -95,8 +95,8 @@ public class OptimizerPlannerTest {
         assertEquals(new OperatorB("b1"), operatorNode1.getOperator());
         assertEquals(new OperatorA("a1"),
                 operatorNode1.getInputs().get(0).getOperators().iterator().next().getOperator());
-        assertEquals(3, planner.getSets().size());
-        assertEquals(3, planner.getOperators().size());
+        assertEquals(3, planner.getAndOrTree().getSets().size());
+        assertEquals(3, planner.getAndOrTree().getOperators().size());
 
     }
 
@@ -137,8 +137,8 @@ public class OptimizerPlannerTest {
         OperatorNode operatorNode = OperatorNode.create(new OperatorB("b1"), planner.defaultTraitSet());
         planner.registerOperator(operatorNode, 0);
 
-        assertEquals(2, planner.getOperators().size());
-        assertTrue(planner.getSets().get(0).getOperators().contains(operatorNode));
+        assertEquals(2, planner.getAndOrTree().getOperators().size());
+        assertTrue(planner.getAndOrTree().getSets().get(0).getOperators().contains(operatorNode));
 
 
 
@@ -164,9 +164,9 @@ public class OptimizerPlannerTest {
         planner.registerOperator(operatorNodeA, 0);
         planner.registerOperator(operatorNodeB, 0);
 
-        assertEquals(5, planner.getOperators().size());
-        assertTrue(planner.getSets().get(0).getOperators().contains(operatorNodeA));
-        assertTrue(planner.getSets().get(0).getOperators().contains(operatorNodeB));
+        assertEquals(5, planner.getAndOrTree().getOperators().size());
+        assertTrue(planner.getAndOrTree().getSets().get(0).getOperators().contains(operatorNodeA));
+        assertTrue(planner.getAndOrTree().getSets().get(0).getOperators().contains(operatorNodeB));
 
     }
 
@@ -183,7 +183,7 @@ public class OptimizerPlannerTest {
         OperatorNode operatorNodeA = OperatorNode.create(new OperatorA("a0"),planner.defaultTraitSet());
         planner.registerOperator(operatorNodeA, 1);
 
-        assertEquals(2, planner.getOperators().size());
+        assertEquals(2, planner.getAndOrTree().getOperators().size());
         assertEquals(1, subsetA.getOperators().size());
     }
 
@@ -207,7 +207,6 @@ public class OptimizerPlannerTest {
 
     /**
      *Test register a operator with a invalid SetID
-     * throw NullPointerException
      */
     @Test
     public void testRegisterWithInvalidSetID() {
@@ -218,7 +217,7 @@ public class OptimizerPlannerTest {
 
         OperatorNode operatorNodeB = OperatorNode.create(new OperatorB("b0"),planner.defaultTraitSet());
 
-        assertThrows(NullPointerException.class, ()->planner.registerOperator(operatorNodeB, 2), "");
+        assertThrows(Exception.class, ()->planner.registerOperator(operatorNodeB, 2), "");
 
 
     }
@@ -393,7 +392,7 @@ public class OptimizerPlannerTest {
         planner.optimize();
 
         assertEquals(0, planner.getRuleCallQueue().size());
-        assertEquals(8, planner.getOperators().size());
+        assertEquals(8, planner.getAndOrTree().getOperators().size());
     }
     @Test
     public void testRuleCallSignalRule() {
@@ -404,7 +403,7 @@ public class OptimizerPlannerTest {
         planner.optimize();
 
         assertEquals(0, planner.getRuleCallQueue().size());
-        assertEquals(3, planner.getOperators().size());
+        assertEquals(3, planner.getAndOrTree().getOperators().size());
     }
     /**
      * Test RuleCall Match Rules
@@ -418,7 +417,7 @@ public class OptimizerPlannerTest {
         planner.setRoot(root);
         planner.optimize();
         assertEquals(0, planner.getRuleCallQueue().size());
-        assertEquals(5, planner.getOperators().size());
+        assertEquals(5, planner.getAndOrTree().getOperators().size());
 
     }
     /**
@@ -433,7 +432,7 @@ public class OptimizerPlannerTest {
         planner.setRoot(root);
         planner.optimize();
         assertEquals(0, planner.getRuleCallQueue().size());
-        assertEquals(5, planner.getOperators().size());
+        assertEquals(5, planner.getAndOrTree().getOperators().size());
 
     }
 
@@ -450,7 +449,7 @@ public class OptimizerPlannerTest {
         planner.optimize();
 
         assertEquals(0, planner.getRuleCallQueue().size());
-        assertEquals(5, planner.getOperators().size());
+        assertEquals(5, planner.getAndOrTree().getOperators().size());
     }
 
     @Test
@@ -470,7 +469,7 @@ public class OptimizerPlannerTest {
         planner.optimize();
 
         assertEquals(0, planner.getRuleCallQueue().size());
-        assertEquals(5, planner.getOperators().size());
+        assertEquals(5, planner.getAndOrTree().getOperators().size());
     }
     @Test
     public void testMatchVerifyToMatchVerifyRuleRuleMatch1() {
@@ -489,7 +488,7 @@ public class OptimizerPlannerTest {
         planner.optimize();
 
         assertEquals(0, planner.getRuleCallQueue().size());
-        assertEquals(4, planner.getOperators().size());
+        assertEquals(4, planner.getAndOrTree().getOperators().size());
     }
     @Test
 
@@ -506,7 +505,7 @@ public class OptimizerPlannerTest {
         planner.setRoot(root);
         planner.optimize();
         assertEquals(0, planner.getRuleCallQueue().size());
-        assertEquals(5, planner.getOperators().size());
+        assertEquals(5, planner.getAndOrTree().getOperators().size());
 
     }
 
@@ -541,7 +540,7 @@ public class OptimizerPlannerTest {
         RuleSet.DEFAULT_RULES.stream().forEach(transformRule -> planner.addRule(transformRule));
         planner.setRoot(root);
         planner.optimize();
-        System.out.println(planner.getOperators().size());
+        System.out.println(planner.getAndOrTree().getOperators().size());
         assertEquals(0, planner.getRuleCallQueue().size());
     }
 

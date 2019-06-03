@@ -1,45 +1,39 @@
 package edu.ics.uci.optimizer.operator;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.*;
 import edu.ics.uci.optimizer.triat.TraitSet;
 
 import java.io.Serializable;
 import java.util.*;
 
+import static java.util.stream.Collectors.toList;
+
 public class MetaSet implements Serializable {
 
-    private final Set<OperatorNode> operatorNodes = new HashSet<>();
-    private final Multimap<TraitSet, OperatorNode> traits = HashMultimap.create();
+    private final ImmutableSet<OperatorNode> operatorNodes;
+    private final ImmutableMultimap<TraitSet, OperatorNode> traits;
 
     public static MetaSet create(OperatorNode operatorNode) {
         return create(Collections.singletonList(operatorNode));
     }
 
-    public static MetaSet create(List<OperatorNode> operatorNodes) {
+    public static MetaSet create(Collection<OperatorNode> operatorNodes) {
         return new MetaSet(operatorNodes);
     }
 
-    private MetaSet(List<OperatorNode> operatorNodes) {
-        operatorNodes.forEach(op -> this.addOperatorNode(op));
+    private MetaSet(Collection<OperatorNode> operatorNodes) {
+        this.operatorNodes = ImmutableSet.copyOf(operatorNodes);
+        traits = ImmutableMultimap.copyOf(
+                this.operatorNodes.stream().map(op -> Maps.immutableEntry(op.getTraitSet(), op)).collect(toList())
+        );
     }
 
-    public void addOperatorNode(OperatorNode operatorNode) {
-        Preconditions.checkNotNull(operatorNode);
-        // check duplicate operatorNode in this set
-        if (this.operatorNodes.contains(operatorNode)) {
-            return;
-        }
+    public static MetaSet withNewOperator(MetaSet metaSet, OperatorNode newOperator) {
+        return create(ImmutableSet.<OperatorNode>builder().addAll(metaSet.operatorNodes).add(newOperator).build());
+    }
 
-        this.operatorNodes.add(operatorNode);
-        TraitSet traitSet = operatorNode.getTraitSet();
-        traits.put(traitSet, operatorNode);
-        traits.keySet().forEach(otherTrait -> {
-            if (! otherTrait.equals(traitSet) && traitSet.satisfy(otherTrait)) {
-                traits.put(otherTrait, operatorNode);
-            }
-        });
+    public static MetaSet withNewOperators(MetaSet metaSet, Iterable<OperatorNode> newOperators) {
+        return create(ImmutableSet.<OperatorNode>builder().addAll(metaSet.operatorNodes).addAll(newOperators).build());
     }
 
     public Set<OperatorNode> getOperators() {
