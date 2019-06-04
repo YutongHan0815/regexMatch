@@ -427,12 +427,7 @@ public class OptimizerPlannerTest {
         planner.setRoot(root);
         planner.optimize();
         assertEquals(0, planner.getRuleCallQueue().size());
-<<<<<<< HEAD
-        assertEquals(3, planner.getAndOrTree().getOperators().size());
-
-=======
         assertEquals(5, planner.getAndOrTree().getOperators().size());
->>>>>>> 750beef2f8f65d4f64a12df62dff7ab398f7123e
 
     }
 
@@ -556,10 +551,8 @@ public class OptimizerPlannerTest {
         RuleSet.DEFAULT_RULES.stream().forEach(transformRule -> planner.addRule(transformRule));
         planner.setRoot(root);
         planner.optimize();
-<<<<<<< HEAD
-=======
+
         System.out.println(planner.getAndOrTree().getOperators().size());
->>>>>>> 750beef2f8f65d4f64a12df62dff7ab398f7123e
         assertEquals(0, planner.getRuleCallQueue().size());
         assertEquals(3, planner.getAndOrTree().getSets().size());
 
