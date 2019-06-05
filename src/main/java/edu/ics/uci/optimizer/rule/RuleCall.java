@@ -1,6 +1,7 @@
 package edu.ics.uci.optimizer.rule;
 
 
+import edu.ics.uci.optimizer.OptimizerContext;
 import edu.ics.uci.optimizer.OptimizerPlanner;
 import edu.ics.uci.optimizer.operator.OperatorNode;
 
@@ -12,12 +13,16 @@ public class RuleCall implements Serializable {
 
     private final OptimizerPlanner planner;
     private final TransformRule rule;
-    private final Map<Integer, OperatorNode> matchedOperators;
+    private final Map<Integer, Integer> matchedOperators;
 
-    public RuleCall(OptimizerPlanner planner, TransformRule rule, Map<Integer, OperatorNode> matchedOperators) {
+    public RuleCall(OptimizerPlanner planner, TransformRule rule, Map<Integer, Integer> matchedOperators) {
         this.planner = planner;
         this.rule = rule;
         this.matchedOperators = matchedOperators;
+    }
+
+    public OptimizerContext getContext() {
+        return this.planner.getContext();
     }
 
     public TransformRule getRule() {
@@ -25,11 +30,11 @@ public class RuleCall implements Serializable {
     }
 
     public OperatorNode getOperator(int ordinal) {
-        return matchedOperators.get(ordinal);
+        return this.planner.getAndOrTree().getOperator(matchedOperators.get(ordinal));
     }
 
     public void transformTo(OperatorNode equivalentOperator) {
-        int equivSetID = planner.getAndOrTree().getOperatorSetID(matchedOperators.get(0));
+        int equivSetID = planner.getAndOrTree().getOperatorSet(matchedOperators.get(0)).getSetID();
         this.planner.registerOperator(equivalentOperator, equivSetID);
     }
 

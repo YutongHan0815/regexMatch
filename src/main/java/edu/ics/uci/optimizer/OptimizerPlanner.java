@@ -14,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 import static java.util.stream.Collectors.toList;
@@ -46,7 +45,7 @@ public class OptimizerPlanner implements Serializable {
 
     public void setRoot(SubsetNode root) {
         this.root = root;
-        this.registerNewSet(root.getMetaSet());
+        this.registerNewSet(root.getEquivSet());
     }
 
     public void addRule(TransformRule rule) {
@@ -84,11 +83,11 @@ public class OptimizerPlanner implements Serializable {
      *
      * @return the setID of the newly registered set
      */
-    private int registerNewSet(@NotNull MetaSet set) {
+    private int registerNewSet(@NotNull EquivSet set) {
 
-        Set<Integer> existingEquivSets = set.getOperators().stream()
+        Set<EquivSet> existingEquivSets = set.getOperators().stream()
                 .filter(op -> this.andOrTree.getOperators().containsValue(op))
-                .map(op -> this.andOrTree.getOperatorSetID(op))
+                .map(op -> this.andOrTree.getOperatorSet(op.getOperatorID()))
                 .collect(toSet());
 
         if (! (existingEquivSets.size() == 0 || existingEquivSets.size() == 1)) {
@@ -96,12 +95,12 @@ public class OptimizerPlanner implements Serializable {
         }
 
         if (existingEquivSets.size() == 1) {
-            int currentSetID = existingEquivSets.iterator().next();
+            int currentSetID = existingEquivSets.iterator().next().getSetID();
             set.getOperators().forEach(op -> this.registerOperator(op, currentSetID));
             return currentSetID;
         }
 
-        int newSetID = this.andOrTree.addSet(MetaSet.create(new ArrayList<>()));
+        int newSetID = this.andOrTree.addSet(EquivSet.create(this.context, new ArrayList<>()));
         set.getOperators().forEach(op -> this.registerOperator(op, newSetID));
 
         return  newSetID;
@@ -112,26 +111,22 @@ public class OptimizerPlanner implements Serializable {
         // recursively add children first
         List<SubsetNode> registeredChildren = operator.getInputs().stream()
                 .map(subset -> {
-                    MetaSet metaSet = this.andOrTree.getSet(this.registerNewSet(subset.getMetaSet()));
-                    return metaSet.getSubset(subset.getTraitSet());
+                    EquivSet equivSet = this.andOrTree.getSet(this.registerNewSet(subset.getEquivSet()));
+                    return equivSet.getSubset(subset.getTraitSet());
                 }).collect(toList());
 
         // newOperator is operator with all children already registered into the planner
-        OperatorNode newOperator = OperatorNode.create(operator.getOperator(), operator.getTraitSet(), registeredChildren);
+        OperatorNode newOperator = OperatorNode.create(operator.getOperatorID(), operator.getOperator(), operator.getTraitSet(), registeredChildren);
 
         // check duplicate
         if (this.andOrTree.getOperators().containsValue(newOperator)) {
             int duplicateOpID = this.andOrTree.getOperators().inverse().get(newOperator);
-            int duplicateOpSet = this.andOrTree.getOperatorSetID(newOperator);
+            int duplicateOpSet = this.andOrTree.getOperatorSet(duplicateOpID).getSetID();
             if (duplicateOpSet != setID) {
                 throw new UnsupportedOperationException("TODO: set merge is not implemented yet");
             }
             return duplicateOpID;
         }
-<<<<<<< HEAD
-=======
-       // TODO: else invalid setID
->>>>>>> 750beef2f8f65d4f64a12df62dff7ab398f7123e
 
         int newOperatorID = this.andOrTree.addOperator(newOperator, setID);
 

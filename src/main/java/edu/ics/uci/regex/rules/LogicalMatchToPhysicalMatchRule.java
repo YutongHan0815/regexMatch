@@ -44,7 +44,8 @@ public class LogicalMatchToPhysicalMatchRule implements TransformRule, Serializa
 
         PhysicalMatchOperator physicalMatchOperator = new PhysicalMatchOperator(logicalMatchOperator.getSubRegex());
         inputs.forEach(subsetNode -> subsetNode.getTraitSet().replace(Convention.PHYSICAL));
-        OperatorNode matchOperatorNode = OperatorNode.create(physicalMatchOperator,
+
+        OperatorNode matchOperatorNode = OperatorNode.create(ruleCall.getContext(), physicalMatchOperator,
                 logicalMatchOpN.getTraitSet().replace(Convention.PHYSICAL),inputs);
 
         ruleCall.transformTo(matchOperatorNode);

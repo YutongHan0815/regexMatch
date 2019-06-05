@@ -1,16 +1,11 @@
 package edu.ics.uci.regex.rules;
 
 
-import com.google.re2j.PublicParser;
-import com.google.re2j.PublicRE2;
-import com.google.re2j.PublicRegexp;
-import com.google.re2j.PublicSimplify;
-import edu.ics.uci.optimizer.operator.Operator;
 import edu.ics.uci.optimizer.rule.PatternNode;
 import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.TransformRule;
 import edu.ics.uci.regex.operators.*;
-import edu.ics.uci.optimizer.operator.MetaSet;
+import edu.ics.uci.optimizer.operator.EquivSet;
 import edu.ics.uci.optimizer.operator.OperatorNode;
 import edu.ics.uci.optimizer.operator.SubsetNode;
 
@@ -48,10 +43,12 @@ public class MatchToMatchVerifyRule implements TransformRule, Serializable {
 
         LogicalVerifyOperator newVerify = new LogicalVerifyOperator(subRegexList.get(1), Condition.AFTER);
         LogicalMatchOperator newMatch = new LogicalMatchOperator(subRegexList.get(0));
-        OperatorNode matchOperatorNode = OperatorNode.create(newMatch, logicalMatchOpN.getTraitSet(), logicalMatchOpN.getInputs());
-        MetaSet matchMetaSet = MetaSet.create(matchOperatorNode);
-        SubsetNode matchSubsetNode = SubsetNode.create(matchMetaSet, matchOperatorNode.getTraitSet());
-        OperatorNode verifyOperatorNode = OperatorNode.create(newVerify, matchOperatorNode.getTraitSet(), Collections.singletonList(matchSubsetNode));
+        OperatorNode matchOperatorNode = OperatorNode.create(ruleCall.getContext(), newMatch,
+                logicalMatchOpN.getTraitSet(), logicalMatchOpN.getInputs());
+        EquivSet matchEquivSet = EquivSet.create(ruleCall.getContext(), matchOperatorNode);
+        SubsetNode matchSubsetNode = SubsetNode.create(matchEquivSet, matchOperatorNode.getTraitSet());
+        OperatorNode verifyOperatorNode = OperatorNode.create(ruleCall.getContext(), newVerify,
+                matchOperatorNode.getTraitSet(), Collections.singletonList(matchSubsetNode));
 
         ruleCall.transformTo(verifyOperatorNode);
 

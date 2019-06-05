@@ -61,7 +61,7 @@ public class RuleMatcher implements Serializable {
             patternOrdinals.put(patternNode, ordinal);
             ordinal++;
         }
-        BiMap<Integer, OperatorNode> matchedOperators = HashBiMap.create();
+        BiMap<Integer, Integer> matchedOperators = HashBiMap.create();
 
         for (PatternNode patternNode : allPatternNodes) {
             Collection<OperatorNode> operatorNodes = this.lookupTable.get(patternNode);
@@ -73,7 +73,7 @@ public class RuleMatcher implements Serializable {
             if (temporaryOperators.containsKey(matchedOperatorNode)) {
                 matchedOperatorNode = temporaryOperators.get(matchedOperatorNode);
             }
-             matchedOperators.put(patternOrdinals.get(patternNode), matchedOperatorNode);
+             matchedOperators.put(patternOrdinals.get(patternNode), matchedOperatorNode.getOperatorID());
         }
 
         RuleCall ruleCall = new RuleCall(planner, rule, matchedOperators);
@@ -99,14 +99,14 @@ public class RuleMatcher implements Serializable {
             return;
         }
 
-        Collection<OperatorNode> parents = planner.getAndOrTree().getOperatorParents(operatorNode);
+        Collection<OperatorNode> parents = planner.getAndOrTree().getOperatorParents(operatorNode.getOperatorID());
 
         boolean parentAnyMatch = false;
         for (OperatorNode parent: parents) {
             List<SubsetNode> tempInputs = parent.getInputs().stream().map(input ->
-                input.getOperators().contains(operatorNode) ? SubsetNode.create(operatorNode) : input
+                input.getOperators().contains(operatorNode) ? SubsetNode.create(planner.getContext(), operatorNode) : input
             ).collect(toList());
-            OperatorNode tempParent = OperatorNode.create(parent.getOperator(), parent.getTraitSet(), tempInputs);
+            OperatorNode tempParent = OperatorNode.create(planner.getContext(), parent.getOperator(), parent.getTraitSet(), tempInputs);
             temporaryOperators.put(tempParent, parent);
 
             boolean parentMatch = this.matchDescending(tempParent, parentPattern.get());

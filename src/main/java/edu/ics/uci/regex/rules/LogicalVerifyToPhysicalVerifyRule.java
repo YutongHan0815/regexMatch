@@ -43,7 +43,7 @@ public class LogicalVerifyToPhysicalVerifyRule implements TransformRule, Seriali
 
         PhysicalVerifyOperator physicalVerifyOperator = new PhysicalVerifyOperator(
                 logicalVerifyOperator.getSubRegex(), logicalVerifyOperator.getCondition());
-        OperatorNode verifyOperatorNode = OperatorNode.create(physicalVerifyOperator,
+        OperatorNode verifyOperatorNode = OperatorNode.create(ruleCall.getContext(), physicalVerifyOperator,
                 logicalVerifyOpN.getTraitSet().replace(Convention.PHYSICAL),inputs);
 
         ruleCall.transformTo(verifyOperatorNode);

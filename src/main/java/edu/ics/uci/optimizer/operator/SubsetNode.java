@@ -1,5 +1,6 @@
 package edu.ics.uci.optimizer.operator;
 
+import edu.ics.uci.optimizer.OptimizerContext;
 import edu.ics.uci.optimizer.triat.TraitSet;
 
 import java.io.Serializable;
@@ -9,24 +10,24 @@ import java.util.Set;
 
 public class SubsetNode implements Serializable {
 
-    public static SubsetNode create(MetaSet metaSet, TraitSet traitSet) {
-        return new SubsetNode(metaSet, traitSet);
+    public static SubsetNode create(EquivSet equivSet, TraitSet traitSet) {
+        return new SubsetNode(equivSet, traitSet);
     }
 
-    public static SubsetNode create(OperatorNode operator) {
-        return new SubsetNode(MetaSet.create(operator), operator.getTraitSet());
+    public static SubsetNode create(OptimizerContext context, OperatorNode operator) {
+        return new SubsetNode(EquivSet.create(context, operator), operator.getTraitSet());
     }
 
-    private final MetaSet metaSet;
+    private final EquivSet equivSet;
     private final TraitSet traitSet;
 
-    private SubsetNode(MetaSet metaSet, TraitSet traitSet) {
-        this.metaSet = metaSet;
+    private SubsetNode(EquivSet equivSet, TraitSet traitSet) {
+        this.equivSet = equivSet;
         this.traitSet = traitSet;
     }
 
-    public MetaSet getMetaSet() {
-        return metaSet;
+    public EquivSet getEquivSet() {
+        return equivSet;
     }
 
     public TraitSet getTraitSet() {
@@ -34,7 +35,7 @@ public class SubsetNode implements Serializable {
     }
 
     public Set<OperatorNode> getOperators() {
-        return this.metaSet.getOperators(this.traitSet);
+        return this.equivSet.getOperators(this.traitSet);
     }
 
     public void acceptSelf(AndOrTreeVisitor visitor) {
@@ -47,12 +48,12 @@ public class SubsetNode implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SubsetNode that = (SubsetNode) o;
-        return Objects.equals(metaSet, that.metaSet) &&
+        return Objects.equals(equivSet, that.equivSet) &&
                 Objects.equals(traitSet, that.traitSet);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(metaSet, traitSet);
+        return Objects.hash(equivSet, traitSet);
     }
 }

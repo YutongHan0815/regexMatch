@@ -4,13 +4,12 @@ import edu.ics.uci.optimizer.rule.PatternNode;
 import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.TransformRule;
 import edu.ics.uci.regex.operators.*;
-import edu.ics.uci.optimizer.operator.MetaSet;
+import edu.ics.uci.optimizer.operator.EquivSet;
 import edu.ics.uci.optimizer.operator.OperatorNode;
 import edu.ics.uci.optimizer.operator.SubsetNode;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Collections;
 
 public class MatchVerifyToMatchVerifyRule implements TransformRule, Serializable {
 
@@ -40,11 +39,11 @@ public class MatchVerifyToMatchVerifyRule implements TransformRule, Serializable
         LogicalVerifyOperator newVerify = new LogicalVerifyOperator(logicalMatchOperator.getSubRegex(), Condition.BEFORE);
         LogicalMatchOperator newMatch = new LogicalMatchOperator(logicalVerifyOperator.getSubRegex());
 
-        OperatorNode matchOperatorNode = OperatorNode.create(newMatch, logicalMatchOpN.getTraitSet(), logicalMatchOpN.getInputs());
+        OperatorNode matchOperatorNode = OperatorNode.create(ruleCall.getContext(), newMatch, logicalMatchOpN.getTraitSet(), logicalMatchOpN.getInputs());
 
-        MetaSet matchMetaSet = MetaSet.create(matchOperatorNode);
-        SubsetNode matchSubsetNode = SubsetNode.create(matchMetaSet, matchOperatorNode.getTraitSet());
-        OperatorNode verifyOperatorNode = OperatorNode.create(newVerify, matchOperatorNode.getTraitSet(), matchSubsetNode);
+        EquivSet matchEquivSet = EquivSet.create(ruleCall.getContext(), matchOperatorNode);
+        SubsetNode matchSubsetNode = SubsetNode.create(matchEquivSet, matchOperatorNode.getTraitSet());
+        OperatorNode verifyOperatorNode = OperatorNode.create(ruleCall.getContext(), newVerify, matchOperatorNode.getTraitSet(), matchSubsetNode);
 
         ruleCall.transformTo(verifyOperatorNode);
 

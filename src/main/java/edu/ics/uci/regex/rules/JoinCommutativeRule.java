@@ -4,11 +4,9 @@ package edu.ics.uci.regex.rules;
 import edu.ics.uci.optimizer.rule.PatternNode;
 import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.TransformRule;
-import edu.ics.uci.optimizer.operator.MetaSet;
 import edu.ics.uci.optimizer.operator.OperatorNode;
 import edu.ics.uci.optimizer.operator.SubsetNode;
 import edu.ics.uci.regex.operators.*;
-import org.checkerframework.checker.units.qual.C;
 
 import java.io.Serializable;
 import java.util.*;
@@ -64,7 +62,7 @@ public class JoinCommutativeRule implements TransformRule, Serializable {
         }
         LogicalJoinOperator newJoin = new LogicalJoinOperator(condition);
 
-        OperatorNode joinOperatorNode = OperatorNode.create(newJoin, logicalJoinOpN.getTraitSet(), Arrays.asList(inputs.get(1), inputs.get(0)));
+        OperatorNode joinOperatorNode = OperatorNode.create(ruleCall.getContext(), newJoin, logicalJoinOpN.getTraitSet(), Arrays.asList(inputs.get(1), inputs.get(0)));
 
         ruleCall.transformTo(joinOperatorNode);
 

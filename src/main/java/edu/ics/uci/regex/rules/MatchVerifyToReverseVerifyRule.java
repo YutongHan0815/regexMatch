@@ -48,27 +48,31 @@ public class MatchVerifyToReverseVerifyRule implements TransformRule, Serializab
 
         List<String> subRegexList = logicalVerifyOperator.decompose();
 
-        SubsetNode subsetNode = SubsetNode.create(logicalMatchOpN);
+        SubsetNode subsetNode = SubsetNode.create(ruleCall.getContext(), logicalMatchOpN);
 
         String subRegexRight= subRegexList.get(1);
         LogicalVerifyOperator verifyGapOp = new LogicalVerifyOperator(subRegexRight, Condition.GAP_AFTER);
-        OperatorNode verifyGapOpN = OperatorNode.create(verifyGapOp, logicalVerifyOpN.getTraitSet(), subsetNode);
-        SubsetNode subsetNodeGap = SubsetNode.create(verifyGapOpN);
+        OperatorNode verifyGapOpN = OperatorNode.create(ruleCall.getContext(),
+                verifyGapOp, logicalVerifyOpN.getTraitSet(), subsetNode);
+        SubsetNode subsetNodeGap = SubsetNode.create(ruleCall.getContext(), verifyGapOpN);
 
         String subRegexLeft= subRegexList.get(0);
         LogicalVerifyOperator verifyEqualOp = new LogicalVerifyOperator(subRegexLeft, Condition.EQUAL);
-        OperatorNode verifyEqualOpN = OperatorNode.create(verifyEqualOp, logicalVerifyOpN.getTraitSet(), subsetNodeGap);
-        SubsetNode subsetNodeEqual = SubsetNode.create(verifyEqualOpN);
+        OperatorNode verifyEqualOpN = OperatorNode.create(ruleCall.getContext(),
+                verifyEqualOp, logicalVerifyOpN.getTraitSet(), subsetNodeGap);
+        SubsetNode subsetNodeEqual = SubsetNode.create(ruleCall.getContext(), verifyEqualOpN);
 
         //TODO get left subRegex in the mainRegex
         String subRegexMatch= logicalMatchOperator.getSubRegex();
         LogicalVerifyOperator operatorLeft = new LogicalVerifyOperator(subRegexMatch, Condition.BEFORE);
-        OperatorNode newVerifyOpN = OperatorNode.create(operatorLeft, logicalVerifyOpN.getTraitSet(), subsetNodeEqual);
-        SubsetNode subsetNodeLeft = SubsetNode.create(newVerifyOpN);
+        OperatorNode newVerifyOpN = OperatorNode.create(ruleCall.getContext(),
+                operatorLeft, logicalVerifyOpN.getTraitSet(), subsetNodeEqual);
+        SubsetNode subsetNodeLeft = SubsetNode.create(ruleCall.getContext(), newVerifyOpN);
 
         //TODO get left subRegex in the mainRegex
         LogicalVerifyOperator operatorRight = new LogicalVerifyOperator(subRegexRight, Condition.AFTER);
-        OperatorNode rightVerifyOpN = OperatorNode.create(operatorRight, logicalVerifyOpN.getTraitSet(), subsetNodeLeft);
+        OperatorNode rightVerifyOpN = OperatorNode.create(ruleCall.getContext(),
+                operatorRight, logicalVerifyOpN.getTraitSet(), subsetNodeLeft);
 
         ruleCall.transformTo(rightVerifyOpN);
 

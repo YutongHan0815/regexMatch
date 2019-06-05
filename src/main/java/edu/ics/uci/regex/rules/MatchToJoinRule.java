@@ -1,15 +1,10 @@
 package edu.ics.uci.regex.rules;
 
-import com.google.re2j.PublicParser;
-import com.google.re2j.PublicRE2;
-import com.google.re2j.PublicRegexp;
-import com.google.re2j.PublicSimplify;
-import edu.ics.uci.optimizer.operator.Operator;
+import edu.ics.uci.optimizer.operator.EquivSet;
 import edu.ics.uci.optimizer.rule.PatternNode;
 import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.TransformRule;
 import edu.ics.uci.regex.operators.*;
-import edu.ics.uci.optimizer.operator.MetaSet;
 import edu.ics.uci.optimizer.operator.OperatorNode;
 import edu.ics.uci.optimizer.operator.SubsetNode;
 
@@ -49,15 +44,15 @@ public class MatchToJoinRule implements TransformRule, Serializable {
         LogicalMatchOperator newLeftMatch = new LogicalMatchOperator(subRegexList.get(0));
         LogicalMatchOperator newRightMatch = new LogicalMatchOperator(subRegexList.get(1));
 
-        OperatorNode leftOperatorNode = OperatorNode.create(newLeftMatch, logicalMatchOpN.getTraitSet(), logicalMatchOpN.getInputs());
-        OperatorNode rightOperatorNode = OperatorNode.create(newRightMatch, logicalMatchOpN.getTraitSet(), logicalMatchOpN.getInputs());
-        MetaSet leftMetaSet = MetaSet.create(leftOperatorNode);
-        MetaSet rightMetaSet = MetaSet.create(rightOperatorNode);
+        OperatorNode leftOperatorNode = OperatorNode.create(ruleCall.getContext(), newLeftMatch, logicalMatchOpN.getTraitSet(), logicalMatchOpN.getInputs());
+        OperatorNode rightOperatorNode = OperatorNode.create(ruleCall.getContext(),newRightMatch, logicalMatchOpN.getTraitSet(), logicalMatchOpN.getInputs());
+        EquivSet leftEquivSet = EquivSet.create(ruleCall.getContext(),leftOperatorNode);
+        EquivSet rightEquivSet = EquivSet.create(ruleCall.getContext(),rightOperatorNode);
 
-        SubsetNode leftMatchSubsetNode = SubsetNode.create(leftMetaSet, leftOperatorNode.getTraitSet());
-        SubsetNode rightMatchSubsetNode = SubsetNode.create(rightMetaSet, rightOperatorNode.getTraitSet());
+        SubsetNode leftMatchSubsetNode = SubsetNode.create(leftEquivSet, leftOperatorNode.getTraitSet());
+        SubsetNode rightMatchSubsetNode = SubsetNode.create(rightEquivSet, rightOperatorNode.getTraitSet());
 
-        OperatorNode joinOperatorNode = OperatorNode.create(newJoin, leftOperatorNode.getTraitSet(), Arrays.asList(leftMatchSubsetNode, rightMatchSubsetNode));
+        OperatorNode joinOperatorNode = OperatorNode.create(ruleCall.getContext(),newJoin, leftOperatorNode.getTraitSet(), Arrays.asList(leftMatchSubsetNode, rightMatchSubsetNode));
 
         ruleCall.transformTo(joinOperatorNode);
 

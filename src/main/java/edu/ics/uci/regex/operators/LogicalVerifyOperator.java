@@ -29,20 +29,6 @@ public class LogicalVerifyOperator implements Operator, Serializable {
         return condition;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        LogicalVerifyOperator that = (LogicalVerifyOperator) o;
-        return Objects.equals(subRegex, that.subRegex) &&
-                condition == that.condition;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(subRegex, condition);
-    }
-
     public String getDigest() {
         return "LogicalVerifyOperator(" + subRegex + condition + ")";
     }
@@ -78,4 +64,17 @@ public class LogicalVerifyOperator implements Operator, Serializable {
         return subRegexList;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LogicalVerifyOperator that = (LogicalVerifyOperator) o;
+        return Objects.equals(subRegex, that.subRegex) &&
+                condition == that.condition;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(subRegex, condition);
+    }
 }

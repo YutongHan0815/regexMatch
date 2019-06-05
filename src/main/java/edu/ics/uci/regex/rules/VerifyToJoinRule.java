@@ -46,13 +46,15 @@ public class VerifyToJoinRule implements TransformRule, Serializable {
 
 
         LogicalMatchOperator matchOperator= new LogicalMatchOperator(subRegex);
-        OperatorNode newMatchOpN = OperatorNode.create(matchOperator, logicalVerifyOpN.getTraitSet());
-        SubsetNode subsetNode = SubsetNode.create(newMatchOpN);
+        OperatorNode newMatchOpN = OperatorNode.create(ruleCall.getContext(), matchOperator,
+                logicalVerifyOpN.getTraitSet());
+        SubsetNode subsetNode = SubsetNode.create(ruleCall.getContext(), newMatchOpN);
         List<SubsetNode> newSubsets = new ArrayList<>();
         logicalVerifyOpN.getInputs().forEach(subsetNode1->newSubsets.add(subsetNode1));
         newSubsets.add(subsetNode);
         LogicalJoinOperator joinOperator = new LogicalJoinOperator(logicalVerifyOperator.getCondition());
-        OperatorNode joinOperatorNode = OperatorNode.create(joinOperator, logicalVerifyOpN.getTraitSet(), newSubsets);
+        OperatorNode joinOperatorNode = OperatorNode.create(ruleCall.getContext(), joinOperator,
+                logicalVerifyOpN.getTraitSet(), newSubsets);
 
         ruleCall.transformTo(joinOperatorNode);
 

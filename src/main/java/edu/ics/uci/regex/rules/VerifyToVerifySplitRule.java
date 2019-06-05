@@ -1,23 +1,16 @@
 package edu.ics.uci.regex.rules;
 
-import com.google.re2j.PublicParser;
-import com.google.re2j.PublicRE2;
-import com.google.re2j.PublicRegexp;
-import com.google.re2j.PublicSimplify;
-
-import edu.ics.uci.optimizer.operator.Operator;
+import edu.ics.uci.optimizer.operator.EquivSet;
 import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.PatternNode;
 import edu.ics.uci.optimizer.rule.TransformRule;
 import edu.ics.uci.regex.operators.Condition;
 import edu.ics.uci.regex.operators.LogicalVerifyOperator;
-import edu.ics.uci.optimizer.operator.MetaSet;
 import edu.ics.uci.optimizer.operator.OperatorNode;
 import edu.ics.uci.optimizer.operator.SubsetNode;
 
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -56,10 +49,10 @@ public class VerifyToVerifySplitRule implements TransformRule, Serializable {
         LogicalVerifyOperator newVerify0 = new LogicalVerifyOperator(subRegexList.get(1), Condition.AFTER);
         LogicalVerifyOperator newVerify1 = new LogicalVerifyOperator(subRegexList.get(0), logicalVerifyOperator.getCondition());
 
-        OperatorNode verifyOperatorNode1 = OperatorNode.create(newVerify1, logicalVerifyOpN.getTraitSet());
-        MetaSet verifyMetaSet = MetaSet.create(verifyOperatorNode1);
-        SubsetNode verifySubsetNode = SubsetNode.create(verifyMetaSet, logicalVerifyOpN.getTraitSet());
-        OperatorNode verifyOperatorNode0 = OperatorNode.create(newVerify0, verifyOperatorNode1.getTraitSet(), Collections.singletonList(verifySubsetNode));
+        OperatorNode verifyOperatorNode1 = OperatorNode.create(ruleCall.getContext(), newVerify1, logicalVerifyOpN.getTraitSet());
+        EquivSet verifyEquivSet = EquivSet.create(ruleCall.getContext(), verifyOperatorNode1);
+        SubsetNode verifySubsetNode = SubsetNode.create(verifyEquivSet, logicalVerifyOpN.getTraitSet());
+        OperatorNode verifyOperatorNode0 = OperatorNode.create(ruleCall.getContext(), newVerify0, verifyOperatorNode1.getTraitSet(), Collections.singletonList(verifySubsetNode));
 
 
         ruleCall.transformTo(verifyOperatorNode0);

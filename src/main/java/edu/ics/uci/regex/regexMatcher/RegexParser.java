@@ -4,6 +4,7 @@ import com.google.re2j.PublicParser;
 import com.google.re2j.PublicRE2;
 import com.google.re2j.PublicRegexp;
 import com.google.re2j.PublicSimplify;
+import edu.ics.uci.optimizer.OptimizerPlanner;
 import edu.ics.uci.optimizer.operator.OperatorNode;
 import edu.ics.uci.optimizer.operator.SubsetNode;
 import edu.ics.uci.optimizer.triat.Convention;
@@ -29,8 +30,9 @@ public class RegexParser {
     public SubsetNode parser() {
 
         LogicalMatchOperator mainLogMatchOpt = new LogicalMatchOperator(regex);
-        OperatorNode operatorNode= OperatorNode.create(mainLogMatchOpt, TraitSet.of(Convention.LOGICAL));
-        SubsetNode root = SubsetNode.create(operatorNode);
+        OptimizerPlanner planner = OptimizerPlanner.create();
+        OperatorNode operatorNode= OperatorNode.create(planner.getContext(), mainLogMatchOpt, TraitSet.of(Convention.LOGICAL));
+        SubsetNode root = SubsetNode.create(planner.getContext(), operatorNode);
         return root;
 
     }

@@ -1,26 +1,25 @@
 package edu.ics.uci.optimizer.operator;
 
-import com.google.common.base.Preconditions;
 
 import com.google.common.collect.*;
 import edu.ics.uci.optimizer.OptimizerContext;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.toSet;
 
 public class AndOrTree implements Serializable {
 
     private final OptimizerContext context;
 
-    private final Map<Integer, MetaSet> sets = new HashMap<>();
-    private final BiMap<Integer, OperatorNode> operators = HashBiMap.create();
+    private final Map<Integer, EquivSet> sets = new HashMap<>();
+    private final Map<Integer, OperatorNode> operators = new HashMap<>();
     private final Map<Integer, Integer> operatorToSet = new HashMap<>();
 
-    private final Multimap<OperatorNode, OperatorNode> operatorParentMap = HashMultimap.create();
+    private final Multimap<Integer, Integer> operatorParentMap = HashMultimap.create();
 
     public static AndOrTree create(OptimizerContext context) {
         return new AndOrTree(context);
@@ -30,21 +29,11 @@ public class AndOrTree implements Serializable {
         this.context = context;
     }
 
-    public Collection<OperatorNode> getOperatorParents(OperatorNode operatorNode) {
-        checkArgument(this.operators.containsValue(operatorNode));
-        return new HashSet<>(this.operatorParentMap.get(operatorNode));
-    }
-
-    public int getOperatorSetID(OperatorNode operatorNode) {
-        checkArgument(this.operators.containsValue(operatorNode));
-        return this.operatorToSet.get(this.operators.inverse().get(operatorNode));
-    }
-
-    public Map<Integer, MetaSet> getSets() {
+    public Map<Integer, EquivSet> getSets() {
         return new HashMap<>(sets);
     }
 
-    public MetaSet getSet(int setID) {
+    public EquivSet getSet(int setID) {
         checkArgument(this.sets.containsKey(setID), "no set with ID: " + setID);
         return this.sets.get(setID);
     }
@@ -58,8 +47,10 @@ public class AndOrTree implements Serializable {
         return this.operators.get(operatorID);
     }
 
-    public int addSet(MetaSet set) {
-        int setID = this.context.nextSetID();
+    public int addSet(EquivSet set) {
+        int setID = set.getSetID();
+        checkArgument(! this.sets.containsKey(setID), "SetID " + setID + " already exists");
+
         this.sets.put(setID, set);
         return setID;
     }
@@ -69,31 +60,46 @@ public class AndOrTree implements Serializable {
         // check setID exists
         checkArgument(this.sets.containsKey(setID), "no set with ID: " + setID);
         // check no duplicate operator - caller should ensure this
+        int operatorID = operator.getOperatorID();
+        checkArgument(! this.operators.containsKey(operatorID), "duplicate operatorID " + operatorID);
         checkArgument(! this.operators.containsValue(operator), "duplicate operator " + operator);
         // check all children are registered - caller should ensure this
         operator.getInputs().stream().flatMap(subset -> subset.getOperators().stream()).forEach(input ->
                 checkArgument(this.operators.containsValue(input), "input is not registered " + input));
 
-        // assign operatorID and add it
-        int operatorID = this.context.nextOperatorID();
+
         this.operators.put(operatorID, operator);
 
         // update set to include the operator in the set
         this.operatorToSet.put(operatorID, setID);
-        this.sets.put(setID, MetaSet.withNewOperator(this.sets.get(setID), operator));
+        this.sets.get(setID).addOperator(operator);
 
         // add parents pointers from this to existing parents in the same subset
         Set<OperatorNode> existingParents = this.getSet(setID).getSubset(operator.getTraitSet()).getOperators().stream()
-                .map(op -> this.getOperatorParents(op))
-                .flatMap(l -> l.stream()).collect(Collectors.toSet());
-        existingParents.forEach(parent -> this.operatorParentMap.put(operator, parent));
+                .map(op -> this.getOperatorParents(op.getOperatorID()))
+                .flatMap(l -> l.stream()).collect(toSet());
+        existingParents.forEach(parent -> this.operatorParentMap.put(operator.getOperatorID(), parent.getOperatorID()));
 
         // add parent pointers from the new operator's children
-        operator.getInputs().stream().flatMap(subset -> subset.getOperators().stream()).forEach(child -> {
-            this.operatorParentMap.put(child, operator);
-        });
+        operator.getInputs().stream().flatMap(subset -> subset.getOperators().stream()).forEach(child ->
+            this.operatorParentMap.put(child.getOperatorID(), operator.getOperatorID())
+        );
 
         return operatorID;
+    }
+
+    public Collection<OperatorNode> getOperatorParents(int operatorID) {
+        checkArgument(this.operators.containsKey(operatorID));
+        return this.operatorParentMap.get(operatorID).stream().map(parent -> this.operators.get(parent)).collect(toSet());
+    }
+
+    public Collection<OperatorNode> getOperatorParents(OperatorNode operator) {
+        return getOperatorParents(operator.getOperatorID());
+    }
+
+    public EquivSet getOperatorSet(int operatorID) {
+        checkArgument(this.operators.containsKey(operatorID));
+        return this.sets.get(this.operatorToSet.get(operatorID));
     }
 
     @Override
