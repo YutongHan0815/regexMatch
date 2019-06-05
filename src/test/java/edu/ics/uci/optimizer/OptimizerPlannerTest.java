@@ -130,7 +130,6 @@ public class OptimizerPlannerTest {
 
         OperatorNode operatorNode = OperatorNode.create(planner.getContext(), new OperatorB("b1"), planner.defaultTraitSet());
         planner.registerOperator(operatorNode, 2);
-        System.out.println(operatorNode.getOperatorID());
         assertEquals(2, planner.getAndOrTree().getOperators().size());
         assertTrue(planner.getAndOrTree().getSets().get(2).getOperators().contains(operatorNode));
         assertTrue(planner.getAndOrTree().getSet(2).getOperators(planner.defaultTraitSet()).contains(operatorNode));

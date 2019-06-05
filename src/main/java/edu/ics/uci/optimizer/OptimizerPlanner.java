@@ -116,7 +116,7 @@ public class OptimizerPlanner implements Serializable {
                 }).collect(toList());
 
         // newOperator is operator with all children already registered into the planner
-        OperatorNode newOperator = OperatorNode.create(operator.getOperatorID(), operator.getOperator(), operator.getTraitSet(), registeredChildren);
+        OperatorNode newOperator = OperatorNode.create(this.getContext(), operator.getOperator(), operator.getTraitSet(), registeredChildren);
 
         // check duplicate
         if (this.andOrTree.getOperators().containsValue(newOperator)) {

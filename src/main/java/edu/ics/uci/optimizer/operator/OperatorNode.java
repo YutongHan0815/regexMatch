@@ -27,36 +27,17 @@ public class OperatorNode implements Serializable {
     }
 
     public static OperatorNode create(OptimizerContext context, Operator operators, TraitSet traitSet, List<SubsetNode> inputs) {
-        return new OperatorNode(context.nextOperatorID(), operators, traitSet, inputs);
+        return new OperatorNode(context, operators, traitSet, inputs);
     }
 
-    public static OperatorNode create(int operatorID, Operator operator, TraitSet traitSet) {
-        return create(operatorID, operator, traitSet, new ArrayList<>());
-    }
 
-    public static OperatorNode create(int operatorID, Operator operator, TraitSet traitSet, SubsetNode input) {
-        return create(operatorID, operator, traitSet, Collections.singletonList(input));
-    }
-
-    public static OperatorNode create(int operatorID, Operator operators, TraitSet traitSet, List<SubsetNode> inputs) {
-        return new OperatorNode(operatorID, operators, traitSet, inputs);
-    }
-
-//
-//    private OperatorNode(OptimizerContext context, Operator operator, TraitSet traitSet, List<SubsetNode> inputs) {
-//        this.operatorID = context.nextOperatorID();
-//        this.operator = operator;
-//        this.traitSet = traitSet;
-//        this.inputs = ImmutableList.copyOf(inputs);
-//    }
-
-
-    public OperatorNode(int operatorID, Operator operator, TraitSet traitSet, List<SubsetNode> inputs) {
-        this.operatorID = operatorID;
+    private OperatorNode(OptimizerContext context, Operator operator, TraitSet traitSet, List<SubsetNode> inputs) {
+        this.operatorID = context.nextOperatorID();
         this.operator = operator;
         this.traitSet = traitSet;
-        this.inputs = inputs;
+        this.inputs = ImmutableList.copyOf(inputs);
     }
+
 
     public int getOperatorID() {
         return operatorID;
