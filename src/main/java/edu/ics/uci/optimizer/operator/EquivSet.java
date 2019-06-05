@@ -31,7 +31,7 @@ public class EquivSet implements Serializable {
     }
 
     public void addOperator(OperatorNode operatorNode) {
-        this.operatorNodes.addAll(operatorNodes);
+        this.operatorNodes.add(operatorNode);
         this.traits.put(operatorNode.getTraitSet(), operatorNode);
     }
 
@@ -56,14 +56,13 @@ public class EquivSet implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EquivSet equivSet = (EquivSet) o;
-        return setID == equivSet.setID &&
-                Objects.equals(operatorNodes, equivSet.operatorNodes) &&
+        return Objects.equals(operatorNodes, equivSet.operatorNodes) &&
                 Objects.equals(traits, equivSet.traits);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(setID, operatorNodes, traits);
+        return Objects.hash( operatorNodes, traits);
     }
 
     @Override

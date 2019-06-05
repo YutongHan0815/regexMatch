@@ -87,7 +87,7 @@ public class OptimizerPlanner implements Serializable {
 
         Set<EquivSet> existingEquivSets = set.getOperators().stream()
                 .filter(op -> this.andOrTree.getOperators().containsValue(op))
-                .map(op -> this.andOrTree.getOperatorSet(op.getOperatorID()))
+                .map(op -> this.andOrTree.getOperatorSet(this.andOrTree.getOperators().inverse().get(op)))
                 .collect(toSet());
 
         if (! (existingEquivSets.size() == 0 || existingEquivSets.size() == 1)) {
