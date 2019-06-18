@@ -35,14 +35,22 @@ public class RuleMatcher implements Serializable {
 
     public Optional<RuleCall> match() {
         Set<PatternNode> allPatternNodes = rule.getMatchPattern().getAllNodes();
+        //List<PatternNode> allPatternNodes = rule.getMatchPattern().getAllNodes();
+       // System.out.println(allPatternNodes);
 
         Optional<PatternNode> relevantPattern = allPatternNodes.stream()
-                .filter(node -> node.getOperatorClass().isAssignableFrom(triggerOperator.getOperator().getClass()))
+                //.peek(node -> System.out.println(node))
+                //.filter(node -> node.getOperatorClass().isAssignableFrom(triggerOperator.getOperator().getClass()))
+                .filter(node-> node.getOperatorClass().equals(triggerOperator.getOperator().getClass()))
                 .filter(node -> node.getPredicate().test(triggerOperator.getOperator()))
-                .findAny();
+                .findFirst();
+
+        //System.out.println("relevant" + relevantPattern);
+
         if (! relevantPattern.isPresent()) {
             return Optional.empty();
         }
+
 
         matchNode(triggerOperator, relevantPattern.get());
 
@@ -67,7 +75,7 @@ public class RuleMatcher implements Serializable {
             Collection<OperatorNode> operatorNodes = this.lookupTable.get(patternNode);
             Verify.verify(!operatorNodes.isEmpty());
             if (operatorNodes.size() > 1) {
-                throw new UnsupportedOperationException("matching multiple edu.ics.uci.regex.operators per pattern node not implemented");
+                throw new UnsupportedOperationException("matching multiple edu.ics.uci.regex.optimizer.operators per pattern node not implemented");
             }
             OperatorNode matchedOperatorNode = operatorNodes.iterator().next();
             if (temporaryOperators.containsKey(matchedOperatorNode)) {
@@ -77,6 +85,7 @@ public class RuleMatcher implements Serializable {
         }
 
         RuleCall ruleCall = new RuleCall(planner, rule, matchedOperators);
+
         return Optional.of(ruleCall);
     }
 
@@ -96,6 +105,7 @@ public class RuleMatcher implements Serializable {
         // match ascending from this node
         Optional<PatternNode> parentPattern = Optional.ofNullable(patternInverse.get(patternNode));
         if (! parentPattern.isPresent()) {
+            //System.out.println("4");
             return;
         }
 
@@ -108,12 +118,12 @@ public class RuleMatcher implements Serializable {
             ).collect(toList());
             OperatorNode tempParent = OperatorNode.create(planner.getContext(), parent.getOperator(), parent.getTraitSet(), tempInputs);
             temporaryOperators.put(tempParent, parent);
-
             boolean parentMatch = this.matchDescending(tempParent, parentPattern.get());
             parentAnyMatch = parentAnyMatch || parentMatch;
         }
 
         if (!parentAnyMatch) {
+            //System.out.println("5");
             this.matchFailed = true;
         }
     }

@@ -49,8 +49,7 @@ public class PatternNode implements Serializable {
         return exact(operatorClass, op -> true, children);
     }
 
-    public static <T extends Operator> PatternNode exact(Class<T> operatorClass,
-                                                         Predicate<T> predicate, List<PatternNode> children) {
+    public static <T extends Operator> PatternNode exact(Class<T> operatorClass, Predicate<T> predicate, List<PatternNode> children) {
         return new PatternNode(operatorClass, predicate, children, ChildrenPolicy.EXACT);
     }
 
@@ -85,10 +84,12 @@ public class PatternNode implements Serializable {
     }
 
     public Set<PatternNode> getAllNodes() {
-        Set<PatternNode> nodes = new HashSet<>();
+//        Set<PatternNode> nodes = new HashSet<>();
+        Set<PatternNode> nodes = new LinkedHashSet<>();
         this.accept(nodes::add);
         return nodes;
     }
+
 
     public void accept(Consumer<PatternNode> visitor) {
         this.children.forEach(children -> children.accept(visitor));

@@ -3,7 +3,7 @@ package edu.ics.uci.regex;
 import edu.ics.uci.optimizer.OptimizerPlanner;
 import edu.ics.uci.optimizer.operator.SubsetNode;
 import edu.ics.uci.optimizer.rule.RuleSet;
-import edu.ics.uci.regex.regexMatcher.RegexParser;
+import edu.ics.uci.regex.runtime.regexMatcher.RegexParser;
 
 import static edu.ics.uci.optimizer.triat.ConventionDef.CONVENTION_TRAIT_DEF;
 

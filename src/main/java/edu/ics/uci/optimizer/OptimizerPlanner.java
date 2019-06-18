@@ -103,7 +103,7 @@ public class OptimizerPlanner implements Serializable {
         int newSetID = this.andOrTree.addSet(EquivSet.create(this.context, new ArrayList<>()));
         set.getOperators().forEach(op -> this.registerOperator(op, newSetID));
 
-        return  newSetID;
+        return newSetID;
     }
 
 
