@@ -371,7 +371,7 @@ public class OptimizerPlannerTest {
 
         planner.addRule(dummyRule(operand(OperatorB.class).children(any()).build()));
         planner.setRoot(root);
-        assertEquals(0, planner.getRuleCallQueue().size());
+        assertEquals(1, planner.getRuleCallQueue().size());
     }
 
     @Test
@@ -392,7 +392,7 @@ public class OptimizerPlannerTest {
         planner.setRoot(root);
         planner.optimize();
         assertEquals(0, planner.getRuleCallQueue().size());
-        assertEquals(10, planner.getAndOrTree().getOperators().size());
+        assertEquals(9, planner.getAndOrTree().getOperators().size());
     }
     /**
      * Test RuleCall Match Rules
