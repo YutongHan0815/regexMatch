@@ -16,6 +16,7 @@ public class RuleMatcher implements Serializable {
 
     private final OptimizerPlanner planner;
     private final OperatorNode triggerOperator;
+    private final PatternNode triggeringPatternNode;
     private final TransformRule rule;
     private final Map<PatternNode, PatternNode> patternInverse;
     private final BiMap<OperatorNode, OperatorNode> temporaryOperators = HashBiMap.create();
@@ -23,26 +24,17 @@ public class RuleMatcher implements Serializable {
 
     private boolean matchFailed = false;
 
-    public RuleMatcher(OptimizerPlanner planner, OperatorNode operatorNode, TransformRule rule) {
+    public RuleMatcher(OptimizerPlanner planner, OperatorNode triggeringOperator,
+                       TransformRule rule, PatternNode triggeringPatternNode) {
         this.planner = planner;
-        this.triggerOperator = operatorNode;
+        this.triggerOperator = triggeringOperator;
+        this.triggeringPatternNode = triggeringPatternNode;
         this.rule = rule;
         this.patternInverse = this.rule.getMatchPattern().inverse();
     }
 
     public List<RuleCall> match() {
-        Set<PatternNode> allPatternNodes = rule.getMatchPattern().getAllNodes();
-
-        Optional<PatternNode> relevantPattern = allPatternNodes.stream()
-                .filter(node-> node.getOperatorClass().equals(triggerOperator.getOperator().getClass()))
-                .filter(node -> node.getPredicate().test(triggerOperator.getOperator()))
-                .findFirst();
-
-        if (! relevantPattern.isPresent()) {
-            return Collections.emptyList();
-        }
-
-        matchNode(triggerOperator, relevantPattern.get());
+        matchNode(triggerOperator, triggeringPatternNode);
         if (matchFailed) {
             return Collections.emptyList();
         }
@@ -50,11 +42,11 @@ public class RuleMatcher implements Serializable {
         // verify that all patternNodes have matched nodes
         lookupTable.asMap().values().forEach(matches -> Verify.verify(! matches.isEmpty()));
 
+        Set<PatternNode> allPatternNodes = rule.getMatchPattern().getAllNodes();
         List<Integer> idList = allPatternNodes.stream().map(p -> p.getId()).sorted().collect(toList());
         List<List<OperatorNode>> matchedNodes = allPatternNodes.stream().sorted(Comparator.comparing(p -> p.getId()))
                 .map(p -> ImmutableList.copyOf(lookupTable.get(p))).collect(toList());
         List<List<OperatorNode>> ruleCalls = Lists.cartesianProduct(matchedNodes);
-
 
         return ruleCalls.stream().map(matchOperatorList -> {
             Map<Integer, Integer> matchedOperators = new HashMap<>();

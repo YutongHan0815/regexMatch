@@ -5,11 +5,13 @@ import com.google.common.collect.*;
 
 
 import edu.ics.uci.optimizer.operator.*;
+import edu.ics.uci.optimizer.rule.PatternNode;
 import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.RuleMatcher;
 import edu.ics.uci.optimizer.rule.TransformRule;
 import edu.ics.uci.optimizer.triat.TraitDef;
 import edu.ics.uci.optimizer.triat.TraitSet;
+import io.vavr.Tuple2;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
@@ -30,7 +32,7 @@ public class OptimizerPlanner implements Serializable {
     private SubsetNode root;
 
     private final Set<TransformRule> ruleSet = new HashSet<>();
-    private final Multimap<Class<? extends Operator>, TransformRule> operatorRuleIndex = HashMultimap.create();
+    private final Multimap<Class<? extends Operator>, Tuple2<TransformRule, PatternNode>> operatorRuleIndex = HashMultimap.create();
 
     private final Queue<RuleCall> ruleCallQueue = new ArrayDeque<>();
 
@@ -52,7 +54,7 @@ public class OptimizerPlanner implements Serializable {
         Preconditions.checkArgument(! this.ruleSet.contains(rule));
         this.ruleSet.add(rule);
         rule.getMatchPattern().accept(pattern ->
-            this.operatorRuleIndex.put(pattern.getOperatorClass(), rule)
+            this.operatorRuleIndex.put(pattern.getOperatorClass(), new Tuple2<>(rule, pattern))
         );
     }
 
@@ -137,9 +139,13 @@ public class OptimizerPlanner implements Serializable {
 
 
     private void fireRules(OperatorNode operatorNode) {
-        Collection<TransformRule> relevantRules = operatorRuleIndex.get(operatorNode.getOperator().getClass());
+        List<Tuple2<TransformRule, PatternNode>> relevantRules = operatorRuleIndex.keySet().stream()
+                .filter(matchClass -> matchClass.isAssignableFrom(operatorNode.getOperator().getClass()))
+                .map(matchClass -> operatorRuleIndex.get(matchClass))
+                .flatMap(rules -> rules.stream())
+                .collect(toList());
 
-        relevantRules.stream().map(rule -> new RuleMatcher(this, operatorNode, rule).match())
+        relevantRules.stream().map(rule -> new RuleMatcher(this, operatorNode, rule._1, rule._2).match())
                 .flatMap(ruleCalls ->  ruleCalls.stream())
                 .forEach(this.ruleCallQueue::add);
     }

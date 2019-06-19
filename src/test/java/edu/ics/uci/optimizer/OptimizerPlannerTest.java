@@ -7,6 +7,7 @@ import edu.ics.uci.optimizer.operator.OperatorNode;
 import edu.ics.uci.optimizer.operator.SubsetNode;
 import edu.ics.uci.optimizer.rule.PatternNode;
 import edu.ics.uci.optimizer.rule.RuleSet;
+import edu.ics.uci.optimizer.rule.TransformRule;
 import edu.ics.uci.regex.optimizer.operators.*;
 import edu.ics.uci.regex.optimizer.rules.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -541,6 +542,8 @@ public class OptimizerPlannerTest {
         assertEquals(17, planner.getAndOrTree().getOperators().size());
 
     }
+
+
     @Test
     public void testAllRuleMatch1() {
         SubsetNode root = constructSimpleChain(planner, new LogicalMatchOperator("[0-9]+PM(a|b)"));
@@ -557,7 +560,17 @@ public class OptimizerPlannerTest {
     }
 
 
+    @Test
+    public void testMatchAnyOperatorClass() {
+        SubsetNode root = constructSimpleChain(planner, new LogicalMatchOperator("[0-9]+PM(a|b)"));
 
+        TransformRule matchAnyRule = dummyRule(operand(Operator.class).children(any()).build());
+
+        planner.addRule(matchAnyRule);
+        planner.setRoot(root);
+
+        assertEquals(1, planner.getRuleCallQueue().size());
+    }
 
 
 }
