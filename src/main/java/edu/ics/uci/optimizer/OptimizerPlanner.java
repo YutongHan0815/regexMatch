@@ -140,7 +140,8 @@ public class OptimizerPlanner implements Serializable {
         Collection<TransformRule> relevantRules = operatorRuleIndex.get(operatorNode.getOperator().getClass());
 
         relevantRules.stream().map(rule -> new RuleMatcher(this, operatorNode, rule).match())
-                .forEach(ruleCall -> ruleCall.ifPresent(this.ruleCallQueue::add));
+                .flatMap(ruleCalls ->  ruleCalls.stream())
+                .forEach(this.ruleCallQueue::add);
     }
 
 

@@ -8,6 +8,7 @@ import io.vavr.Tuple2;
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -16,6 +17,7 @@ import static com.google.common.base.Verify.verify;
 
 public class PatternNode implements Serializable {
 
+    // id in pre-order traversal of the pattern tree, starting from 0
     private final int id;
 
     private final Class<? extends Operator> operatorClass;
@@ -100,6 +102,28 @@ public class PatternNode implements Serializable {
 
     public static Tuple2<ChildPolicy, List<PatternNode.Builder>> any() {
         return new Tuple2<>(ChildPolicy.ANY, ImmutableList.of());
+    }
+
+
+    // ---------- Visitor Pattern ----------
+
+    public void accept(Consumer<PatternNode> visitor) {
+        this.children.forEach(children -> children.accept(visitor));
+        visitor.accept(this);
+    }
+
+    public Map<PatternNode, PatternNode> inverse() {
+        HashMap<PatternNode, PatternNode> parentMap = new HashMap<>();
+        this.accept(node -> node.getChildren().forEach(child -> parentMap.put(child, this)));
+        return parentMap;
+    }
+
+    public Set<PatternNode> getAllNodes() {
+        // TODO: change this back to hash set and verify if the bug still exists
+//        Set<PatternNode> nodes = new HashSet<>();
+        Set<PatternNode> nodes = new LinkedHashSet<>();
+        this.accept(nodes::add);
+        return nodes;
     }
 
 
