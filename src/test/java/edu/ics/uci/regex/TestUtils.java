@@ -1,21 +1,18 @@
 package edu.ics.uci.regex;
 
-import edu.ics.uci.regex.regexMatcher.Span;
-
-import java.util.List;
+import edu.ics.uci.regex.runtime.regexMatcher.relation.Relation;
 
 public class TestUtils {
     public TestUtils() {
 
     }
-    public static boolean equals(List<Span> expectedResults, List<Span> exactResults) {
+    public static boolean equals(Relation expectedResults, Relation exactResults) {
 
-        if (expectedResults.size() != exactResults.size()) {
+        if (expectedResults != exactResults) {
             return false;
-        } else {
-            return expectedResults.containsAll(exactResults) && exactResults.containsAll(expectedResults);
-        }
+        } else return true;
 
     }
+
 
 }

@@ -43,20 +43,18 @@ public class PatternNode implements Serializable {
 
     // ---------- PatternNode Builder with Fluent API ----------
 
-    public static class Builder implements Serializable {
+    public static class Builder<T extends Operator> implements Serializable {
 
-        private Class<? extends Operator> operatorClass;
-        private Predicate<? extends Operator> predicate;
+        private Class<T> operatorClass;
+        private Predicate<T> predicate;
         private ChildPolicy childPolicy;
         private List<PatternNode.Builder> children;
 
-
-        public Builder withClass(Class<? extends Operator> operatorClass) {
+        public Builder(Class<T> operatorClass) {
             this.operatorClass = operatorClass;
-            return this;
         }
 
-        public Builder predicate(Predicate<? extends Operator> predicate) {
+        public Builder predicate(Predicate<T> predicate) {
             this.predicate = predicate;
             return this;
         }
@@ -88,8 +86,8 @@ public class PatternNode implements Serializable {
         }
     }
 
-    public static PatternNode.Builder operand() {
-        return new PatternNode.Builder();
+    public static <T extends Operator> PatternNode.Builder<T> operand(Class<T> operatorClass) {
+        return new PatternNode.Builder<>(operatorClass);
     }
 
     public static Tuple2<ChildPolicy, List<PatternNode.Builder>> exact(List<PatternNode.Builder> children) {

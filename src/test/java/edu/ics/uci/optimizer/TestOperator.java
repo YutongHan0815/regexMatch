@@ -1,6 +1,8 @@
 package edu.ics.uci.optimizer;
 
 import edu.ics.uci.optimizer.operator.Operator;
+import edu.ics.uci.regex.runtime.regexMatcher.ExecutionOperator;
+import edu.ics.uci.regex.runtime.regexMatcher.relation.Relation;
 
 import java.util.Objects;
 
@@ -32,11 +34,15 @@ public abstract class TestOperator implements Operator {
     public String toString() {
         return this.getClass().getSimpleName() + "{" + property + "}";
     }
-
+    @Override
+    public ExecutionOperator getExecution() {
+        throw new UnsupportedOperationException("test operator is not supported in a query plan!");
+    }
     public static class OperatorA extends TestOperator {
         public OperatorA(String property) {
             super(property);
         }
+
     }
 
     public static class OperatorB extends TestOperator {
