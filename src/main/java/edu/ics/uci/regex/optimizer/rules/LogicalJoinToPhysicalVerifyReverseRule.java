@@ -1,5 +1,6 @@
 package edu.ics.uci.regex.optimizer.rules;
 
+import edu.ics.uci.optimizer.operator.Operator;
 import edu.ics.uci.optimizer.operator.OperatorNode;
 import edu.ics.uci.optimizer.operator.SubsetNode;
 import edu.ics.uci.optimizer.rule.PatternNode;
@@ -7,12 +8,16 @@ import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.TransformRule;
 import edu.ics.uci.optimizer.triat.Convention;
 import edu.ics.uci.regex.optimizer.operators.LogicalJoinOperator;
+import edu.ics.uci.regex.optimizer.operators.LogicalMatchOperator;
 import edu.ics.uci.regex.optimizer.operators.PhysicalVerifyJoinOperator;
 import edu.ics.uci.regex.runtime.regexMatcher.SubRegex;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+
+import static edu.ics.uci.optimizer.rule.PatternNode.*;
 
 public class LogicalJoinToPhysicalVerifyReverseRule implements TransformRule, Serializable {
     public static final LogicalJoinToPhysicalVerifyReverseRule INSTANCE = new LogicalJoinToPhysicalVerifyReverseRule();
@@ -21,7 +26,12 @@ public class LogicalJoinToPhysicalVerifyReverseRule implements TransformRule, Se
 
     public LogicalJoinToPhysicalVerifyReverseRule() {
         this.description = this.getClass().getName();
-        this.matchPattern = PatternNode.any(LogicalJoinOperator.class);
+
+        this.matchPattern = operand(LogicalJoinOperator.class)
+                .children(exact(Arrays.asList(operand(Operator.class).children(any()),
+                        operand(LogicalMatchOperator.class).children(any()))))
+                .build();
+
     }
 
 

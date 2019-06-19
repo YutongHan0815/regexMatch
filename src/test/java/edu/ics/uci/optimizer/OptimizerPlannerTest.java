@@ -275,7 +275,7 @@ public class OptimizerPlannerTest {
 
         SubsetNode root = constructSimpleChain(planner, new OperatorA("a1"));
 
-        planner.addRule(dummyRule(any(OperatorA.class)));
+        planner.addRule(dummyRule(operand(OperatorA.class).children(any()).build()));
 
         planner.setRoot(root);
 
@@ -301,7 +301,10 @@ public class OptimizerPlannerTest {
         SubsetNode root = constructSimpleChain(planner,
                 new OperatorA("a1"), new OperatorB("b1"), new OperatorC("c1"));
 
-        planner.addRule(dummyRule(exact(OperatorB.class, any(OperatorA.class))));
+        planner.addRule(dummyRule(operand(OperatorB.class)
+                .children(exact(Arrays.asList(operand(OperatorA.class).children(any())))).
+                        build()));
+                //exact(OperatorB.class, any(OperatorA.class))));
 
         planner.setRoot(root);
 
@@ -331,7 +334,11 @@ public class OptimizerPlannerTest {
                 Arrays.asList(subsetA, subsetB));
         SubsetNode root = SubsetNode.create(planner.getContext(), operatorRoot);
 
-        planner.addRule(dummyRule(exact(OperatorTwoInput.class, Arrays.asList(any(OperatorA.class), any(OperatorB.class)))));
+        planner.addRule(dummyRule(operand(OperatorTwoInput.class)
+                        .children(exact(Arrays.asList(operand(OperatorA.class).children(any()),
+                                operand(OperatorB.class).children(any()))))
+                        .build()));
+                //exact(OperatorTwoInput.class, Arrays.asList(any(OperatorA.class), any(OperatorB.class)))));
 
         planner.setRoot(root);
 
@@ -361,7 +368,7 @@ public class OptimizerPlannerTest {
         SubsetNode root = constructSimpleChain(planner,
                 new OperatorA("a1"), new OperatorB("b1"), new OperatorC("c1"));
 
-        planner.addRule(dummyRule(leaf(OperatorB.class)));
+        planner.addRule(dummyRule(operand(OperatorB.class).children(any()).build()));
         planner.setRoot(root);
         assertEquals(0, planner.getRuleCallQueue().size());
     }
@@ -510,8 +517,9 @@ public class OptimizerPlannerTest {
 
     public void testMatchAscending() {
         SubsetNode root = constructSimpleChain(planner, new OperatorB("a0"), new OperatorA("b0"));
-
-        planner.addRule(dummyRule(PatternNode.exact(OperatorA.class, PatternNode.leaf(OperatorB.class))));
+        planner.addRule(dummyRule(operand(OperatorA.class)
+                .children(exact(Arrays.asList(operand(OperatorB.class).children(any())))).
+                        build()));
         planner.setRoot(root);
 
         OperatorNode operatorNodeA = OperatorNode.create(planner.getContext(), new OperatorB("a2"), planner.defaultTraitSet());

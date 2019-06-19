@@ -35,8 +35,6 @@ public class RuleMatcher implements Serializable {
 
     public Optional<RuleCall> match() {
         Set<PatternNode> allPatternNodes = rule.getMatchPattern().getAllNodes();
-        //List<PatternNode> allPatternNodes = rule.getMatchPattern().getAllNodes();
-       // System.out.println(allPatternNodes);
 
         Optional<PatternNode> relevantPattern = allPatternNodes.stream()
                 //.peek(node -> System.out.println(node))

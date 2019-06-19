@@ -8,6 +8,7 @@ import io.vavr.Tuple2;
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -123,6 +124,22 @@ public class PatternNode implements Serializable {
 
     public List<PatternNode> getChildren() {
         return children;
+    }
+
+
+    public Set<PatternNode> getAllNodes() {
+        Set<PatternNode> nodes = new LinkedHashSet<>();
+        this.accept(nodes::add);
+        return nodes;
+    }
+    public void accept(Consumer<PatternNode> visitor) {
+        this.children.forEach(children -> children.accept(visitor));
+        visitor.accept(this);
+    }
+    public Map<PatternNode, PatternNode> inverse() {
+        Map<PatternNode, PatternNode> patternInverseMap = new HashMap<>();
+        this.children.forEach(child-> patternInverseMap.put(child, this));
+        return  patternInverseMap;
     }
 
     @Override

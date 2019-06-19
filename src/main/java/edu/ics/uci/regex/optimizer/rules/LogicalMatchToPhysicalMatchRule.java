@@ -27,7 +27,7 @@ public class LogicalMatchToPhysicalMatchRule implements TransformRule, Serializa
     public LogicalMatchToPhysicalMatchRule() {
 
         this.description = this.getClass().getName();
-        this.matchPattern = operand().withClass(LogicalJoinOperator.class).children(none()).build();
+        this.matchPattern = operand(LogicalMatchOperator.class).children(any()).build();
     }
 
     public String getDescription() {

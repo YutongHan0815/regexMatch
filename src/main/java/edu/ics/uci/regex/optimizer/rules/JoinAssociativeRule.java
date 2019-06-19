@@ -5,6 +5,7 @@ import edu.ics.uci.optimizer.operator.SubsetNode;
 import edu.ics.uci.optimizer.rule.PatternNode;
 import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.TransformRule;
+import edu.ics.uci.optimizer.triat.Convention;
 import edu.ics.uci.regex.optimizer.operators.Condition;
 import edu.ics.uci.regex.optimizer.operators.LogicalJoinOperator;
 import edu.ics.uci.regex.optimizer.operators.LogicalMatchOperator;
@@ -13,7 +14,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static edu.ics.uci.optimizer.rule.PatternNode.operand;
+import static edu.ics.uci.optimizer.rule.PatternNode.*;
 
 
 public class JoinAssociativeRule implements TransformRule, Serializable {
@@ -25,7 +26,10 @@ public class JoinAssociativeRule implements TransformRule, Serializable {
     public JoinAssociativeRule() {
         this.description = this.getClass().getName();
         this.mainPattern = operand(LogicalJoinOperator.class).predicate(op -> op.getCondition().equals(Condition.AFTER))
-                .children()
+                .children(exact(Arrays.asList(operand(LogicalMatchOperator.class).children(any()),
+                        operand(LogicalJoinOperator.class).predicate(op -> op.getCondition().equals(Condition.BEFORE)).
+                                children(exact(Arrays.asList(operand(LogicalMatchOperator.class).children(any()),
+                                        operand(LogicalMatchOperator.class).children(any())))))))
                 .build();
 
 //        this.mainPattern = PatternNode.exact(LogicalJoinOperator.class, op->op.getCondition().equals(Condition.AFTER),

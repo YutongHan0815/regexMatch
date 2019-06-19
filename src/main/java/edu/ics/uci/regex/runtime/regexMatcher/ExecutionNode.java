@@ -1,19 +1,15 @@
 package edu.ics.uci.regex.runtime.regexMatcher;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 public class ExecutionNode implements Serializable {
    private final ExecutionOperator executionOperator;
    private List<ExecutionNode> children;
-   private Multimap<ExecutionNode, ExecutionNode> parentChildMap = HashMultimap.create();
+
 
 
    public static ExecutionNode create(ExecutionOperator root) {
@@ -27,28 +23,15 @@ public class ExecutionNode implements Serializable {
    }
    private ExecutionNode(ExecutionOperator executionOperator, List<ExecutionNode> children) {
         this.executionOperator = executionOperator;
-        this.children = this.children;
+        this.children = children;
    }
 
     public ExecutionOperator getExecutionOperator() {
         return executionOperator;
     }
 
-    public void accept(Consumer<ExecutionNode> visitor) {
-       this.children.forEach(child-> child.accept(visitor));
-    }
-
     public List<ExecutionNode> getChildren() {
         return children;
-    }
-
-    public Multimap<ExecutionNode, ExecutionNode> getParentChildMap() {
-        return parentChildMap;
-    }
-
-    public void addNode(ExecutionNode parent, ExecutionNode child) {
-       this.children.add(child);
-       this.parentChildMap.put(parent, child);
     }
 
     @Override

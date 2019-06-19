@@ -13,6 +13,9 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
+import static edu.ics.uci.optimizer.rule.PatternNode.any;
+import static edu.ics.uci.optimizer.rule.PatternNode.operand;
+
 public class LogicalMatchToPhysicalMatchReverseRule implements TransformRule, Serializable {
     public static final LogicalMatchToPhysicalMatchReverseRule INSTANCE = new LogicalMatchToPhysicalMatchReverseRule();
     private final String description;
@@ -21,7 +24,7 @@ public class LogicalMatchToPhysicalMatchReverseRule implements TransformRule, Se
     public LogicalMatchToPhysicalMatchReverseRule() {
 
         this.description = this.getClass().getName();
-        this.matchPattern = PatternNode.any(LogicalMatchOperator.class);
+        this.matchPattern = operand(LogicalMatchOperator.class).children(any()).build();
     }
 
     public String getDescription() {

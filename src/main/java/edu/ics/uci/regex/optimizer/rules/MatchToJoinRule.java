@@ -12,27 +12,27 @@ import edu.ics.uci.regex.runtime.regexMatcher.SubRegex;
 import java.io.Serializable;
 import java.util.*;
 
+import static edu.ics.uci.optimizer.rule.PatternNode.any;
+import static edu.ics.uci.optimizer.rule.PatternNode.operand;
+
 public class MatchToJoinRule implements TransformRule, Serializable {
     public static final MatchToJoinRule INSTANCE = new MatchToJoinRule();
     private final String description;
-    private final PatternNode mainPattern;
+    private final PatternNode matchPattern;
 
     public MatchToJoinRule() {
         this.description = this.getClass().getName();
-        this.mainPattern = PatternNode.any(LogicalMatchOperator.class, op->op.isComposable());
+        this.matchPattern = operand(LogicalMatchOperator.class).children(any()).build();
     }
 
     public String getDescription() {
         return description;
     }
 
-    public PatternNode getMainPattern() {
-        return mainPattern;
-    }
 
     @Override
     public PatternNode getMatchPattern() {
-        return mainPattern;
+        return matchPattern;
     }
 
     @Override
@@ -70,11 +70,11 @@ public class MatchToJoinRule implements TransformRule, Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         MatchToJoinRule that = (MatchToJoinRule) o;
         return description.equals(that.description) &&
-                mainPattern.equals(that.mainPattern);
+                matchPattern.equals(that.matchPattern);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(description, mainPattern);
+        return Objects.hash(description, matchPattern);
     }
 }

@@ -23,7 +23,7 @@ public class LogicalJoinToPhysicalJoinRule implements TransformRule {
 
     public LogicalJoinToPhysicalJoinRule() {
         this.description = this.getClass().getName();
-        this.matchPattern = operand().withClass(LogicalJoinOperator.class).children(any()).build();
+        this.matchPattern = operand(LogicalJoinOperator.class).children(any()).build();
     }
 
     @Override

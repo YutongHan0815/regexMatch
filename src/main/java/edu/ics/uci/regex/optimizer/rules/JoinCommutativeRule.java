@@ -23,7 +23,7 @@ public class JoinCommutativeRule implements TransformRule, Serializable {
 
     public JoinCommutativeRule() {
         this.description = this.getClass().getName();
-        this.matchPattern = operand().withClass(LogicalJoinOperator.class).children(any()).build();
+        this.matchPattern = operand(LogicalJoinOperator.class).children(any()).build();
     }
 
     public String getDescription() {
