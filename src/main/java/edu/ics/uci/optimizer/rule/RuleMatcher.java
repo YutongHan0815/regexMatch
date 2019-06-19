@@ -1,10 +1,7 @@
 package edu.ics.uci.optimizer.rule;
 
 import com.google.common.base.Verify;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.*;
 import edu.ics.uci.optimizer.OptimizerPlanner;
 import edu.ics.uci.optimizer.operator.OperatorNode;
 import edu.ics.uci.optimizer.operator.SubsetNode;
@@ -33,58 +30,38 @@ public class RuleMatcher implements Serializable {
         this.patternInverse = this.rule.getMatchPattern().inverse();
     }
 
-    public Optional<RuleCall> match() {
+    public List<RuleCall> match() {
         Set<PatternNode> allPatternNodes = rule.getMatchPattern().getAllNodes();
 
         Optional<PatternNode> relevantPattern = allPatternNodes.stream()
-                //.peek(node -> System.out.println(node))
-                //.filter(node -> node.getOperatorClass().isAssignableFrom(triggerOperator.getOperator().getClass()))
                 .filter(node-> node.getOperatorClass().equals(triggerOperator.getOperator().getClass()))
                 .filter(node -> node.getPredicate().test(triggerOperator.getOperator()))
                 .findFirst();
 
-        //System.out.println("relevant" + relevantPattern);
-
         if (! relevantPattern.isPresent()) {
-            return Optional.empty();
+            return Collections.emptyList();
         }
-
 
         matchNode(triggerOperator, relevantPattern.get());
-
         if (matchFailed) {
-            return Optional.empty();
+            return Collections.emptyList();
         }
 
-        BiMap<PatternNode, Integer> patternOrdinals = HashBiMap.create();
-        int ordinal = 0;
-        Queue<PatternNode> toVisit = new LinkedList<>();
-        toVisit.add(rule.getMatchPattern());
+        // verify that all patternNodes have matched nodes
+        lookupTable.asMap().values().forEach(matches -> Verify.verify(! matches.isEmpty()));
 
-        while (! toVisit.isEmpty()) {
-            PatternNode patternNode = toVisit.poll();
-            toVisit.addAll(patternNode.getChildren());
-            patternOrdinals.put(patternNode, ordinal);
-            ordinal++;
-        }
-        BiMap<Integer, Integer> matchedOperators = HashBiMap.create();
+        List<Integer> idList = allPatternNodes.stream().map(p -> p.getId()).sorted().collect(toList());
+        List<List<OperatorNode>> matchedNodes = allPatternNodes.stream().sorted(Comparator.comparing(p -> p.getId()))
+                .map(p -> ImmutableList.copyOf(lookupTable.get(p))).collect(toList());
+        List<List<OperatorNode>> ruleCalls = Lists.cartesianProduct(matchedNodes);
 
-        for (PatternNode patternNode : allPatternNodes) {
-            Collection<OperatorNode> operatorNodes = this.lookupTable.get(patternNode);
-            Verify.verify(!operatorNodes.isEmpty());
-            if (operatorNodes.size() > 1) {
-                throw new UnsupportedOperationException("matching multiple edu.ics.uci.regex.optimizer.operators per pattern node not implemented");
-            }
-            OperatorNode matchedOperatorNode = operatorNodes.iterator().next();
-            if (temporaryOperators.containsKey(matchedOperatorNode)) {
-                matchedOperatorNode = temporaryOperators.get(matchedOperatorNode);
-            }
-             matchedOperators.put(patternOrdinals.get(patternNode), matchedOperatorNode.getOperatorID());
-        }
 
-        RuleCall ruleCall = new RuleCall(planner, rule, matchedOperators);
+        return ruleCalls.stream().map(matchOperatorList -> {
+            Map<Integer, Integer> matchedOperators = new HashMap<>();
+            idList.forEach(i -> matchedOperators.put(i, matchOperatorList.get(i).getOperatorID()));
+            return new RuleCall(planner, rule, matchedOperators);
+        }).collect(toList());
 
-        return Optional.of(ruleCall);
     }
 
     private void matchNode(OperatorNode operatorNode, PatternNode patternNode) {

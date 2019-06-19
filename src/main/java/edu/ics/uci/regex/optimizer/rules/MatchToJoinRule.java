@@ -12,8 +12,7 @@ import edu.ics.uci.regex.runtime.regexMatcher.SubRegex;
 import java.io.Serializable;
 import java.util.*;
 
-import static edu.ics.uci.optimizer.rule.PatternNode.any;
-import static edu.ics.uci.optimizer.rule.PatternNode.operand;
+import static edu.ics.uci.optimizer.rule.PatternNode.*;
 
 public class MatchToJoinRule implements TransformRule, Serializable {
     public static final MatchToJoinRule INSTANCE = new MatchToJoinRule();
@@ -22,7 +21,7 @@ public class MatchToJoinRule implements TransformRule, Serializable {
 
     public MatchToJoinRule() {
         this.description = this.getClass().getName();
-        this.matchPattern = operand(LogicalMatchOperator.class).children(any()).build();
+        this.matchPattern = operand(LogicalMatchOperator.class).children(none()).build();
     }
 
     public String getDescription() {

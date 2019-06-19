@@ -29,7 +29,7 @@ public class LogicalJoinToPhysicalVerifyReverseRule implements TransformRule, Se
 
         this.matchPattern = operand(LogicalJoinOperator.class)
                 .children(exact(Arrays.asList(operand(Operator.class).children(any()),
-                        operand(LogicalMatchOperator.class).children(any()))))
+                        operand(LogicalMatchOperator.class).children(none()))))
                 .build();
 
     }

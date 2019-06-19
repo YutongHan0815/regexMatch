@@ -17,6 +17,7 @@ import static com.google.common.base.Verify.verify;
 
 public class PatternNode implements Serializable {
 
+    // id in pre-order traversal of the pattern tree, starting from 0
     private final int id;
 
     private final Class<? extends Operator> operatorClass;
@@ -104,6 +105,28 @@ public class PatternNode implements Serializable {
     }
 
 
+    // ---------- Visitor Pattern ----------
+
+    public void accept(Consumer<PatternNode> visitor) {
+        this.children.forEach(children -> children.accept(visitor));
+        visitor.accept(this);
+    }
+
+    public Map<PatternNode, PatternNode> inverse() {
+        HashMap<PatternNode, PatternNode> parentMap = new HashMap<>();
+        this.accept(node -> node.getChildren().forEach(child -> parentMap.put(child, this)));
+        return parentMap;
+    }
+
+    public Set<PatternNode> getAllNodes() {
+        // TODO: change this back to hash set and verify if the bug still exists
+//        Set<PatternNode> nodes = new HashSet<>();
+        Set<PatternNode> nodes = new LinkedHashSet<>();
+        this.accept(nodes::add);
+        return nodes;
+    }
+
+
     // ---------- Getters, equals, hashcode, toString ----------
 
     public int getId() {
@@ -124,22 +147,6 @@ public class PatternNode implements Serializable {
 
     public List<PatternNode> getChildren() {
         return children;
-    }
-
-
-    public Set<PatternNode> getAllNodes() {
-        Set<PatternNode> nodes = new LinkedHashSet<>();
-        this.accept(nodes::add);
-        return nodes;
-    }
-    public void accept(Consumer<PatternNode> visitor) {
-        this.children.forEach(children -> children.accept(visitor));
-        visitor.accept(this);
-    }
-    public Map<PatternNode, PatternNode> inverse() {
-        Map<PatternNode, PatternNode> patternInverseMap = new HashMap<>();
-        this.children.forEach(child-> patternInverseMap.put(child, this));
-        return  patternInverseMap;
     }
 
     @Override
