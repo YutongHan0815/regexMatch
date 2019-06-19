@@ -3,63 +3,112 @@ package edu.ics.uci.optimizer.rule;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import edu.ics.uci.optimizer.operator.Operator;
+import io.vavr.Tuple2;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.function.Consumer;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Verify.verify;
 
 
 public class PatternNode implements Serializable {
+
+    private final int id;
 
     private final Class<? extends Operator> operatorClass;
 
     private final Predicate<? extends Operator> predicate;
 
-    private final ImmutableList<PatternNode> children;
+    private final ChildPolicy childPolicy;
 
-    private final ChildrenPolicy childrenPolicy;
+    private final List<PatternNode> children;
 
-    private PatternNode(Class<? extends Operator> operatorClass, Predicate<? extends Operator> predicate,
-                        List<PatternNode> children, ChildrenPolicy childrenPolicy) {
+    private PatternNode(
+            int id, Class<? extends Operator> operatorClass, Predicate<? extends Operator> predicate,
+            ChildPolicy childPolicy, List<PatternNode> children) {
         Preconditions.checkNotNull(operatorClass);
         Preconditions.checkNotNull(predicate);
+        Preconditions.checkNotNull(childPolicy);
         Preconditions.checkNotNull(children);
-        Preconditions.checkNotNull(childrenPolicy);
 
+        this.id = id;
         this.operatorClass = operatorClass;
         this.predicate = predicate;
+        this.childPolicy = childPolicy;
         this.children = ImmutableList.copyOf(children);
-        this.childrenPolicy = childrenPolicy;
     }
 
-    public static <T extends Operator> PatternNode leaf(Class<T> operatorClass) {
-        return leaf(operatorClass, op -> true);
+    // ---------- PatternNode Builder with Fluent API ----------
+
+    public static class Builder implements Serializable {
+
+        private Class<? extends Operator> operatorClass;
+        private Predicate<? extends Operator> predicate;
+        private ChildPolicy childPolicy;
+        private List<PatternNode.Builder> children;
+
+
+        public Builder withClass(Class<? extends Operator> operatorClass) {
+            this.operatorClass = operatorClass;
+            return this;
+        }
+
+        public Builder predicate(Predicate<? extends Operator> predicate) {
+            this.predicate = predicate;
+            return this;
+        }
+
+        public Builder children(Tuple2<ChildPolicy, List<Builder>> children) {
+            this.childPolicy = children._1;
+            this.children = children._2;
+            return this;
+        }
+
+        public PatternNode build() {
+            return buildInternal(new AtomicInteger(0));
+        }
+
+        private PatternNode buildInternal(AtomicInteger nextID) {
+            verify(this.operatorClass != null);
+            verify(this.childPolicy != null);
+            verify(this.children != null);
+
+            if (this.predicate == null) {
+                this.predicate = operator -> true;
+            }
+            int selfID = nextID.getAndIncrement();
+
+            List<PatternNode> childrenNodes = this.children.stream()
+                    .map(child -> child.buildInternal(nextID)).collect(Collectors.toList());
+
+            return new PatternNode(selfID, this.operatorClass, this.predicate, this.childPolicy, childrenNodes);
+        }
     }
 
-    public static <T extends Operator> PatternNode leaf(Class<T> operatorClass, Predicate<T> predicate) {
-        return exact(operatorClass, predicate, new ArrayList<>());
+    public static PatternNode.Builder operand() {
+        return new PatternNode.Builder();
     }
 
-    public static <T extends Operator> PatternNode exact(Class<T> operatorClass, PatternNode children) {
-        return exact(operatorClass, op -> true, Collections.singletonList(children));
+    public static Tuple2<ChildPolicy, List<PatternNode.Builder>> exact(List<PatternNode.Builder> children) {
+        return new Tuple2<>(ChildPolicy.EXACT, children);
     }
 
-    public static <T extends Operator> PatternNode exact(Class<T> operatorClass, List<PatternNode> children) {
-        return exact(operatorClass, op -> true, children);
+    public static Tuple2<ChildPolicy, List<PatternNode.Builder>> none() {
+        return new Tuple2<>(ChildPolicy.EXACT, ImmutableList.of());
     }
 
-    public static <T extends Operator> PatternNode exact(Class<T> operatorClass,
-                                                         Predicate<T> predicate, List<PatternNode> children) {
-        return new PatternNode(operatorClass, predicate, children, ChildrenPolicy.EXACT);
+    public static Tuple2<ChildPolicy, List<PatternNode.Builder>> any() {
+        return new Tuple2<>(ChildPolicy.ANY, ImmutableList.of());
     }
 
-    public static <T extends Operator> PatternNode any(Class<T> operatorClass) {
-        return any(operatorClass, op -> true);
-    }
 
-    public static <T extends Operator> PatternNode any(Class<T> operatorClass, Predicate<T> predicate) {
-        return new PatternNode(operatorClass, predicate, ImmutableList.of(), ChildrenPolicy.ANY);
+    // ---------- Getters, equals, hashcode, toString ----------
+
+    public int getId() {
+        return id;
     }
 
     public Class<? extends Operator> getOperatorClass() {
@@ -70,29 +119,12 @@ public class PatternNode implements Serializable {
         return predicate;
     }
 
+    public ChildPolicy getChildPolicy() {
+        return childPolicy;
+    }
+
     public List<PatternNode> getChildren() {
         return children;
-    }
-
-    public ChildrenPolicy getChildrenPolicy() {
-        return childrenPolicy;
-    }
-
-    public Map<PatternNode, PatternNode> inverse() {
-        HashMap<PatternNode, PatternNode> parentMap = new HashMap<>();
-        this.accept(node -> node.getChildren().forEach(child -> parentMap.put(child, this)));
-        return parentMap;
-    }
-
-    public Set<PatternNode> getAllNodes() {
-        Set<PatternNode> nodes = new HashSet<>();
-        this.accept(nodes::add);
-        return nodes;
-    }
-
-    public void accept(Consumer<PatternNode> visitor) {
-        this.children.forEach(children -> children.accept(visitor));
-        visitor.accept(this);
     }
 
     @Override
@@ -100,24 +132,26 @@ public class PatternNode implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PatternNode that = (PatternNode) o;
-        return Objects.equals(operatorClass, that.operatorClass) &&
-                Objects.equals(predicate, that.predicate) &&
-                Objects.equals(children, that.children) &&
-                childrenPolicy == that.childrenPolicy;
+        return id == that.id &&
+                operatorClass.equals(that.operatorClass) &&
+                predicate.equals(that.predicate) &&
+                childPolicy == that.childPolicy &&
+                children.equals(that.children);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(operatorClass, predicate, children, childrenPolicy);
+        return Objects.hash(id, operatorClass, predicate, childPolicy, children);
     }
 
     @Override
     public String toString() {
         return "PatternNode{" +
-                "operatorClass=" + operatorClass +
+                "id=" + id +
+                ", operatorClass=" + operatorClass +
                 ", predicate=" + predicate +
+                ", childPolicy=" + childPolicy +
                 ", children=" + children +
-                ", childrenPolicy=" + childrenPolicy +
                 '}';
     }
 }

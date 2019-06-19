@@ -11,29 +11,28 @@ import edu.ics.uci.regex.operators.*;
 import java.io.Serializable;
 import java.util.*;
 
+import static edu.ics.uci.optimizer.rule.PatternNode.any;
+import static edu.ics.uci.optimizer.rule.PatternNode.operand;
+
 public class JoinCommutativeRule implements TransformRule, Serializable {
 
     public static final JoinCommutativeRule INSTANCE = new JoinCommutativeRule();
 
     private final String description;
-    private final PatternNode mainPattern;
+    private final PatternNode matchPattern;
 
     public JoinCommutativeRule() {
         this.description = this.getClass().getName();
-        this.mainPattern = PatternNode.any(LogicalJoinOperator.class);
+        this.matchPattern = operand().withClass(LogicalJoinOperator.class).children(any()).build();
     }
 
     public String getDescription() {
         return description;
     }
 
-    public PatternNode getMainPattern() {
-        return mainPattern;
-    }
-
     @Override
     public PatternNode getMatchPattern() {
-        return mainPattern;
+        return matchPattern;
     }
 
 
@@ -75,11 +74,11 @@ public class JoinCommutativeRule implements TransformRule, Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         JoinCommutativeRule that = (JoinCommutativeRule) o;
         return description.equals(that.description) &&
-                mainPattern.equals(that.mainPattern);
+                matchPattern.equals(that.matchPattern);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(description, mainPattern);
+        return Objects.hash(description, matchPattern);
     }
 }

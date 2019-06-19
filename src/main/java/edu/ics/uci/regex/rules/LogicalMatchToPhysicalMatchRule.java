@@ -5,6 +5,7 @@ import edu.ics.uci.optimizer.operator.SubsetNode;
 import edu.ics.uci.optimizer.rule.PatternNode;
 import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.TransformRule;
+import edu.ics.uci.regex.operators.LogicalJoinOperator;
 import edu.ics.uci.regex.operators.LogicalMatchOperator;
 import edu.ics.uci.regex.operators.PhysicalMatchOperator;
 import edu.ics.uci.optimizer.operator.OperatorNode;
@@ -12,6 +13,8 @@ import edu.ics.uci.optimizer.triat.Convention;
 
 import java.io.Serializable;
 import java.util.List;
+
+import static edu.ics.uci.optimizer.rule.PatternNode.*;
 
 
 public class LogicalMatchToPhysicalMatchRule implements TransformRule, Serializable {
@@ -23,7 +26,7 @@ public class LogicalMatchToPhysicalMatchRule implements TransformRule, Serializa
     public LogicalMatchToPhysicalMatchRule() {
 
         this.description = this.getClass().getName();
-        this.matchPattern = PatternNode.any(LogicalMatchOperator.class);
+        this.matchPattern = operand().withClass(LogicalJoinOperator.class).children(none()).build();
     }
 
     public String getDescription() {

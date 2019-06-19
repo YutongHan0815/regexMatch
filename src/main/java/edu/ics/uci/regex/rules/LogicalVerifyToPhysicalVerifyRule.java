@@ -4,6 +4,7 @@ import edu.ics.uci.optimizer.operator.SubsetNode;
 import edu.ics.uci.optimizer.rule.PatternNode;
 import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.TransformRule;
+import edu.ics.uci.regex.operators.LogicalJoinOperator;
 import edu.ics.uci.regex.operators.LogicalVerifyOperator;
 
 import edu.ics.uci.regex.operators.PhysicalVerifyOperator;
@@ -12,6 +13,8 @@ import edu.ics.uci.optimizer.triat.Convention;
 
 import java.io.Serializable;
 import java.util.List;
+
+import static edu.ics.uci.optimizer.rule.PatternNode.*;
 
 public class LogicalVerifyToPhysicalVerifyRule implements TransformRule, Serializable {
 
@@ -22,7 +25,7 @@ public class LogicalVerifyToPhysicalVerifyRule implements TransformRule, Seriali
     public LogicalVerifyToPhysicalVerifyRule() {
 
         this.description = this.getClass().getName();
-        this.matchPattern = PatternNode.any(LogicalVerifyOperator.class);
+        this.matchPattern = operand().withClass(LogicalVerifyOperator.class).children(any()).build();
     }
 
     public String getDescription() {

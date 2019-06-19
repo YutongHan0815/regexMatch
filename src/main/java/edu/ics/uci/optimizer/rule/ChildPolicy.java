@@ -1,6 +1,6 @@
 package edu.ics.uci.optimizer.rule;
 
-public enum ChildrenPolicy {
+public enum ChildPolicy {
 
     /**
      * Signifies that operand can have any number of children.
@@ -10,7 +10,6 @@ public enum ChildrenPolicy {
      * Signifies that the operand's children must precisely match its
      * child operands, in order.
      */
-    EXACT,
-    LEAF,
+    EXACT
 
 }

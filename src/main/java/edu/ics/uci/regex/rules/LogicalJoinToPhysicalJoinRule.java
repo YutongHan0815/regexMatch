@@ -12,6 +12,9 @@ import edu.ics.uci.optimizer.triat.Convention;
 
 import java.util.List;
 
+import static edu.ics.uci.optimizer.rule.PatternNode.any;
+import static edu.ics.uci.optimizer.rule.PatternNode.operand;
+
 
 public class LogicalJoinToPhysicalJoinRule implements TransformRule {
     public static final LogicalJoinToPhysicalJoinRule INSTANCE = new LogicalJoinToPhysicalJoinRule();
@@ -20,7 +23,7 @@ public class LogicalJoinToPhysicalJoinRule implements TransformRule {
 
     public LogicalJoinToPhysicalJoinRule() {
         this.description = this.getClass().getName();
-        this.matchPattern = PatternNode.any(LogicalJoinOperator.class);
+        this.matchPattern = operand().withClass(LogicalJoinOperator.class).children(any()).build();
     }
 
     @Override

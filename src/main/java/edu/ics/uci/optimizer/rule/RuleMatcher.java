@@ -137,7 +137,7 @@ public class RuleMatcher implements Serializable {
 
         // start matching the pattern's child
         boolean match = false;
-        switch (patternNode.getChildrenPolicy()) {
+        switch (patternNode.getChildPolicy()) {
             case ANY:
                 // ANY have no children and "self" node is already matched, directly return true
                 Verify.verify(patternNode.getChildren().isEmpty());
