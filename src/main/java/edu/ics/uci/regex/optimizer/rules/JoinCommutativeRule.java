@@ -1,6 +1,7 @@
 package edu.ics.uci.regex.optimizer.rules;
 
 
+import edu.ics.uci.optimizer.operator.Operator;
 import edu.ics.uci.optimizer.rule.PatternNode;
 import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.TransformRule;
@@ -11,8 +12,7 @@ import edu.ics.uci.regex.optimizer.operators.*;
 import java.io.Serializable;
 import java.util.*;
 
-import static edu.ics.uci.optimizer.rule.PatternNode.any;
-import static edu.ics.uci.optimizer.rule.PatternNode.operand;
+import static edu.ics.uci.optimizer.rule.PatternNode.*;
 
 public class JoinCommutativeRule implements TransformRule, Serializable {
 
@@ -23,7 +23,10 @@ public class JoinCommutativeRule implements TransformRule, Serializable {
 
     public JoinCommutativeRule() {
         this.description = this.getClass().getName();
-        this.matchPattern = operand(LogicalJoinOperator.class).children(any()).build();
+        this.matchPattern = operand(LogicalJoinOperator.class)
+                .children(exact(Arrays.asList(operand(Operator.class).children(any()),
+                        operand(Operator.class).children(any()))))
+                .build();
     }
 
     public String getDescription() {
@@ -39,10 +42,9 @@ public class JoinCommutativeRule implements TransformRule, Serializable {
     @Override
     public void onMatch(RuleCall ruleCall) {
         final OperatorNode logicalJoinOpN = ruleCall.getOperator(0);
-        List<SubsetNode> inputs = logicalJoinOpN.getInputs();
-        //System.out.println(logicalJoinOpN.toString()+ " " + inputs.size());
-        if(inputs.size() != 2)
-            throw new UnsupportedOperationException("the inputs of Join not equal to 2 is not implements");
+        final OperatorNode logicalLeftOpN = ruleCall.getOperator(1);
+        final OperatorNode logicalRightOpN = ruleCall.getOperator(2);
+
         Condition condition = Condition.EQUAL;
 
         final LogicalJoinOperator logicalJoinOperator = logicalJoinOpN.getOperator();
@@ -62,7 +64,9 @@ public class JoinCommutativeRule implements TransformRule, Serializable {
         }
         LogicalJoinOperator newJoin = new LogicalJoinOperator(condition);
 
-        OperatorNode joinOperatorNode = OperatorNode.create(ruleCall.getContext(), newJoin, logicalJoinOpN.getTraitSet(), Arrays.asList(inputs.get(1), inputs.get(0)));
+        SubsetNode newLeft = SubsetNode.create(ruleCall.getContext(), logicalLeftOpN);
+        SubsetNode newRight = SubsetNode.create(ruleCall.getContext(), logicalRightOpN);
+        OperatorNode joinOperatorNode = OperatorNode.create(ruleCall.getContext(), newJoin, logicalJoinOpN.getTraitSet(), Arrays.asList(newLeft, newRight));
 
         ruleCall.transformTo(joinOperatorNode);
 

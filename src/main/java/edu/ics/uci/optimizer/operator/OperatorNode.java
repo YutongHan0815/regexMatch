@@ -72,7 +72,7 @@ public class OperatorNode implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash( operator, traitSet, inputs);
+        return Objects.hash(operator, traitSet, inputs);
     }
 
     @Override

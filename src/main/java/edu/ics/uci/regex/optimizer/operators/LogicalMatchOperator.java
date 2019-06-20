@@ -87,7 +87,7 @@ public class LogicalMatchOperator implements Operator, Serializable {
             subRegexList.add(subRegex2);
         }
 
-
         return subRegexList;
     }
+
 }

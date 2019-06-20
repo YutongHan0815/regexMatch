@@ -72,7 +72,6 @@ public class RuleMatcher implements Serializable {
         // match ascending from this node
         Optional<PatternNode> parentPattern = Optional.ofNullable(patternInverse.get(patternNode));
         if (! parentPattern.isPresent()) {
-            //System.out.println("4");
             return;
         }
 
@@ -85,12 +84,13 @@ public class RuleMatcher implements Serializable {
             ).collect(toList());
             OperatorNode tempParent = OperatorNode.create(planner.getContext(), parent.getOperator(), parent.getTraitSet(), tempInputs);
             temporaryOperators.put(tempParent, parent);
+            //TODO
+            //boolean parentMatch = this.matchDescending(parent, parentPattern.get());
             boolean parentMatch = this.matchDescending(tempParent, parentPattern.get());
             parentAnyMatch = parentAnyMatch || parentMatch;
         }
 
         if (!parentAnyMatch) {
-            //System.out.println("5");
             this.matchFailed = true;
         }
     }
