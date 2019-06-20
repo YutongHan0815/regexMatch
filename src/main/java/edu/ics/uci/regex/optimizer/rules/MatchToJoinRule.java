@@ -21,7 +21,9 @@ public class MatchToJoinRule implements TransformRule, Serializable {
 
     public MatchToJoinRule() {
         this.description = this.getClass().getName();
-        this.matchPattern = operand(LogicalMatchOperator.class).children(none()).build();
+        this.matchPattern = operand(LogicalMatchOperator.class).predicate(op-> op.isComposable())
+                .children(none())
+                .build();
     }
 
     public String getDescription() {

@@ -21,21 +21,17 @@ public class JoinAssociativeRule implements TransformRule, Serializable {
     public static final JoinAssociativeRule INSTANCE = new JoinAssociativeRule();
 
     private final String description;
-    private final PatternNode mainPattern;
+    private final PatternNode matchPattern;
 
     public JoinAssociativeRule() {
         this.description = this.getClass().getName();
-        this.mainPattern = operand(LogicalJoinOperator.class).predicate(op -> op.getCondition().equals(Condition.AFTER))
-                .children(exact(Arrays.asList(operand(LogicalMatchOperator.class).children(any()),
+        this.matchPattern = operand(LogicalJoinOperator.class).predicate(op -> op.getCondition().equals(Condition.AFTER))
+                .children(exact(Arrays.asList(operand(LogicalMatchOperator.class).children(none()),
                         operand(LogicalJoinOperator.class).predicate(op -> op.getCondition().equals(Condition.BEFORE)).
-                                children(exact(Arrays.asList(operand(LogicalMatchOperator.class).children(any()),
-                                        operand(LogicalMatchOperator.class).children(any())))))))
+                                children(exact(Arrays.asList(operand(LogicalMatchOperator.class).children(none()),
+                                        operand(LogicalMatchOperator.class).children(none())))))))
                 .build();
 
-//        this.mainPattern = PatternNode.exact(LogicalJoinOperator.class, op->op.getCondition().equals(Condition.AFTER),
-//                Arrays.asList(PatternNode.leaf(LogicalMatchOperator.class),
-//                        PatternNode.exact(LogicalJoinOperator.class, op->op.getCondition().equals(Condition.BEFORE),
-//                        Arrays.asList(PatternNode.leaf(LogicalMatchOperator.class), PatternNode.leaf(LogicalMatchOperator.class)))));
     }
 
     public String getDescription() {
@@ -43,12 +39,12 @@ public class JoinAssociativeRule implements TransformRule, Serializable {
     }
 
     public PatternNode getMainPattern() {
-        return mainPattern;
+        return matchPattern;
     }
 
     @Override
     public PatternNode getMatchPattern() {
-        return mainPattern;
+        return matchPattern;
     }
 
 
@@ -89,11 +85,11 @@ public class JoinAssociativeRule implements TransformRule, Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         JoinAssociativeRule that = (JoinAssociativeRule) o;
         return Objects.equals(description, that.description) &&
-                Objects.equals(mainPattern, that.mainPattern);
+                Objects.equals(matchPattern, that.matchPattern);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(description, mainPattern);
+        return Objects.hash(description, matchPattern);
     }
 }

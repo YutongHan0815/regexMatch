@@ -84,7 +84,7 @@ public class OptimizerPlannerTest {
 
         planner.setRoot(root);
 
-        // TODO: assert the parent-children links are correct
+        // assert the parent-children links are correct
 
         OperatorNode operatorNode1 = planner.getRoot().getOperators().iterator().next().getInputs().get(0).
                 getOperators().iterator().next();
@@ -111,7 +111,7 @@ public class OptimizerPlannerTest {
         SubsetNode root = SubsetNode.create(planner.getContext(), operatorJ);
         planner.setRoot(root);
 
-        // TODO: assert the parent-children links are correct
+        // assert the parent-children links are correct
         assertEquals(new OperatorA("a1"),
                 planner.getRoot().getOperators().iterator().next().getInputs().get(0).
                         getOperators().iterator().next().getOperator());
@@ -434,7 +434,6 @@ public class OptimizerPlannerTest {
      * Test RuleCall Join Rules
      */
     @Test
-    //TODO
     public void testRuleCallMultiVerifyRule() {
         SubsetNode subsetA = createLeafSubset(planner, new LogicalMatchOperator("a0"));
         SubsetNode subsetB = createLeafSubset(planner, new LogicalMatchOperator("b0"));
@@ -474,7 +473,7 @@ public class OptimizerPlannerTest {
 
     @Test
     public void testJoinCommutativeRuleMatch() {
-        SubsetNode subsetA = createLeafSubset(planner, new LogicalMatchOperator("[0-9]+PM"));
+        SubsetNode subsetA = createLeafSubset(planner, new LogicalMatchOperator("[0-9]+pm"));
         SubsetNode subsetB = createLeafSubset(planner, new LogicalMatchOperator("b0"));
 
         OperatorNode operatorRoot = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(Condition.AFTER), planner.defaultTraitSet(),
