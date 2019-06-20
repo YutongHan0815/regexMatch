@@ -7,4 +7,5 @@ public class DefaultSubsetMemo implements SubsetMemo {
     private Cost bestCost;
     private OperatorNode bestOperator;
 
+
 }
