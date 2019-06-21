@@ -1,9 +1,9 @@
 package edu.ics.uci.regex.optimizer.operators;
 
 
-
 import com.google.common.base.Preconditions;
 import edu.ics.uci.optimizer.operator.Operator;
+import edu.ics.uci.optimizer.operator.PhysicalOperator;
 import edu.ics.uci.regex.runtime.regexMatcher.ExecutionOperator;
 import edu.ics.uci.regex.runtime.regexMatcher.MatchRegex;
 import edu.ics.uci.regex.runtime.regexMatcher.SubRegex;
@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 
-public class PhysicalMatchOperator implements Operator, Serializable {
+public class PhysicalMatchOperator implements PhysicalOperator, Serializable {
     private final SubRegex subRegex;
     // match left to right / match reverse regex
     private final boolean matchDirection;
@@ -21,6 +21,7 @@ public class PhysicalMatchOperator implements Operator, Serializable {
     public static PhysicalMatchOperator create(SubRegex subRegex) {
         return new PhysicalMatchOperator(subRegex, true);
     }
+
     public static PhysicalMatchOperator create(String mainRegex) {
         return new PhysicalMatchOperator(new SubRegex(mainRegex), true);
     }
@@ -30,7 +31,7 @@ public class PhysicalMatchOperator implements Operator, Serializable {
 
         this.subRegex = subRegex;
         this.matchDirection = matchDirection;
-   }
+    }
 
     public SubRegex getSubRegex() {
         return subRegex;
@@ -40,7 +41,11 @@ public class PhysicalMatchOperator implements Operator, Serializable {
         return matchDirection;
     }
 
-
+    @Override
+    public ExecutionOperator getExecution() {
+        MatchRegex matcher = new MatchRegex(this);
+        return matcher;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -53,17 +58,14 @@ public class PhysicalMatchOperator implements Operator, Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getDigest());
-    }
-    @Override
-    public String getDigest() {
-        return "PhysicalMatchOperator(subRegex=" + subRegex + matchDirection + ")";
-    }
-    @Override
-    public ExecutionOperator getExecution() {
-
-        MatchRegex matcher = new MatchRegex(this);
-        return matcher;
+        return Objects.hash(subRegex, matchDirection);
     }
 
+    @Override
+    public String toString() {
+        return "PhysicalMatchOperator{" +
+                "subRegex=" + subRegex +
+                ", matchDirection=" + matchDirection +
+                '}';
+    }
 }

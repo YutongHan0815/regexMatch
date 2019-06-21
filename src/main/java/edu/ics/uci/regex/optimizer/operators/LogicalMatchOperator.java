@@ -38,27 +38,6 @@ public class LogicalMatchOperator implements Operator, Serializable {
         return subRegex;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        LogicalMatchOperator that = (LogicalMatchOperator) o;
-        return Objects.equals(subRegex, that.subRegex);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(subRegex);
-    }
-    @Override
-    public String getDigest() {
-        return "LogicalMatchOperator(" + subRegex.getRegex() + ")";
-    }
-    @Override
-    public ExecutionOperator getExecution() {
-        throw new UnsupportedOperationException("a logical match operator is not supported in a query plan!");
-    }
-
     public boolean isComposable() {
 
         final SubRegex regex = this.getSubRegex();
@@ -90,4 +69,23 @@ public class LogicalMatchOperator implements Operator, Serializable {
         return subRegexList;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LogicalMatchOperator that = (LogicalMatchOperator) o;
+        return Objects.equals(subRegex, that.subRegex);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(subRegex);
+    }
+
+    @Override
+    public String toString() {
+        return "LogicalMatchOperator{" +
+                "subRegex=" + subRegex +
+                '}';
+    }
 }

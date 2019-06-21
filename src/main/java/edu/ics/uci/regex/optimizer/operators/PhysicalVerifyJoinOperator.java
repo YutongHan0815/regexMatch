@@ -4,6 +4,7 @@ package edu.ics.uci.regex.optimizer.operators;
 
 import com.google.common.base.Preconditions;
 import edu.ics.uci.optimizer.operator.Operator;
+import edu.ics.uci.optimizer.operator.PhysicalOperator;
 import edu.ics.uci.regex.runtime.regexMatcher.ExecutionOperator;
 import edu.ics.uci.regex.runtime.regexMatcher.SubRegex;
 import edu.ics.uci.regex.runtime.regexMatcher.VerifyRegex;
@@ -13,7 +14,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 
-public class PhysicalVerifyJoinOperator implements Operator, Serializable {
+public class PhysicalVerifyJoinOperator implements PhysicalOperator, Serializable {
 
     private final Condition condition;
     private final boolean matchDirection;
@@ -46,29 +47,33 @@ public class PhysicalVerifyJoinOperator implements Operator, Serializable {
     }
 
     @Override
+    public ExecutionOperator getExecution() {
+        VerifyRegex matcher = new VerifyRegex(this);
+        return matcher;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PhysicalVerifyJoinOperator that = (PhysicalVerifyJoinOperator) o;
         return matchDirection == that.matchDirection &&
-                condition == that.condition;
+                condition == that.condition &&
+                Objects.equals(subRegex, that.subRegex);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getDigest());
-    }
-
-    public String getDigest() {
-        return "PhysicalVerifyJoinOperator(condition=" + condition + matchDirection + ")";
+        return Objects.hash(condition, matchDirection, subRegex);
     }
 
     @Override
-    public ExecutionOperator getExecution() {
-        VerifyRegex matcher = new VerifyRegex(this);
-
-
-        return matcher;
+    public String toString() {
+        return "PhysicalVerifyJoinOperator{" +
+                "condition=" + condition +
+                ", matchDirection=" + matchDirection +
+                ", subRegex=" + subRegex +
+                '}';
     }
 }
 

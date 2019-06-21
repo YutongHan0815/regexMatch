@@ -1,6 +1,8 @@
 package edu.ics.uci.regex.runtime.regexMatcher;
 
+import edu.ics.uci.optimizer.operator.Operator;
 import edu.ics.uci.optimizer.operator.OperatorNode;
+import edu.ics.uci.optimizer.operator.PhysicalOperator;
 import edu.ics.uci.regex.runtime.regexMatcher.relation.Relation;
 
 import java.io.Serializable;
@@ -27,7 +29,11 @@ public class RegexQueryEngine implements QueryEngine, Serializable {
                         children.add(convert(op.getOperator()));
                     }));
         }
-        ExecutionNode  parentExecutionOperator = ExecutionNode.create(operatorNode.getOperator().getExecution(), children);
+        Operator operator = operatorNode.getOperator();
+        if (! (operator instanceof PhysicalOperator)) {
+            throw new RuntimeException(operator + " is not a physical operator");
+        }
+        ExecutionNode parentExecutionOperator = ExecutionNode.create(((PhysicalOperator) operator).getExecution(), children);
         children.forEach(child-> planTree.addNode(parentExecutionOperator, child));
         return parentExecutionOperator;
     }

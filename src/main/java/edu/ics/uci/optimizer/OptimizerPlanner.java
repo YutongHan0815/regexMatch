@@ -33,8 +33,8 @@ public class OptimizerPlanner implements Serializable {
     private final List<TraitDef> traitDefs = new ArrayList<>();
 
     private final AndOrTree andOrTree;
-    private final PlannerMemo<DefaultSetMemo, DefaultSubsetMemo, DefaultOperatorMemo> plannerMemo;
     private SubsetNode root;
+    private final PlannerMemo<DefaultSetMemo, DefaultSubsetMemo, DefaultOperatorMemo> plannerMemo;
 
     private final Set<TransformRule> ruleSet = new HashSet<>();
     private final Multimap<Class<? extends Operator>, Tuple2<TransformRule, PatternNode>> operatorRuleIndex = HashMultimap.create();
@@ -146,9 +146,6 @@ public class OptimizerPlanner implements Serializable {
 
 
     private void fireRules(OperatorNode operatorNode) {
-        System.out.println(operatorNode.getOperatorID() +"   "+operatorNode.toString());
-        System.out.println(operatorRuleIndex.asMap());
-
         List<Tuple2<TransformRule, PatternNode>> relevantRules = operatorRuleIndex.keySet().stream()
                 .filter(matchClass -> matchClass.isAssignableFrom(operatorNode.getOperator().getClass()))
                 .map(matchClass -> operatorRuleIndex.get(matchClass))
@@ -158,8 +155,6 @@ public class OptimizerPlanner implements Serializable {
         relevantRules.stream().map(rule -> new RuleMatcher(this, operatorNode, rule._1, rule._2).match())
                 .flatMap(ruleCalls ->  ruleCalls.stream())
                 .forEach(this.ruleCallQueue::add);
-
-        ruleCallQueue.stream().forEach(ruleCall -> System.out.println("rule  "+ruleCall.toString()));
     }
 
 

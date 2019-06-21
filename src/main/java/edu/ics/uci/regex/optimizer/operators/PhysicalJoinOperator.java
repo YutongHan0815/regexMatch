@@ -2,13 +2,14 @@ package edu.ics.uci.regex.optimizer.operators;
 
 import com.google.common.base.Preconditions;
 import edu.ics.uci.optimizer.operator.Operator;
+import edu.ics.uci.optimizer.operator.PhysicalOperator;
 import edu.ics.uci.regex.runtime.regexMatcher.ExecutionOperator;
 import edu.ics.uci.regex.runtime.regexMatcher.JoinRelations;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class PhysicalJoinOperator implements Operator, Serializable {
+public class PhysicalJoinOperator implements PhysicalOperator, Serializable {
 
     private final Condition condition;
 
@@ -25,7 +26,11 @@ public class PhysicalJoinOperator implements Operator, Serializable {
         return condition;
     }
 
-
+    @Override
+    public ExecutionOperator getExecution() {
+        JoinRelations matcher = new JoinRelations(this);
+        return matcher;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -37,16 +42,13 @@ public class PhysicalJoinOperator implements Operator, Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getDigest());
+        return Objects.hash(condition);
     }
 
     @Override
-    public String getDigest() {
-        return "PhysicalJoinOperator(" + condition  +")";
-    }
-    @Override
-    public ExecutionOperator getExecution() {
-        JoinRelations matcher = new JoinRelations(this);
-        return matcher;
+    public String toString() {
+        return "PhysicalJoinOperator{" +
+                "condition=" + condition +
+                '}';
     }
 }

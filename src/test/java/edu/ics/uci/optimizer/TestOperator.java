@@ -34,10 +34,7 @@ public abstract class TestOperator implements Operator {
     public String toString() {
         return this.getClass().getSimpleName() + "{" + property + "}";
     }
-    @Override
-    public ExecutionOperator getExecution() {
-        throw new UnsupportedOperationException("test operator is not supported in a query plan!");
-    }
+
     public static class OperatorA extends TestOperator {
         public OperatorA(String property) {
             super(property);

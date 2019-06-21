@@ -21,7 +21,6 @@ public class LogicalJoinOperator implements Operator, Serializable {
         return condition;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -32,14 +31,13 @@ public class LogicalJoinOperator implements Operator, Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getDigest());
+        return Objects.hash(condition);
     }
+
     @Override
-    public String getDigest() {
-        return "LogicalJoinOperator(" + condition + ")";
-    }
-    @Override
-    public ExecutionOperator getExecution() {
-        throw new UnsupportedOperationException("a logical join operator is not supported in a query plan!");
+    public String toString() {
+        return "LogicalJoinOperator{" +
+                "condition=" + condition +
+                '}';
     }
 }

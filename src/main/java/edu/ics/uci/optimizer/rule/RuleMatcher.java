@@ -5,6 +5,7 @@ import com.google.common.collect.*;
 import edu.ics.uci.optimizer.OptimizerPlanner;
 import edu.ics.uci.optimizer.operator.OperatorNode;
 import edu.ics.uci.optimizer.operator.SubsetNode;
+import io.vavr.Tuple2;
 
 import java.io.Serializable;
 import java.util.*;
@@ -42,6 +43,14 @@ public class RuleMatcher implements Serializable {
         // verify that all patternNodes have matched nodes
         lookupTable.asMap().values().forEach(matches -> Verify.verify(! matches.isEmpty()));
 
+        // replace temporary operators in the lookup table with real operators
+        ImmutableList.copyOf(lookupTable.entries()).forEach(e -> {
+            if (temporaryOperators.containsKey(e.getValue())) {
+                lookupTable.remove(e.getKey(), e.getValue());
+                lookupTable.put(e.getKey(), temporaryOperators.get(e.getValue()));
+            }
+        });
+
         Set<PatternNode> allPatternNodes = rule.getMatchPattern().getAllNodes();
         List<Integer> idList = allPatternNodes.stream().map(p -> p.getId()).sorted().collect(toList());
         List<List<OperatorNode>> matchedNodes = allPatternNodes.stream().sorted(Comparator.comparing(p -> p.getId()))
@@ -71,23 +80,24 @@ public class RuleMatcher implements Serializable {
 
         // match ascending from this node
         Optional<PatternNode> parentPattern = Optional.ofNullable(patternInverse.get(patternNode));
-        if (! parentPattern.isPresent()) {
+        if (! parentPattern.isPresent() || ! patternNode.getIndexInParent().isEmpty()) {
             return;
         }
 
-        Collection<OperatorNode> parents = planner.getAndOrTree().getOperatorParents(operatorNode.getOperatorID());
+        Collection<Tuple2<OperatorNode, Integer>> parents = planner.getAndOrTree().getOperatorParents(operatorNode.getOperatorID());
 
         boolean parentAnyMatch = false;
-        for (OperatorNode parent: parents) {
-            List<SubsetNode> tempInputs = parent.getInputs().stream().map(input ->
-                input.getOperators().contains(operatorNode) ? SubsetNode.create(planner.getContext(), operatorNode) : input
-            ).collect(toList());
-            OperatorNode tempParent = OperatorNode.create(planner.getContext(), parent.getOperator(), parent.getTraitSet(), tempInputs);
-            temporaryOperators.put(tempParent, parent);
-            //TODO
-            //boolean parentMatch = this.matchDescending(parent, parentPattern.get());
-            boolean parentMatch = this.matchDescending(tempParent, parentPattern.get());
-            parentAnyMatch = parentAnyMatch || parentMatch;
+        for (Tuple2<OperatorNode, Integer> parent: parents) {
+            if (parent._2().equals(patternNode.getIndexInParent().get())) {
+                OperatorNode parentOp = parent._1();
+                List<SubsetNode> tempInputs = parentOp.getInputs().stream().map(input ->
+                        input.getOperators().contains(operatorNode) ? SubsetNode.create(planner.getContext(), operatorNode) : input
+                ).collect(toList());
+                OperatorNode tempParent = OperatorNode.create(planner.getContext(), parentOp.getOperator(), parentOp.getTraitSet(), tempInputs);
+                temporaryOperators.put(tempParent, parentOp);
+                boolean parentMatch = this.matchDescending(tempParent, parentPattern.get());
+                parentAnyMatch = parentAnyMatch || parentMatch;
+            }
         }
 
         if (!parentAnyMatch) {

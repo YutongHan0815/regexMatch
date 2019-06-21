@@ -3,9 +3,11 @@ package edu.ics.uci.optimizer.operator;
 
 import com.google.common.collect.*;
 import edu.ics.uci.optimizer.OptimizerContext;
+import io.vavr.Tuple2;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.IntStream;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -19,7 +21,7 @@ public class AndOrTree implements Serializable {
     private final Map<Integer, OperatorNode> operators = new HashMap<>();
     private final Map<Integer, Integer> operatorToSet = new HashMap<>();
 
-    private final Multimap<Integer, Integer> operatorParentMap = HashMultimap.create();
+    private final Multimap<Integer, Tuple2<OperatorNode, Integer>> operatorParentMap = HashMultimap.create();
 
     public static AndOrTree create(OptimizerContext context) {
         return new AndOrTree(context);
@@ -75,25 +77,28 @@ public class AndOrTree implements Serializable {
         this.sets.get(setID).addOperator(operator);
 
         // add parents pointers from this to existing parents in the same subset
-        Set<OperatorNode> existingParents = this.getSet(setID).getSubset(operator.getTraitSet()).getOperators().stream()
+        Set<Tuple2<OperatorNode, Integer>> existingParents = this.getSet(setID)
+                .getSubset(operator.getTraitSet()).getOperators().stream()
                 .map(op -> this.getOperatorParents(op.getOperatorID()))
                 .flatMap(l -> l.stream()).collect(toSet());
-        existingParents.forEach(parent -> this.operatorParentMap.put(operator.getOperatorID(), parent.getOperatorID()));
+        existingParents.forEach(parent -> this.operatorParentMap.put(operator.getOperatorID(), parent));
 
         // add parent pointers from the new operator's children
-        operator.getInputs().stream().flatMap(subset -> subset.getOperators().stream()).forEach(child ->
-            this.operatorParentMap.put(child.getOperatorID(), operator.getOperatorID())
-        );
+        for (int i = 0; i < operator.getInputs().size(); i++) {
+            for (OperatorNode inputOp : operator.getInputs().get(i).getOperators()) {
+                this.operatorParentMap.put(inputOp.getOperatorID(), new Tuple2<>(operator, i));
+            }
+        }
 
         return operatorID;
     }
 
-    public Collection<OperatorNode> getOperatorParents(int operatorID) {
+    public Collection<Tuple2<OperatorNode, Integer>> getOperatorParents(int operatorID) {
         checkArgument(this.operators.containsKey(operatorID));
-        return this.operatorParentMap.get(operatorID).stream().map(parent -> this.operators.get(parent)).collect(toSet());
+        return this.operatorParentMap.get(operatorID);
     }
 
-    public Collection<OperatorNode> getOperatorParents(OperatorNode operator) {
+    public Collection<Tuple2<OperatorNode, Integer>>  getOperatorParents(OperatorNode operator) {
         return getOperatorParents(operator.getOperatorID());
     }
 

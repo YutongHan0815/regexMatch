@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import edu.ics.uci.optimizer.operator.Operator;
 import io.vavr.Tuple2;
+import io.vavr.control.Option;
 
 import java.io.Serializable;
 import java.util.*;
@@ -11,6 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.google.common.base.Verify.verify;
 
@@ -19,6 +21,8 @@ public class PatternNode implements Serializable {
 
     // id in pre-order traversal of the pattern tree, starting from 0
     private final int id;
+
+    private final Option<Integer> indexInParent;
 
     private final Class<? extends Operator> operatorClass;
 
@@ -29,14 +33,16 @@ public class PatternNode implements Serializable {
     private final List<PatternNode> children;
 
     private PatternNode(
-            int id, Class<? extends Operator> operatorClass, Predicate<? extends Operator> predicate,
+            int id, Option<Integer> indexInParent, Class<? extends Operator> operatorClass, Predicate<? extends Operator> predicate,
             ChildPolicy childPolicy, List<PatternNode> children) {
+        Preconditions.checkNotNull(indexInParent);
         Preconditions.checkNotNull(operatorClass);
         Preconditions.checkNotNull(predicate);
         Preconditions.checkNotNull(childPolicy);
         Preconditions.checkNotNull(children);
 
         this.id = id;
+        this.indexInParent = indexInParent;
         this.operatorClass = operatorClass;
         this.predicate = predicate;
         this.childPolicy = childPolicy;
@@ -68,10 +74,10 @@ public class PatternNode implements Serializable {
         }
 
         public PatternNode build() {
-            return buildInternal(new AtomicInteger(0));
+            return buildInternal(new AtomicInteger(0), Option.none());
         }
 
-        private PatternNode buildInternal(AtomicInteger nextID) {
+        private PatternNode buildInternal(AtomicInteger nextID, Option<Integer> indexInParent) {
             verify(this.operatorClass != null);
             verify(this.childPolicy != null);
             verify(this.children != null);
@@ -81,10 +87,11 @@ public class PatternNode implements Serializable {
             }
             int selfID = nextID.getAndIncrement();
 
-            List<PatternNode> childrenNodes = this.children.stream()
-                    .map(child -> child.buildInternal(nextID)).collect(Collectors.toList());
+            List<PatternNode> childrenNodes = IntStream.range(0, this.children.size())
+                    .mapToObj(i -> this.children.get(i).buildInternal(nextID, Option.of(i)))
+                    .collect(Collectors.toList());
 
-            return new PatternNode(selfID, this.operatorClass, this.predicate, this.childPolicy, childrenNodes);
+            return new PatternNode(selfID, indexInParent, this.operatorClass, this.predicate, this.childPolicy, childrenNodes);
         }
     }
 
@@ -133,6 +140,10 @@ public class PatternNode implements Serializable {
         return id;
     }
 
+    public Option<Integer> getIndexInParent() {
+        return indexInParent;
+    }
+
     public Class<? extends Operator> getOperatorClass() {
         return operatorClass;
     }
@@ -155,6 +166,7 @@ public class PatternNode implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         PatternNode that = (PatternNode) o;
         return id == that.id &&
+                indexInParent.equals(that.indexInParent) &&
                 operatorClass.equals(that.operatorClass) &&
                 predicate.equals(that.predicate) &&
                 childPolicy == that.childPolicy &&
@@ -163,13 +175,14 @@ public class PatternNode implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, operatorClass, predicate, childPolicy, children);
+        return Objects.hash(id, indexInParent, operatorClass, predicate, childPolicy, children);
     }
 
     @Override
     public String toString() {
         return "PatternNode{" +
                 "id=" + id +
+                ", indexInParent=" + indexInParent +
                 ", operatorClass=" + operatorClass +
                 ", predicate=" + predicate +
                 ", childPolicy=" + childPolicy +
