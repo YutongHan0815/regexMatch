@@ -1,11 +1,15 @@
 package edu.ics.uci.regex.optimizer.operators;
 
 
+import com.google.common.base.Preconditions;
 import com.google.re2j.PublicParser;
 import com.google.re2j.PublicRE2;
 import com.google.re2j.PublicRegexp;
 import com.google.re2j.PublicSimplify;
 import edu.ics.uci.optimizer.operator.Operator;
+import edu.ics.uci.optimizer.operator.schema.Field;
+import edu.ics.uci.optimizer.operator.schema.RowType;
+import edu.ics.uci.optimizer.operator.schema.SpanType;
 import edu.ics.uci.regex.runtime.regexMatcher.ExecutionOperator;
 import edu.ics.uci.regex.runtime.regexMatcher.SubRegex;
 import edu.ics.uci.regex.runtime.regexMatcher.relation.Relation;
@@ -14,6 +18,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static edu.ics.uci.optimizer.operator.schema.SpanType.SPAN_TYPE;
 
 
 public class LogicalMatchOperator implements Operator, Serializable {
@@ -67,6 +73,11 @@ public class LogicalMatchOperator implements Operator, Serializable {
         }
 
         return subRegexList;
+    }
+
+    public RowType deriveRowType(List<RowType> inputRowTypeList) {
+        Preconditions.checkArgument(inputRowTypeList.isEmpty());
+        return RowType.of(Field.of(this.subRegex.getRegex(), SPAN_TYPE));
     }
 
     @Override

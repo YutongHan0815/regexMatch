@@ -4,6 +4,12 @@ import edu.ics.uci.optimizer.operator.EquivSet;
 import edu.ics.uci.optimizer.rule.PatternNode;
 import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.TransformRule;
+import edu.ics.uci.regex.optimizer.expression.BooleanExpr;
+import edu.ics.uci.regex.optimizer.expression.BooleanExpr.BooleanType;
+import edu.ics.uci.regex.optimizer.expression.ComparisonExpr;
+import edu.ics.uci.regex.optimizer.expression.ComparisonExpr.ComparisionType;
+import edu.ics.uci.regex.optimizer.expression.InputRef;
+import edu.ics.uci.regex.optimizer.expression.InputRef.SpanAccess;
 import edu.ics.uci.regex.optimizer.operators.*;
 import edu.ics.uci.optimizer.operator.OperatorNode;
 import edu.ics.uci.optimizer.operator.SubsetNode;
@@ -41,7 +47,13 @@ public class MatchToJoinRule implements TransformRule, Serializable {
         final OperatorNode logicalMatchOpN = ruleCall.getOperator(0);
         final LogicalMatchOperator logicalMatchOperator = logicalMatchOpN.getOperator();
 
-        LogicalJoinOperator newJoin = new LogicalJoinOperator(Condition.AFTER);
+        LogicalJoinOperator newJoin = new LogicalJoinOperator(
+                ComparisonExpr.of(ComparisionType.EQ,
+                        InputRef.of(0, SpanAccess.END), InputRef.of(1, SpanAccess.START)
+                )
+        );
+
+
         List<SubRegex> subRegexList = logicalMatchOperator.decompose();
         LogicalMatchOperator newLeftMatch = new LogicalMatchOperator(subRegexList.get(0));
         LogicalMatchOperator newRightMatch = new LogicalMatchOperator(subRegexList.get(1));

@@ -2,23 +2,35 @@ package edu.ics.uci.regex.optimizer.operators;
 
 import com.google.common.base.Preconditions;
 import edu.ics.uci.optimizer.operator.Operator;
+import edu.ics.uci.optimizer.operator.schema.Field;
+import edu.ics.uci.optimizer.operator.schema.RowType;
+import edu.ics.uci.regex.optimizer.expression.Expression;
 import edu.ics.uci.regex.runtime.regexMatcher.ExecutionOperator;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
+
+import static edu.ics.uci.optimizer.operator.schema.SpanType.SPAN_TYPE;
 
 public class LogicalJoinOperator implements Operator, Serializable {
 
-    private final Condition condition;
+//    private final Condition condition;
+    private final Expression condition;
 
-
-    public LogicalJoinOperator(Condition condition) {
+    public LogicalJoinOperator(Expression condition) {
         Preconditions.checkNotNull(condition);
         this.condition = condition;
     }
 
-    public Condition getCondition() {
+    public Expression getCondition() {
         return condition;
+    }
+
+    public RowType deriveRowType(List<RowType> inputRowTypeList) {
+        Preconditions.checkArgument(inputRowTypeList.size() == 2);
+        throw new UnsupportedOperationException();
+//        return RowType.of(Field.of(this.subRegex.getRegex(), SPAN_TYPE));
     }
 
     @Override
