@@ -4,10 +4,7 @@ import edu.ics.uci.optimizer.operator.EquivSet;
 import edu.ics.uci.optimizer.rule.PatternNode;
 import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.TransformRule;
-import edu.ics.uci.regex.optimizer.expression.BooleanExpr;
-import edu.ics.uci.regex.optimizer.expression.BooleanExpr.BooleanType;
 import edu.ics.uci.regex.optimizer.expression.ComparisonExpr;
-import edu.ics.uci.regex.optimizer.expression.ComparisonExpr.ComparisionType;
 import edu.ics.uci.regex.optimizer.expression.InputRef;
 import edu.ics.uci.regex.optimizer.expression.InputRef.SpanAccess;
 import edu.ics.uci.regex.optimizer.operators.*;
@@ -19,6 +16,7 @@ import java.io.Serializable;
 import java.util.*;
 
 import static edu.ics.uci.optimizer.rule.PatternNode.*;
+import static edu.ics.uci.regex.optimizer.expression.ComparisonExpr.ComparisionType.EQ;
 
 public class MatchToJoinRule implements TransformRule, Serializable {
     public static final MatchToJoinRule INSTANCE = new MatchToJoinRule();
@@ -48,7 +46,7 @@ public class MatchToJoinRule implements TransformRule, Serializable {
         final LogicalMatchOperator logicalMatchOperator = logicalMatchOpN.getOperator();
 
         LogicalJoinOperator newJoin = new LogicalJoinOperator(
-                ComparisonExpr.of(ComparisionType.EQ,
+                ComparisonExpr.of(EQ,
                         InputRef.of(0, SpanAccess.END), InputRef.of(1, SpanAccess.START)
                 )
         );

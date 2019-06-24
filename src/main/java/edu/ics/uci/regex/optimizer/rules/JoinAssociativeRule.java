@@ -5,8 +5,9 @@ import edu.ics.uci.optimizer.operator.SubsetNode;
 import edu.ics.uci.optimizer.rule.PatternNode;
 import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.TransformRule;
-import edu.ics.uci.optimizer.triat.Convention;
-import edu.ics.uci.regex.optimizer.operators.Condition;
+import edu.ics.uci.regex.optimizer.expression.BooleanExpr;
+import edu.ics.uci.regex.optimizer.expression.ComparisonExpr;
+import edu.ics.uci.regex.optimizer.expression.InputRef;
 import edu.ics.uci.regex.optimizer.operators.LogicalJoinOperator;
 import edu.ics.uci.regex.optimizer.operators.LogicalMatchOperator;
 
@@ -25,10 +26,14 @@ public class JoinAssociativeRule implements TransformRule, Serializable {
 
     public JoinAssociativeRule() {
         this.description = this.getClass().getName();
-        this.matchPattern = operand(LogicalJoinOperator.class).predicate(op -> op.getCondition().equals(Condition.AFTER))
+        this.matchPattern = operand(LogicalJoinOperator.class).predicate(op -> op.getCondition().equals(
+                ComparisonExpr.of(ComparisonExpr.ComparisionType.EQ,
+                        InputRef.of(0, InputRef.SpanAccess.END), InputRef.of(1, InputRef.SpanAccess.START))))
                 .children(exact(Arrays.asList(operand(LogicalMatchOperator.class).children(none()),
-                        operand(LogicalJoinOperator.class).predicate(op -> op.getCondition().equals(Condition.BEFORE)).
-                                children(exact(Arrays.asList(operand(LogicalMatchOperator.class).children(none()),
+                        operand(LogicalJoinOperator.class).predicate(op -> op.getCondition().equals(
+                                ComparisonExpr.of(ComparisonExpr.ComparisionType.EQ,
+                                        InputRef.of(0, InputRef.SpanAccess.START), InputRef.of(1, InputRef.SpanAccess.END))))
+                                .children(exact(Arrays.asList(operand(LogicalMatchOperator.class).children(none()),
                                         operand(LogicalMatchOperator.class).children(none())))))))
                 .build();
 
@@ -64,16 +69,25 @@ public class JoinAssociativeRule implements TransformRule, Serializable {
         SubsetNode subsetNodeA = SubsetNode.create(ruleCall.getContext(), matchOperatorA);
         SubsetNode subsetNodeC = SubsetNode.create(ruleCall.getContext(), matchOperatorC);
 
-        OperatorNode logicalJoinAGOpN = OperatorNode.create(ruleCall.getContext(),
-                new LogicalJoinOperator(Condition.GAP_AFTER), logicalJoinAfterOpN.getTraitSet(), Arrays.asList(subsetNodeA, subsetNodeC));
-        SubsetNode subsetNodeJoin = SubsetNode.create(ruleCall.getContext(), logicalJoinAGOpN);
+        OperatorNode logicalJoinACOpN = OperatorNode.create(ruleCall.getContext(),
+                new LogicalJoinOperator(
+                        ComparisonExpr.of(ComparisonExpr.ComparisionType.GE,
+                        InputRef.of(0, InputRef.SpanAccess.END), InputRef.of(1, InputRef.SpanAccess.START)
+                )), logicalJoinAfterOpN.getTraitSet(), Arrays.asList(subsetNodeA, subsetNodeC));
+        SubsetNode subsetNodeJoin = SubsetNode.create(ruleCall.getContext(), logicalJoinACOpN);
 
         OperatorNode matchOperatorB = OperatorNode.create(ruleCall.getContext(), logicalMatchOpNB.getOperator(),
                 logicalJoinAfterOpN.getTraitSet(), logicalMatchOpNB.getInputs());
         SubsetNode subsetNodeB = SubsetNode.create(ruleCall.getContext(), matchOperatorB);
 
         OperatorNode logicalJoinEqualOpN = OperatorNode.create(ruleCall.getContext(),
-                new LogicalJoinOperator(Condition.EQUAL), logicalJoinAfterOpN.getTraitSet(), Arrays.asList(subsetNodeJoin, subsetNodeB));
+                new LogicalJoinOperator(
+                        BooleanExpr.of(BooleanExpr.BooleanType.AND,
+                              Arrays.asList(
+                                      ComparisonExpr.of(ComparisonExpr.ComparisionType.EQ, InputRef.of(0, InputRef.SpanAccess.END), InputRef.of(2, InputRef.SpanAccess.START)),
+                                      ComparisonExpr.of(ComparisonExpr.ComparisionType.EQ, InputRef.of(2, InputRef.SpanAccess.END), InputRef.of(1, InputRef.SpanAccess.START))
+                              ))),
+                logicalJoinAfterOpN.getTraitSet(), Arrays.asList(subsetNodeJoin, subsetNodeB));
 
         ruleCall.transformTo(logicalJoinEqualOpN);
 

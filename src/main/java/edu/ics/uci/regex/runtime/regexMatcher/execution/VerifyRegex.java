@@ -1,6 +1,7 @@
-package edu.ics.uci.regex.runtime.regexMatcher;
+package edu.ics.uci.regex.runtime.regexMatcher.execution;
 
 import edu.ics.uci.regex.optimizer.operators.PhysicalVerifyJoinOperator;
+import edu.ics.uci.regex.runtime.regexMatcher.RegexMatchUtils;
 import edu.ics.uci.regex.runtime.regexMatcher.relation.Relation;
 import edu.ics.uci.regex.runtime.regexMatcher.relation.Span;
 
@@ -25,16 +26,16 @@ public class VerifyRegex implements ExecutionOperator, Serializable {
     @Override
     public Relation computeMatchingResult(List<Relation> inputs) {
         Relation matchingResults = Relation.create(inputs.get(0).getFieldValue());
-        inputs.get(0).tupleList.forEach(tuple-> {
-            Span span = tuple.getRootNode().getSpan();
-            Matcher javaMatcher = RegexMatchUtils.createMatcher(inputs.get(0).getFieldValue().substring(span.getStart(), span.getEnd()),
-                    physicalVerifyJoinOperator.getSubRegex().regex);
-            int end = span.getEnd();
-            if (javaMatcher.find(end) && javaMatcher.start() == end) {
-                end = javaMatcher.end();
-                matchingResults.addTuple(new Span(span.getStart(), end));
-            }
-        });
+//        inputs.get(0).tupleList.forEach(tuple-> {
+//            Span span = tuple.getRootNode().getSpan();
+//            Matcher javaMatcher = RegexMatchUtils.createMatcher(inputs.get(0).getFieldValue().substring(span.getStart(), span.getEnd()),
+//                    physicalVerifyJoinOperator.getSubRegex().getRegex());
+//            int end = span.getEnd();
+//            if (javaMatcher.find(end) && javaMatcher.start() == end) {
+//                end = javaMatcher.end();
+//                matchingResults.addTuple(new Span(span.getStart(), end));
+//            }
+//        });
 
         return matchingResults;
     }

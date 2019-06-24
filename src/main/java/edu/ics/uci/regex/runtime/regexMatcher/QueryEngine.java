@@ -1,8 +1,8 @@
 package edu.ics.uci.regex.runtime.regexMatcher;
 
-import edu.ics.uci.regex.runtime.regexMatcher.relation.Relation;
+import edu.ics.uci.regex.runtime.regexMatcher.relation.Tuple;
 
 public interface QueryEngine {
-    Relation executeQuery(String fieldValue);
+    Tuple executeQuery(Tuple tuple);
 
 }

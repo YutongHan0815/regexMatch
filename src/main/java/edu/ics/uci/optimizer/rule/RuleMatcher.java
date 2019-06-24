@@ -80,7 +80,7 @@ public class RuleMatcher implements Serializable {
 
         // match ascending from this node
         Optional<PatternNode> parentPattern = Optional.ofNullable(patternInverse.get(patternNode));
-        if (! parentPattern.isPresent() || ! patternNode.getIndexInParent().isEmpty()) {
+        if ((! parentPattern.isPresent()) ||  patternNode.getIndexInParent().isEmpty()) {
             return;
         }
 

@@ -2,14 +2,11 @@ package edu.ics.uci.regex;
 
 
 import edu.ics.uci.regex.optimizer.operators.PhysicalMatchOperator;
-import edu.ics.uci.regex.runtime.regexMatcher.MatchRegex;
-import edu.ics.uci.regex.runtime.regexMatcher.SubRegex;
-import edu.ics.uci.regex.runtime.regexMatcher.relation.Relation;
+import edu.ics.uci.regex.runtime.regexMatcher.execution.MatchRegex;
 import edu.ics.uci.regex.runtime.regexMatcher.relation.Span;
 import org.junit.jupiter.api.Test;
 
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

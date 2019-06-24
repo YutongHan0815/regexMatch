@@ -1,7 +1,5 @@
 package edu.ics.uci.regex;
 
-import edu.ics.uci.regex.runtime.regexMatcher.relation.Relation;
-
 public class TestUtils {
     public TestUtils() {
 

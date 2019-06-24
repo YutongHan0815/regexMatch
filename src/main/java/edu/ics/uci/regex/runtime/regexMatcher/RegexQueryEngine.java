@@ -3,7 +3,9 @@ package edu.ics.uci.regex.runtime.regexMatcher;
 import edu.ics.uci.optimizer.operator.Operator;
 import edu.ics.uci.optimizer.operator.OperatorNode;
 import edu.ics.uci.optimizer.operator.PhysicalOperator;
-import edu.ics.uci.regex.runtime.regexMatcher.relation.Relation;
+import edu.ics.uci.regex.runtime.regexMatcher.execution.ExecutionNode;
+import edu.ics.uci.regex.runtime.regexMatcher.execution.ExecutionTree;
+import edu.ics.uci.regex.runtime.regexMatcher.relation.Tuple;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -39,12 +41,10 @@ public class RegexQueryEngine implements QueryEngine, Serializable {
     }
 
     @Override
-    public Relation executeQuery(String fieldValue) {
-        Relation relation = Relation.create(fieldValue).getInitializeRelation();
+    public Tuple executeQuery(Tuple tuple) {
+        Tuple.Builder tupleBuilder = new Tuple.Builder(tuple);
 
-
-
-        return relation;
+        return tupleBuilder.build();
     }
 
 }

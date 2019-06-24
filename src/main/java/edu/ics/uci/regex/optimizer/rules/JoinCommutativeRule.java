@@ -7,12 +7,17 @@ import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.TransformRule;
 import edu.ics.uci.optimizer.operator.OperatorNode;
 import edu.ics.uci.optimizer.operator.SubsetNode;
+import edu.ics.uci.regex.optimizer.expression.ComparisonExpr;
+
+import edu.ics.uci.regex.optimizer.expression.Expression;
+import edu.ics.uci.regex.optimizer.expression.InputRef;
 import edu.ics.uci.regex.optimizer.operators.*;
 
 import java.io.Serializable;
 import java.util.*;
 
 import static edu.ics.uci.optimizer.rule.PatternNode.*;
+import static edu.ics.uci.regex.optimizer.expression.ComparisonExpr.ComparisionType.*;
 
 public class JoinCommutativeRule implements TransformRule, Serializable {
 
@@ -45,21 +50,30 @@ public class JoinCommutativeRule implements TransformRule, Serializable {
         final OperatorNode logicalLeftOpN = ruleCall.getOperator(1);
         final OperatorNode logicalRightOpN = ruleCall.getOperator(2);
 
-        Condition condition = Condition.EQUAL;
+        Expression condition = ComparisonExpr.of(GE,
+                InputRef.of(0, InputRef.SpanAccess.END), InputRef.of(1, InputRef.SpanAccess.START));
+
 
         final LogicalJoinOperator logicalJoinOperator = logicalJoinOpN.getOperator();
-        switch (logicalJoinOperator.getCondition()) {
-            case AFTER:
-                condition = Condition.BEFORE;
+
+        final InputRef inputRef0 = InputRef.of(0, InputRef.SpanAccess.START);
+        final InputRef inputRef1 = InputRef.of(1, InputRef.SpanAccess.END);
+
+        switch ((ComparisonExpr.ComparisionType)logicalJoinOperator.getCondition().getOperator()) {
+            case EQ:
+                condition = ComparisonExpr.of(EQ, inputRef0, inputRef1);
                 break;
-            case BEFORE:
-                condition = Condition.AFTER;
+            case LT:
+                condition = ComparisonExpr.of(GT, inputRef0, inputRef1);
                 break;
-            case GAP_AFTER:
-                condition = Condition.GAP_BEFORE;
+            case LE:
+                condition = ComparisonExpr.of(GE, inputRef0, inputRef1);
                 break;
-            case GAP_BEFORE:
-                condition = Condition.GAP_AFTER;
+            case GE:
+                condition = ComparisonExpr.of(LE, inputRef0, inputRef1);
+                break;
+            case GT:
+                condition = ComparisonExpr.of(LT, inputRef0, inputRef1);
                 break;
         }
         LogicalJoinOperator newJoin = new LogicalJoinOperator(condition);

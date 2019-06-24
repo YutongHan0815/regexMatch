@@ -1,7 +1,8 @@
-package edu.ics.uci.regex.runtime.regexMatcher;
+package edu.ics.uci.regex.runtime.regexMatcher.execution;
 
 
 import edu.ics.uci.regex.optimizer.operators.PhysicalMatchOperator;
+import edu.ics.uci.regex.runtime.regexMatcher.RegexMatchUtils;
 import edu.ics.uci.regex.runtime.regexMatcher.relation.Relation;
 import edu.ics.uci.regex.runtime.regexMatcher.relation.Span;
 
@@ -27,19 +28,19 @@ public class MatchRegex implements ExecutionOperator, Serializable {
     @Override
     // Match regex on a string from left to right
     public Relation computeMatchingResult(List<Relation> inputs) {
-        String mainRegex = physicalMatchOperator.getSubRegex().regex;
+        String mainRegex = physicalMatchOperator.getSubRegex().getRegex();
         String fieldValue = inputs.get(0).getFieldValue();
         Relation matchingResults = Relation.create(fieldValue);
-        inputs.get(0).tupleList.forEach(tuple-> {
-            Span span = tuple.getRootNode().getSpan();
-            Matcher javaMatcher = RegexMatchUtils.createMatcher(fieldValue.substring(span.getStart(),
-                    span.getEnd()), mainRegex);
-            while (javaMatcher.find()) {
-                int start = javaMatcher.start();
-                int end = javaMatcher.end();
-                matchingResults.addTuple(new Span(start, end));
-            }
-        });
+//        inputs.get(0).tupleList.forEach(tuple-> {
+//            Span span = tuple.getField(physicalMatchOperator.getSubRegex().getRegex()).getType().getTypeName();
+//            Matcher javaMatcher = RegexMatchUtils.createMatcher(fieldValue.substring(span.getStart(),
+//                    span.getEnd()), mainRegex);
+//            while (javaMatcher.find()) {
+//                int start = javaMatcher.start();
+//                int end = javaMatcher.end();
+//                matchingResults.addTuple(new Span(start, end));
+//            }
+//        });
 
 
         return matchingResults;

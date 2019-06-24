@@ -2,16 +2,13 @@ package edu.ics.uci.regex.optimizer.operators;
 
 import com.google.common.base.Preconditions;
 import edu.ics.uci.optimizer.operator.Operator;
-import edu.ics.uci.optimizer.operator.schema.Field;
 import edu.ics.uci.optimizer.operator.schema.RowType;
 import edu.ics.uci.regex.optimizer.expression.Expression;
-import edu.ics.uci.regex.runtime.regexMatcher.ExecutionOperator;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-import static edu.ics.uci.optimizer.operator.schema.SpanType.SPAN_TYPE;
 
 public class LogicalJoinOperator implements Operator, Serializable {
 
@@ -33,12 +30,13 @@ public class LogicalJoinOperator implements Operator, Serializable {
 //        return RowType.of(Field.of(this.subRegex.getRegex(), SPAN_TYPE));
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LogicalJoinOperator that = (LogicalJoinOperator) o;
-        return condition == that.condition;
+        return Objects.equals(condition, that.condition);
     }
 
     @Override

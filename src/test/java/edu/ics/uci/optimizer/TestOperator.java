@@ -1,8 +1,6 @@
 package edu.ics.uci.optimizer;
 
 import edu.ics.uci.optimizer.operator.Operator;
-import edu.ics.uci.regex.runtime.regexMatcher.ExecutionOperator;
-import edu.ics.uci.regex.runtime.regexMatcher.relation.Relation;
 
 import java.util.Objects;
 

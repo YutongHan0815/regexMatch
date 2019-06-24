@@ -5,9 +5,12 @@ import edu.ics.uci.optimizer.operator.EquivSet;
 import edu.ics.uci.optimizer.operator.Operator;
 import edu.ics.uci.optimizer.operator.OperatorNode;
 import edu.ics.uci.optimizer.operator.SubsetNode;
-import edu.ics.uci.optimizer.rule.PatternNode;
+
 import edu.ics.uci.optimizer.rule.RuleSet;
 import edu.ics.uci.optimizer.rule.TransformRule;
+import edu.ics.uci.regex.optimizer.expression.ComparisonExpr;
+import edu.ics.uci.regex.optimizer.expression.InputRef.SpanAccess;
+import edu.ics.uci.regex.optimizer.expression.InputRef;
 import edu.ics.uci.regex.optimizer.operators.*;
 import edu.ics.uci.regex.optimizer.rules.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +21,7 @@ import java.util.*;
 import static edu.ics.uci.optimizer.TestRules.dummyRule;
 import static edu.ics.uci.optimizer.rule.PatternNode.*;
 import static edu.ics.uci.optimizer.triat.ConventionDef.CONVENTION_TRAIT_DEF;
+import static edu.ics.uci.regex.optimizer.expression.ComparisonExpr.ComparisionType.EQ;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.*;
@@ -318,7 +322,9 @@ public class OptimizerPlannerTest {
 
         SubsetNode root = constructSimpleChain(planner,
                 new LogicalMatchOperator("ab(c|d) "),
-                new LogicalJoinOperator(Condition.AFTER));
+                new LogicalJoinOperator(ComparisonExpr.of(EQ,
+                        InputRef.of(0, InputRef.SpanAccess.END), InputRef.of(1, InputRef.SpanAccess.START)
+                )));
         planner.addRule(MatchToJoinRule.INSTANCE);
         planner.setRoot(root);
 
@@ -352,8 +358,9 @@ public class OptimizerPlannerTest {
         SubsetNode subsetA = createLeafSubset(planner, new LogicalMatchOperator("a0"));
         SubsetNode subsetB = createLeafSubset(planner, new LogicalMatchOperator("b0"));
 
-        OperatorNode operatorRoot = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(Condition.AFTER), planner.defaultTraitSet(),
-                Arrays.asList(subsetA, subsetB));
+        OperatorNode operatorRoot = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(ComparisonExpr.of(EQ,
+                        InputRef.of(0, SpanAccess.END), InputRef.of(1, SpanAccess.START))),
+                planner.defaultTraitSet(), Arrays.asList(subsetA, subsetB));
         SubsetNode root = SubsetNode.create(planner.getContext(), operatorRoot);
 
         planner.addRule(JoinCommutativeRule.INSTANCE);
@@ -376,9 +383,13 @@ public class OptimizerPlannerTest {
 
     @Test
     public void testRuleCallLogicalToPhysicalRule() {
-        SubsetNode subsetA = createLeafSubset(planner, new LogicalJoinOperator(Condition.AFTER));
+        SubsetNode subsetA = createLeafSubset(planner, new LogicalJoinOperator(ComparisonExpr.of(EQ,
+                        InputRef.of(0, SpanAccess.END), InputRef.of(1, SpanAccess.START)
+                )));
         SubsetNode subsetB = createLeafSubset(planner, new LogicalMatchOperator("b0"));
-        OperatorNode operatorRoot = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(Condition.BEFORE), planner.defaultTraitSet(),
+        OperatorNode operatorRoot = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(ComparisonExpr.of(EQ,
+                        InputRef.of(0, SpanAccess.START), InputRef.of(1, SpanAccess.END)
+                )), planner.defaultTraitSet(),
                 Arrays.asList(subsetA, subsetB));
 
         SubsetNode root = SubsetNode.create(planner.getContext(), operatorRoot);
@@ -416,7 +427,9 @@ public class OptimizerPlannerTest {
     public void testRuleCallLogicalJoinToPhysicalVerifyRule() {
         SubsetNode subsetA = createLeafSubset(planner, new LogicalMatchOperator("a0"));
         SubsetNode subsetB = createLeafSubset(planner, new LogicalMatchOperator("b0"));
-        OperatorNode joinOperatorNode = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(Condition.AFTER),
+        OperatorNode joinOperatorNode = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(ComparisonExpr.of(EQ,
+                        InputRef.of(0, SpanAccess.END), InputRef.of(1, SpanAccess.START)
+                )),
                 planner.defaultTraitSet(), Arrays.asList(subsetA, subsetB));
 
         SubsetNode root = SubsetNode.create(planner.getContext(), joinOperatorNode);
@@ -438,11 +451,15 @@ public class OptimizerPlannerTest {
         SubsetNode subsetA = createLeafSubset(planner, new LogicalMatchOperator("a0"));
         SubsetNode subsetB = createLeafSubset(planner, new LogicalMatchOperator("b0"));
         SubsetNode subsetC = createLeafSubset(planner, new LogicalMatchOperator("c0"));
-        OperatorNode joinOperatorNode = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(Condition.BEFORE),
+        OperatorNode joinOperatorNode = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(ComparisonExpr.of(EQ,
+                        InputRef.of(0, SpanAccess.START), InputRef.of(1, SpanAccess.END)
+                )),
                 planner.defaultTraitSet(), Arrays.asList(subsetC, subsetB));
         SubsetNode joinSubset = SubsetNode.create(planner.getContext(), joinOperatorNode);
 
-        OperatorNode operatorRoot = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(Condition.AFTER), planner.defaultTraitSet(),
+        OperatorNode operatorRoot = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(ComparisonExpr.of(EQ,
+                        InputRef.of(0, SpanAccess.END), InputRef.of(1, SpanAccess.START)
+                )), planner.defaultTraitSet(),
                 Arrays.asList(subsetA, joinSubset));
 
         SubsetNode root = SubsetNode.create(planner.getContext(), operatorRoot);
@@ -476,7 +493,9 @@ public class OptimizerPlannerTest {
         SubsetNode subsetA = createLeafSubset(planner, new LogicalMatchOperator("[0-9]+pm"));
         SubsetNode subsetB = createLeafSubset(planner, new LogicalMatchOperator("b0"));
 
-        OperatorNode operatorRoot = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(Condition.AFTER), planner.defaultTraitSet(),
+        OperatorNode operatorRoot = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(ComparisonExpr.of(EQ,
+                        InputRef.of(0, SpanAccess.END), InputRef.of(1, SpanAccess.START)
+                )), planner.defaultTraitSet(),
                 Arrays.asList(subsetA, subsetB));
 
         SubsetNode root = SubsetNode.create(planner.getContext(), operatorRoot);
@@ -495,11 +514,15 @@ public class OptimizerPlannerTest {
         SubsetNode subsetB = createLeafSubset(planner, new LogicalMatchOperator("b0"));
         SubsetNode subsetC = createLeafSubset(planner, new LogicalMatchOperator("c0"));
 
-        OperatorNode operatorNode = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(Condition.BEFORE), planner.defaultTraitSet(),
+        OperatorNode operatorNode = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(ComparisonExpr.of(EQ,
+                        InputRef.of(0, SpanAccess.START), InputRef.of(1, SpanAccess.END)
+                )), planner.defaultTraitSet(),
                 Arrays.asList(subsetC, subsetB));
         SubsetNode subsetNode = SubsetNode.create(planner.getContext(), operatorNode);
 
-        OperatorNode operatorRoot = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(Condition.AFTER), planner.defaultTraitSet(),
+        OperatorNode operatorRoot = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(ComparisonExpr.of(EQ,
+                        InputRef.of(0, SpanAccess.END), InputRef.of(1, SpanAccess.START)
+                )), planner.defaultTraitSet(),
                 Arrays.asList(subsetA, subsetNode));
 
         SubsetNode root = SubsetNode.create(planner.getContext(), operatorRoot);
@@ -516,14 +539,14 @@ public class OptimizerPlannerTest {
     @Test
 
     public void testMatchAscending() {
-        SubsetNode root = constructSimpleChain(planner, new OperatorB("a0"), new OperatorA("b0"));
+        SubsetNode root = constructSimpleChain(planner, new OperatorB("b0"), new OperatorA("a0"));
         planner.addRule(dummyRule(operand(OperatorA.class)
-                .children(exact(Arrays.asList(operand(OperatorB.class).children(any())))).
-                        build()));
+                .children(exact(Arrays.asList(operand(OperatorB.class).children(none()))))
+                .build()));
         planner.setRoot(root);
 
-        OperatorNode operatorNodeA = OperatorNode.create(planner.getContext(), new OperatorB("a2"), planner.defaultTraitSet());
-        planner.registerOperator(operatorNodeA, 4);
+        OperatorNode operatorNodeB = OperatorNode.create(planner.getContext(), new OperatorB("b1"), planner.defaultTraitSet());
+        planner.registerOperator(operatorNodeB, 4);
         assertEquals(2, planner.getRuleCallQueue().size());
 
     }

@@ -1,4 +1,4 @@
-package edu.ics.uci.regex.runtime.regexMatcher;
+package edu.ics.uci.regex.runtime.regexMatcher.execution;
 
 import edu.ics.uci.regex.runtime.regexMatcher.relation.Relation;
 

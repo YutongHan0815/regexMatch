@@ -1,6 +1,5 @@
-package edu.ics.uci.regex.runtime.regexMatcher;
+package edu.ics.uci.regex.runtime.regexMatcher.execution;
 
-import edu.ics.uci.regex.optimizer.operators.Condition;
 import edu.ics.uci.regex.optimizer.operators.PhysicalJoinOperator;
 import edu.ics.uci.regex.runtime.regexMatcher.relation.Relation;
 
@@ -26,9 +25,7 @@ public class JoinRelations implements ExecutionOperator, Serializable {
     //TODO
     public Relation computeMatchingResult(List<Relation> inputs) {
         Relation matchingResults = Relation.create(inputs.get(0).getFieldValue());
-        if(this.physicalJoinOperator.getCondition() == Condition.AFTER){
-           // inputs.get(0).getTupleList().stream().map(inputs.get(1).getTupleList().)
-        }
+
         return  matchingResults;
     }
 

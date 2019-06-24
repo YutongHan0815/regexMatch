@@ -3,12 +3,11 @@ package edu.ics.uci.regex.optimizer.operators;
 
 
 import com.google.common.base.Preconditions;
-import edu.ics.uci.optimizer.operator.Operator;
 import edu.ics.uci.optimizer.operator.PhysicalOperator;
-import edu.ics.uci.regex.runtime.regexMatcher.ExecutionOperator;
+import edu.ics.uci.regex.optimizer.expression.Expression;
+import edu.ics.uci.regex.runtime.regexMatcher.execution.ExecutionOperator;
 import edu.ics.uci.regex.runtime.regexMatcher.SubRegex;
-import edu.ics.uci.regex.runtime.regexMatcher.VerifyRegex;
-import edu.ics.uci.regex.runtime.regexMatcher.relation.Relation;
+import edu.ics.uci.regex.runtime.regexMatcher.execution.VerifyRegex;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -16,16 +15,16 @@ import java.util.Objects;
 
 public class PhysicalVerifyJoinOperator implements PhysicalOperator, Serializable {
 
-    private final Condition condition;
+    private final Expression condition;
     private final boolean matchDirection;
     private final SubRegex subRegex;
 
 
-    public static PhysicalVerifyJoinOperator create(Condition condition, SubRegex subRegex) {
+    public static PhysicalVerifyJoinOperator create(Expression condition, SubRegex subRegex) {
         return new PhysicalVerifyJoinOperator(condition, true, subRegex);
     }
 
-    public PhysicalVerifyJoinOperator(Condition condition, boolean matchDirection, SubRegex subRegex) {
+    public PhysicalVerifyJoinOperator(Expression condition, boolean matchDirection, SubRegex subRegex) {
         Preconditions.checkNotNull(condition);
         Preconditions.checkNotNull(subRegex);
 
@@ -38,7 +37,7 @@ public class PhysicalVerifyJoinOperator implements PhysicalOperator, Serializabl
         return subRegex;
     }
 
-    public Condition getCondition() {
+    public Expression getCondition() {
         return condition;
     }
 

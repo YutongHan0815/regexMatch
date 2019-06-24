@@ -2,14 +2,13 @@ package edu.ics.uci.optimizer;
 
 import edu.ics.uci.optimizer.operator.*;
 import edu.ics.uci.regex.RegexTestConstantsText;
-import edu.ics.uci.regex.optimizer.operators.Condition;
 
+import edu.ics.uci.regex.optimizer.expression.ComparisonExpr;
+import edu.ics.uci.regex.optimizer.expression.InputRef;
 import edu.ics.uci.regex.optimizer.operators.PhysicalJoinOperator;
 import edu.ics.uci.regex.optimizer.operators.PhysicalMatchOperator;
 import edu.ics.uci.regex.runtime.regexMatcher.*;
 
-import edu.ics.uci.regex.runtime.regexMatcher.relation.Relation;
-import edu.ics.uci.regex.runtime.regexMatcher.relation.Span;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,6 +17,7 @@ import java.util.List;
 
 import static edu.ics.uci.optimizer.OptimizerPlannerTest.createLeafSubset;
 import static edu.ics.uci.optimizer.triat.ConventionDef.CONVENTION_TRAIT_DEF;
+import static edu.ics.uci.regex.optimizer.expression.ComparisonExpr.ComparisionType.EQ;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class QueryEngineTest {
@@ -43,7 +43,7 @@ public class QueryEngineTest {
         //Relation matchingResult = queryEngine.executeQuery(fieldValue);
 
         Relation expectedResults = Relation.create(fieldValue);
-        expectedResults.addTuple(new Span(22, 32));
+        //expectedResults.addTuple(new Span(22, 32));
 
         //assertEquals(expectedResults.tupleList.get(0).getRootNode().getSpan(), matchingResult.tupleList.get(0).getRootNode().getSpan());
 
@@ -57,7 +57,9 @@ public class QueryEngineTest {
 
         SubsetNode subsetA = createLeafSubset(planner, new PhysicalMatchOperator(new SubRegex("[0-9]+(?:st|nd|rd|th)"), true));
         SubsetNode subsetB = createLeafSubset(planner, new PhysicalMatchOperator(new SubRegex("\\s?Floor"), true));
-        OperatorNode operatorRoot = OperatorNode.create(planner.getContext(), new PhysicalJoinOperator(Condition.AFTER), planner.defaultTraitSet(),
+        OperatorNode operatorRoot = OperatorNode.create(planner.getContext(), new PhysicalJoinOperator(ComparisonExpr.of(EQ,
+                InputRef.of(0, InputRef.SpanAccess.END), InputRef.of(1, InputRef.SpanAccess.START)
+                )), planner.defaultTraitSet(),
                 Arrays.asList(subsetA, subsetB));
         SubsetNode root = SubsetNode.create(planner.getContext(), operatorRoot);
         planner.setRoot(root);
@@ -68,7 +70,7 @@ public class QueryEngineTest {
         //Relation matchingResult = queryEngine.executeQuery(fieldValue);
 
         Relation expectedResults = Relation.create(fieldValue);
-        expectedResults.addTuple(new Span(22, 32));
+        //expectedResults.addTuple(new Span(22, 32));
 
        // assertEquals(expectedResults.tupleList.get(0).getRootNode().getSpan(), matchingResult.tupleList.get(0).getRootNode().getSpan());
 

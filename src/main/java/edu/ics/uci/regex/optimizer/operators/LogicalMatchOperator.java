@@ -9,10 +9,7 @@ import com.google.re2j.PublicSimplify;
 import edu.ics.uci.optimizer.operator.Operator;
 import edu.ics.uci.optimizer.operator.schema.Field;
 import edu.ics.uci.optimizer.operator.schema.RowType;
-import edu.ics.uci.optimizer.operator.schema.SpanType;
-import edu.ics.uci.regex.runtime.regexMatcher.ExecutionOperator;
 import edu.ics.uci.regex.runtime.regexMatcher.SubRegex;
-import edu.ics.uci.regex.runtime.regexMatcher.relation.Relation;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -2,12 +2,10 @@ package edu.ics.uci.regex.optimizer.operators;
 
 
 import com.google.common.base.Preconditions;
-import edu.ics.uci.optimizer.operator.Operator;
 import edu.ics.uci.optimizer.operator.PhysicalOperator;
-import edu.ics.uci.regex.runtime.regexMatcher.ExecutionOperator;
-import edu.ics.uci.regex.runtime.regexMatcher.MatchRegex;
+import edu.ics.uci.regex.runtime.regexMatcher.execution.ExecutionOperator;
+import edu.ics.uci.regex.runtime.regexMatcher.execution.MatchRegex;
 import edu.ics.uci.regex.runtime.regexMatcher.SubRegex;
-import edu.ics.uci.regex.runtime.regexMatcher.relation.Relation;
 
 import java.io.Serializable;
 import java.util.Objects;
