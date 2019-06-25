@@ -1,7 +1,11 @@
 package edu.ics.uci.optimizer;
 
 import edu.ics.uci.optimizer.operator.Operator;
+import edu.ics.uci.optimizer.operator.schema.Field;
+import edu.ics.uci.optimizer.operator.schema.RowType;
+import edu.ics.uci.optimizer.operator.schema.SpanType;
 
+import java.util.List;
 import java.util.Objects;
 
 public abstract class TestOperator implements Operator {
@@ -13,6 +17,11 @@ public abstract class TestOperator implements Operator {
     }
     public String getDigest() {
         return "TestOperator(" + property + ")";
+    }
+
+    @Override
+    public RowType deriveRowType(List<RowType> inputRowTypeList) {
+        return RowType.of(Field.of(property, SpanType.SPAN_TYPE));
     }
 
     @Override

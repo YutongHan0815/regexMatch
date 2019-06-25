@@ -1,11 +1,10 @@
-package edu.ics.uci.regex.optimizer.rules;
+package edu.ics.uci.regex.optimizer.rules.physical;
 
 
 import edu.ics.uci.optimizer.operator.SubsetNode;
 import edu.ics.uci.optimizer.rule.PatternNode;
 import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.TransformRule;
-import edu.ics.uci.regex.optimizer.operators.LogicalJoinOperator;
 import edu.ics.uci.regex.optimizer.operators.LogicalMatchOperator;
 import edu.ics.uci.regex.optimizer.operators.PhysicalMatchOperator;
 import edu.ics.uci.optimizer.operator.OperatorNode;
@@ -46,7 +45,7 @@ public class LogicalMatchToPhysicalMatchRule implements TransformRule, Serializa
         final LogicalMatchOperator logicalMatchOperator = logicalMatchOpN.getOperator();
         final List<SubsetNode> inputs = logicalMatchOpN.getInputs();
 
-        PhysicalMatchOperator physicalMatchOperator = PhysicalMatchOperator.create(logicalMatchOperator.getSubRegex());
+        PhysicalMatchOperator physicalMatchOperator = new PhysicalMatchOperator(logicalMatchOperator.getSubRegex(), false);
         inputs.forEach(subsetNode -> subsetNode.getTraitSet().replace(Convention.PHYSICAL));
 
         OperatorNode matchOperatorNode = OperatorNode.create(ruleCall.getContext(), physicalMatchOperator,

@@ -1,4 +1,4 @@
-package edu.ics.uci.regex.optimizer.rules;
+package edu.ics.uci.regex.optimizer.rules.physical;
 
 import edu.ics.uci.optimizer.operator.Operator;
 import edu.ics.uci.optimizer.operator.OperatorNode;
@@ -46,7 +46,8 @@ public class LogicalJoinToPhysicalVerifyRule implements TransformRule, Serializa
         final OperatorNode logicalJoinOpN = ruleCall.getOperator(0);
         final LogicalJoinOperator logicalJoinOperator = logicalJoinOpN.getOperator();
         final List<SubsetNode> inputs = logicalJoinOpN.getInputs();
-        PhysicalVerifyJoinOperator physicalVerifyJoinOperator = PhysicalVerifyJoinOperator.create(logicalJoinOperator.getCondition(), new SubRegex(""));
+        PhysicalVerifyJoinOperator physicalVerifyJoinOperator = new PhysicalVerifyJoinOperator(
+                logicalJoinOperator.getCondition(), true, new SubRegex(""));
         inputs.forEach(subsetNode -> subsetNode.getTraitSet().replace(Convention.PHYSICAL));
         OperatorNode verifyJoinOperatorNode = OperatorNode.create(ruleCall.getContext(), physicalVerifyJoinOperator,
                 logicalJoinOpN.getTraitSet().replace(Convention.PHYSICAL), inputs);

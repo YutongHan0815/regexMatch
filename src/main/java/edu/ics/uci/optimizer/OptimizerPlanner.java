@@ -3,11 +3,6 @@ package edu.ics.uci.optimizer;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.*;
 
-
-import edu.ics.uci.optimizer.memo.DefaultOperatorMemo;
-import edu.ics.uci.optimizer.memo.DefaultSetMemo;
-import edu.ics.uci.optimizer.memo.DefaultSubsetMemo;
-import edu.ics.uci.optimizer.memo.PlannerMemo;
 import edu.ics.uci.optimizer.operator.*;
 import edu.ics.uci.optimizer.rule.PatternNode;
 import edu.ics.uci.optimizer.rule.RuleCall;
@@ -34,7 +29,6 @@ public class OptimizerPlanner implements Serializable {
 
     private final AndOrTree andOrTree;
     private SubsetNode root;
-    private final PlannerMemo<DefaultSetMemo, DefaultSubsetMemo, DefaultOperatorMemo> plannerMemo;
 
     private final Set<TransformRule> ruleSet = new HashSet<>();
     private final Multimap<Class<? extends Operator>, Tuple2<TransformRule, PatternNode>> operatorRuleIndex = HashMultimap.create();
@@ -48,7 +42,6 @@ public class OptimizerPlanner implements Serializable {
     private OptimizerPlanner() {
         this.context = new OptimizerContext(this);
         this.andOrTree = AndOrTree.create(context);
-        this.plannerMemo = PlannerMemo.create();
     }
 
     public void setRoot(SubsetNode root) {

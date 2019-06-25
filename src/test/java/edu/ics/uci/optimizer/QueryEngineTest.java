@@ -4,7 +4,7 @@ import edu.ics.uci.optimizer.operator.*;
 import edu.ics.uci.regex.RegexTestConstantsText;
 
 import edu.ics.uci.regex.optimizer.expression.ComparisonExpr;
-import edu.ics.uci.regex.optimizer.expression.InputRef;
+import edu.ics.uci.regex.optimizer.expression.SpanInputRef;
 import edu.ics.uci.regex.optimizer.operators.PhysicalJoinOperator;
 import edu.ics.uci.regex.optimizer.operators.PhysicalMatchOperator;
 import edu.ics.uci.regex.runtime.regexMatcher.*;
@@ -42,7 +42,7 @@ public class QueryEngineTest {
         //queryEngine.compile();
         //Relation matchingResult = queryEngine.executeQuery(fieldValue);
 
-        Relation expectedResults = Relation.create(fieldValue);
+//        Relation expectedResults = Relation.create(fieldValue);
         //expectedResults.addTuple(new Span(22, 32));
 
         //assertEquals(expectedResults.tupleList.get(0).getRootNode().getSpan(), matchingResult.tupleList.get(0).getRootNode().getSpan());
@@ -58,7 +58,7 @@ public class QueryEngineTest {
         SubsetNode subsetA = createLeafSubset(planner, new PhysicalMatchOperator(new SubRegex("[0-9]+(?:st|nd|rd|th)"), true));
         SubsetNode subsetB = createLeafSubset(planner, new PhysicalMatchOperator(new SubRegex("\\s?Floor"), true));
         OperatorNode operatorRoot = OperatorNode.create(planner.getContext(), new PhysicalJoinOperator(ComparisonExpr.of(EQ,
-                InputRef.of(0, InputRef.SpanAccess.END), InputRef.of(1, InputRef.SpanAccess.START)
+                SpanInputRef.of(0, SpanInputRef.SpanAccess.END), SpanInputRef.of(1, SpanInputRef.SpanAccess.START)
                 )), planner.defaultTraitSet(),
                 Arrays.asList(subsetA, subsetB));
         SubsetNode root = SubsetNode.create(planner.getContext(), operatorRoot);
@@ -69,7 +69,7 @@ public class QueryEngineTest {
         //queryEngine.compile();
         //Relation matchingResult = queryEngine.executeQuery(fieldValue);
 
-        Relation expectedResults = Relation.create(fieldValue);
+//        Relation expectedResults = Relation.create(fieldValue);
         //expectedResults.addTuple(new Span(22, 32));
 
        // assertEquals(expectedResults.tupleList.get(0).getRootNode().getSpan(), matchingResult.tupleList.get(0).getRootNode().getSpan());

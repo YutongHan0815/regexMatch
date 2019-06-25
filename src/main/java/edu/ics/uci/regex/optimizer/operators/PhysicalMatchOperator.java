@@ -1,42 +1,26 @@
 package edu.ics.uci.regex.optimizer.operators;
 
-
-import com.google.common.base.Preconditions;
 import edu.ics.uci.optimizer.operator.PhysicalOperator;
 import edu.ics.uci.regex.runtime.regexMatcher.execution.ExecutionOperator;
 import edu.ics.uci.regex.runtime.regexMatcher.execution.MatchRegex;
 import edu.ics.uci.regex.runtime.regexMatcher.SubRegex;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 
-public class PhysicalMatchOperator implements PhysicalOperator, Serializable {
-    private final SubRegex subRegex;
+public class PhysicalMatchOperator extends MatchOperator implements PhysicalOperator {
+
     // match left to right / match reverse regex
-    private final boolean matchDirection;
+    final boolean reverseMatch;
 
-    public static PhysicalMatchOperator create(SubRegex subRegex) {
-        return new PhysicalMatchOperator(subRegex, true);
+    public PhysicalMatchOperator(SubRegex subRegex, boolean reverseMatch) {
+        super(subRegex);
+
+        this.reverseMatch = reverseMatch;
     }
 
-    public static PhysicalMatchOperator create(String mainRegex) {
-        return new PhysicalMatchOperator(new SubRegex(mainRegex), true);
-    }
-
-    public PhysicalMatchOperator(SubRegex subRegex, boolean matchDirection) {
-        Preconditions.checkNotNull(subRegex);
-
-        this.subRegex = subRegex;
-        this.matchDirection = matchDirection;
-    }
-
-    public SubRegex getSubRegex() {
-        return subRegex;
-    }
-
-    public boolean isMatchDirection() {
-        return matchDirection;
+    public boolean isReverseMatch() {
+        return reverseMatch;
     }
 
     @Override
@@ -49,21 +33,20 @@ public class PhysicalMatchOperator implements PhysicalOperator, Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         PhysicalMatchOperator that = (PhysicalMatchOperator) o;
-        return matchDirection == that.matchDirection &&
-                Objects.equals(subRegex, that.subRegex);
+        return reverseMatch == that.reverseMatch;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(subRegex, matchDirection);
+        return Objects.hash(super.hashCode(), reverseMatch);
     }
 
     @Override
     public String toString() {
         return "PhysicalMatchOperator{" +
-                "subRegex=" + subRegex +
-                ", matchDirection=" + matchDirection +
-                '}';
+                "reverseMatch=" + reverseMatch +
+                "} " + super.toString();
     }
 }

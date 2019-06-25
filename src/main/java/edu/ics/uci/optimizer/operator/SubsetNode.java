@@ -1,6 +1,7 @@
 package edu.ics.uci.optimizer.operator;
 
 import edu.ics.uci.optimizer.OptimizerContext;
+import edu.ics.uci.optimizer.memo.SubsetMemo;
 import edu.ics.uci.optimizer.triat.TraitSet;
 
 import java.io.Serializable;
@@ -20,10 +21,12 @@ public class SubsetNode implements Serializable {
 
     private final EquivSet equivSet;
     private final TraitSet traitSet;
+    private final SubsetMemo subsetMemo;
 
     private SubsetNode(EquivSet equivSet, TraitSet traitSet) {
         this.equivSet = equivSet;
         this.traitSet = traitSet;
+        this.subsetMemo = SubsetMemo.create();
     }
 
     public EquivSet getEquivSet() {
@@ -36,6 +39,10 @@ public class SubsetNode implements Serializable {
 
     public Set<OperatorNode> getOperators() {
         return this.equivSet.getOperators(this.traitSet);
+    }
+
+    public SubsetMemo getSubsetMemo() {
+        return subsetMemo;
     }
 
     public void acceptSelf(AndOrTreeVisitor visitor) {

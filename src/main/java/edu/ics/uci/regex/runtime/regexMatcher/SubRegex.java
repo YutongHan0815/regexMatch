@@ -1,5 +1,7 @@
 package edu.ics.uci.regex.runtime.regexMatcher;
 
+import com.google.common.base.Preconditions;
+
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -20,6 +22,7 @@ public class SubRegex extends AbstractSubSequence{
 
     public SubRegex(String regex){
         super(-1, -1);
+        Preconditions.checkNotNull(regex);
         super.setOriginalSubCount(-1);
         this.regex = regex;
         originalSubId = 0;

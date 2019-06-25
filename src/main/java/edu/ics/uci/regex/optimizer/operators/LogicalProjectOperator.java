@@ -1,8 +1,24 @@
 package edu.ics.uci.regex.optimizer.operators;
 
-import edu.ics.uci.optimizer.operator.Operator;
 
-import java.io.Serializable;
+public class LogicalProjectOperator extends ProjectOperator {
 
-public class LogicalProjectOperator implements Operator, Serializable {
+    public LogicalProjectOperator(int leftIndex, int rightIndex) {
+        super(leftIndex, rightIndex);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public String toString() {
+        return "LogicalProjectOperator{} " + super.toString();
+    }
 }

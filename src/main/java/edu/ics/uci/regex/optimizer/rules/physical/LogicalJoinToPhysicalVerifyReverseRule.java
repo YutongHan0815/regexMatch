@@ -1,4 +1,4 @@
-package edu.ics.uci.regex.optimizer.rules;
+package edu.ics.uci.regex.optimizer.rules.physical;
 
 import edu.ics.uci.optimizer.operator.Operator;
 import edu.ics.uci.optimizer.operator.OperatorNode;

@@ -4,13 +4,31 @@ import edu.ics.uci.optimizer.operator.PhysicalOperator;
 import edu.ics.uci.regex.runtime.regexMatcher.execution.ExecutionOperator;
 import edu.ics.uci.regex.runtime.regexMatcher.execution.Project;
 
-import java.io.Serializable;
+public class PhysicalProjectOperator extends ProjectOperator implements PhysicalOperator {
 
-public class PhysicalProjectOperator implements PhysicalOperator, Serializable {
+    public PhysicalProjectOperator(int leftIndex, int rightIndex) {
+        super(leftIndex, rightIndex);
+    }
+
     @Override
     public ExecutionOperator getExecution() {
         Project matcher = new Project(this);
         return matcher;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public String toString() {
+        return "PhysicalProjectOperator{} " + super.toString();
     }
 
 }

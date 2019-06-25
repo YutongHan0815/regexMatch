@@ -2,7 +2,10 @@ package edu.ics.uci.optimizer.rule;
 
 
 import com.google.common.collect.ImmutableList;
-import edu.ics.uci.regex.optimizer.rules.*;
+import edu.ics.uci.regex.optimizer.rules.logical.JoinAssociativeRule;
+import edu.ics.uci.regex.optimizer.rules.logical.JoinCommutativeRule;
+import edu.ics.uci.regex.optimizer.rules.logical.MatchToJoinRule;
+import edu.ics.uci.regex.optimizer.rules.physical.*;
 
 import java.io.Serializable;
 

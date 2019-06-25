@@ -2,6 +2,8 @@ package edu.ics.uci.optimizer.operator;
 
 import com.google.common.collect.ImmutableList;
 import edu.ics.uci.optimizer.OptimizerContext;
+import edu.ics.uci.optimizer.memo.OperatorMemo;
+import edu.ics.uci.optimizer.operator.schema.RowType;
 import edu.ics.uci.optimizer.triat.TraitSet;
 
 import java.io.Serializable;
@@ -9,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 public class OperatorNode implements Serializable {
@@ -17,6 +20,7 @@ public class OperatorNode implements Serializable {
     private final Operator operator;
     private final TraitSet traitSet;
     private final List<SubsetNode> inputs;
+    private final OperatorMemo operatorMemo;
 
     public static OperatorNode create(OptimizerContext context, Operator operator, TraitSet traitSet) {
         return create(context, operator, traitSet, new ArrayList<>());
@@ -26,16 +30,30 @@ public class OperatorNode implements Serializable {
         return create(context, operator, traitSet, Collections.singletonList(input));
     }
 
-    public static OperatorNode create(OptimizerContext context, Operator operators, TraitSet traitSet, List<SubsetNode> inputs) {
-        return new OperatorNode(context, operators, traitSet, inputs);
+    public static OperatorNode create(OptimizerContext context, Operator operator, TraitSet traitSet, SubsetNode... inputs) {
+        return new OperatorNode(context, operator, traitSet, ImmutableList.copyOf(inputs));
     }
 
+    public static OperatorNode create(OptimizerContext context, Operator operator, TraitSet traitSet, List<SubsetNode> inputs) {
+        return new OperatorNode(context, operator, traitSet, inputs);
+    }
 
     private OperatorNode(OptimizerContext context, Operator operator, TraitSet traitSet, List<SubsetNode> inputs) {
         this.operatorID = context.nextOperatorID();
         this.operator = operator;
         this.traitSet = traitSet;
         this.inputs = ImmutableList.copyOf(inputs);
+        this.operatorMemo = OperatorMemo.create();
+
+        setRowTypeInMemo();
+    }
+
+
+    private void setRowTypeInMemo() {
+        List<RowType> inputRowTypeList = this.inputs.stream()
+                .map(subset -> subset.getEquivSet().getSetMemo().getOutputRowType().get())
+                .collect(Collectors.toList());
+        this.operatorMemo.setOutputRowType(this.operator.deriveRowType(inputRowTypeList));
     }
 
 
@@ -54,6 +72,10 @@ public class OperatorNode implements Serializable {
 
     public List<SubsetNode> getInputs() {
         return inputs;
+    }
+
+    public OperatorMemo getOperatorMemo() {
+        return operatorMemo;
     }
 
     public void acceptSelf(AndOrTreeVisitor visitor) {

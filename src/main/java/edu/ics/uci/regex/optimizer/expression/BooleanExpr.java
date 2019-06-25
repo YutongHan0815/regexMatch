@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Objects;
 
-public class BooleanExpr implements Expression {
+public class BooleanExpr implements Expression, ExprOperand {
 
     public enum BooleanType implements ExprOperator {
         AND,
@@ -23,6 +23,11 @@ public class BooleanExpr implements Expression {
     private BooleanExpr(BooleanType type, List<ExprOperand> operands) {
         this.type = type;
         this.operands = ImmutableList.copyOf(operands);
+    }
+
+    @Override
+    public BooleanExpr copyWithNewOperands(List<ExprOperand> newOperands) {
+        return of(this.type, newOperands);
     }
 
     @Override

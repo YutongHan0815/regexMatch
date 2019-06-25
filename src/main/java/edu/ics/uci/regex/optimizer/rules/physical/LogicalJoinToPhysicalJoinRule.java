@@ -1,4 +1,4 @@
-package edu.ics.uci.regex.optimizer.rules;
+package edu.ics.uci.regex.optimizer.rules.physical;
 
 import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.PatternNode;
@@ -38,7 +38,7 @@ public class LogicalJoinToPhysicalJoinRule implements TransformRule {
         final LogicalJoinOperator logicalJoinOperator = logicalJoinOpN.getOperator();
         final List<SubsetNode> inputs = logicalJoinOpN.getInputs();
 
-        PhysicalJoinOperator physicalJoinOperator = PhysicalJoinOperator.create(logicalJoinOperator.getCondition());
+        PhysicalJoinOperator physicalJoinOperator = new PhysicalJoinOperator(logicalJoinOperator.getCondition());
         inputs.forEach(subsetNode -> subsetNode.getTraitSet().replace(Convention.PHYSICAL));
         OperatorNode joinOperatorNode = OperatorNode.create(ruleCall.getContext(), physicalJoinOperator,
                 logicalJoinOpN.getTraitSet().replace(Convention.PHYSICAL), inputs);

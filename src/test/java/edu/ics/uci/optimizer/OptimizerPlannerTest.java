@@ -9,10 +9,13 @@ import edu.ics.uci.optimizer.operator.SubsetNode;
 import edu.ics.uci.optimizer.rule.RuleSet;
 import edu.ics.uci.optimizer.rule.TransformRule;
 import edu.ics.uci.regex.optimizer.expression.ComparisonExpr;
-import edu.ics.uci.regex.optimizer.expression.InputRef.SpanAccess;
-import edu.ics.uci.regex.optimizer.expression.InputRef;
+import edu.ics.uci.regex.optimizer.expression.SpanInputRef.SpanAccess;
+import edu.ics.uci.regex.optimizer.expression.SpanInputRef;
 import edu.ics.uci.regex.optimizer.operators.*;
-import edu.ics.uci.regex.optimizer.rules.*;
+import edu.ics.uci.regex.optimizer.rules.logical.JoinAssociativeRule;
+import edu.ics.uci.regex.optimizer.rules.logical.JoinCommutativeRule;
+import edu.ics.uci.regex.optimizer.rules.logical.MatchToJoinRule;
+import edu.ics.uci.regex.optimizer.rules.physical.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -323,7 +326,7 @@ public class OptimizerPlannerTest {
         SubsetNode root = constructSimpleChain(planner,
                 new LogicalMatchOperator("ab(c|d) "),
                 new LogicalJoinOperator(ComparisonExpr.of(EQ,
-                        InputRef.of(0, InputRef.SpanAccess.END), InputRef.of(1, InputRef.SpanAccess.START)
+                        SpanInputRef.of(0, SpanInputRef.SpanAccess.END), SpanInputRef.of(1, SpanInputRef.SpanAccess.START)
                 )));
         planner.addRule(MatchToJoinRule.INSTANCE);
         planner.setRoot(root);
@@ -359,7 +362,7 @@ public class OptimizerPlannerTest {
         SubsetNode subsetB = createLeafSubset(planner, new LogicalMatchOperator("b0"));
 
         OperatorNode operatorRoot = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(ComparisonExpr.of(EQ,
-                        InputRef.of(0, SpanAccess.END), InputRef.of(1, SpanAccess.START))),
+                        SpanInputRef.of(0, SpanAccess.END), SpanInputRef.of(1, SpanAccess.START))),
                 planner.defaultTraitSet(), Arrays.asList(subsetA, subsetB));
         SubsetNode root = SubsetNode.create(planner.getContext(), operatorRoot);
 
@@ -384,11 +387,11 @@ public class OptimizerPlannerTest {
     @Test
     public void testRuleCallLogicalToPhysicalRule() {
         SubsetNode subsetA = createLeafSubset(planner, new LogicalJoinOperator(ComparisonExpr.of(EQ,
-                        InputRef.of(0, SpanAccess.END), InputRef.of(1, SpanAccess.START)
+                        SpanInputRef.of(0, SpanAccess.END), SpanInputRef.of(1, SpanAccess.START)
                 )));
         SubsetNode subsetB = createLeafSubset(planner, new LogicalMatchOperator("b0"));
         OperatorNode operatorRoot = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(ComparisonExpr.of(EQ,
-                        InputRef.of(0, SpanAccess.START), InputRef.of(1, SpanAccess.END)
+                        SpanInputRef.of(0, SpanAccess.START), SpanInputRef.of(1, SpanAccess.END)
                 )), planner.defaultTraitSet(),
                 Arrays.asList(subsetA, subsetB));
 
@@ -428,7 +431,7 @@ public class OptimizerPlannerTest {
         SubsetNode subsetA = createLeafSubset(planner, new LogicalMatchOperator("a0"));
         SubsetNode subsetB = createLeafSubset(planner, new LogicalMatchOperator("b0"));
         OperatorNode joinOperatorNode = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(ComparisonExpr.of(EQ,
-                        InputRef.of(0, SpanAccess.END), InputRef.of(1, SpanAccess.START)
+                        SpanInputRef.of(0, SpanAccess.END), SpanInputRef.of(1, SpanAccess.START)
                 )),
                 planner.defaultTraitSet(), Arrays.asList(subsetA, subsetB));
 
@@ -452,13 +455,13 @@ public class OptimizerPlannerTest {
         SubsetNode subsetB = createLeafSubset(planner, new LogicalMatchOperator("b0"));
         SubsetNode subsetC = createLeafSubset(planner, new LogicalMatchOperator("c0"));
         OperatorNode joinOperatorNode = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(ComparisonExpr.of(EQ,
-                        InputRef.of(0, SpanAccess.START), InputRef.of(1, SpanAccess.END)
+                        SpanInputRef.of(0, SpanAccess.START), SpanInputRef.of(1, SpanAccess.END)
                 )),
                 planner.defaultTraitSet(), Arrays.asList(subsetC, subsetB));
         SubsetNode joinSubset = SubsetNode.create(planner.getContext(), joinOperatorNode);
 
         OperatorNode operatorRoot = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(ComparisonExpr.of(EQ,
-                        InputRef.of(0, SpanAccess.END), InputRef.of(1, SpanAccess.START)
+                        SpanInputRef.of(0, SpanAccess.END), SpanInputRef.of(1, SpanAccess.START)
                 )), planner.defaultTraitSet(),
                 Arrays.asList(subsetA, joinSubset));
 
@@ -494,7 +497,7 @@ public class OptimizerPlannerTest {
         SubsetNode subsetB = createLeafSubset(planner, new LogicalMatchOperator("b0"));
 
         OperatorNode operatorRoot = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(ComparisonExpr.of(EQ,
-                        InputRef.of(0, SpanAccess.END), InputRef.of(1, SpanAccess.START)
+                        SpanInputRef.of(0, SpanAccess.END), SpanInputRef.of(1, SpanAccess.START)
                 )), planner.defaultTraitSet(),
                 Arrays.asList(subsetA, subsetB));
 
@@ -515,13 +518,13 @@ public class OptimizerPlannerTest {
         SubsetNode subsetC = createLeafSubset(planner, new LogicalMatchOperator("c0"));
 
         OperatorNode operatorNode = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(ComparisonExpr.of(EQ,
-                        InputRef.of(0, SpanAccess.START), InputRef.of(1, SpanAccess.END)
+                        SpanInputRef.of(0, SpanAccess.START), SpanInputRef.of(1, SpanAccess.END)
                 )), planner.defaultTraitSet(),
                 Arrays.asList(subsetC, subsetB));
         SubsetNode subsetNode = SubsetNode.create(planner.getContext(), operatorNode);
 
         OperatorNode operatorRoot = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(ComparisonExpr.of(EQ,
-                        InputRef.of(0, SpanAccess.END), InputRef.of(1, SpanAccess.START)
+                        SpanInputRef.of(0, SpanAccess.END), SpanInputRef.of(1, SpanAccess.START)
                 )), planner.defaultTraitSet(),
                 Arrays.asList(subsetA, subsetNode));
 

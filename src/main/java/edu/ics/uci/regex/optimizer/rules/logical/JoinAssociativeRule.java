@@ -1,4 +1,4 @@
-package edu.ics.uci.regex.optimizer.rules;
+package edu.ics.uci.regex.optimizer.rules.logical;
 
 import edu.ics.uci.optimizer.operator.OperatorNode;
 import edu.ics.uci.optimizer.operator.SubsetNode;
@@ -7,7 +7,7 @@ import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.TransformRule;
 import edu.ics.uci.regex.optimizer.expression.BooleanExpr;
 import edu.ics.uci.regex.optimizer.expression.ComparisonExpr;
-import edu.ics.uci.regex.optimizer.expression.InputRef;
+import edu.ics.uci.regex.optimizer.expression.SpanInputRef;
 import edu.ics.uci.regex.optimizer.operators.LogicalJoinOperator;
 import edu.ics.uci.regex.optimizer.operators.LogicalMatchOperator;
 
@@ -28,11 +28,11 @@ public class JoinAssociativeRule implements TransformRule, Serializable {
         this.description = this.getClass().getName();
         this.matchPattern = operand(LogicalJoinOperator.class).predicate(op -> op.getCondition().equals(
                 ComparisonExpr.of(ComparisonExpr.ComparisionType.EQ,
-                        InputRef.of(0, InputRef.SpanAccess.END), InputRef.of(1, InputRef.SpanAccess.START))))
+                        SpanInputRef.of(0, SpanInputRef.SpanAccess.END), SpanInputRef.of(1, SpanInputRef.SpanAccess.START))))
                 .children(exact(Arrays.asList(operand(LogicalMatchOperator.class).children(none()),
                         operand(LogicalJoinOperator.class).predicate(op -> op.getCondition().equals(
                                 ComparisonExpr.of(ComparisonExpr.ComparisionType.EQ,
-                                        InputRef.of(0, InputRef.SpanAccess.START), InputRef.of(1, InputRef.SpanAccess.END))))
+                                        SpanInputRef.of(0, SpanInputRef.SpanAccess.START), SpanInputRef.of(1, SpanInputRef.SpanAccess.END))))
                                 .children(exact(Arrays.asList(operand(LogicalMatchOperator.class).children(none()),
                                         operand(LogicalMatchOperator.class).children(none())))))))
                 .build();
@@ -72,7 +72,7 @@ public class JoinAssociativeRule implements TransformRule, Serializable {
         OperatorNode logicalJoinACOpN = OperatorNode.create(ruleCall.getContext(),
                 new LogicalJoinOperator(
                         ComparisonExpr.of(ComparisonExpr.ComparisionType.GE,
-                        InputRef.of(0, InputRef.SpanAccess.END), InputRef.of(1, InputRef.SpanAccess.START)
+                        SpanInputRef.of(0, SpanInputRef.SpanAccess.END), SpanInputRef.of(1, SpanInputRef.SpanAccess.START)
                 )), logicalJoinAfterOpN.getTraitSet(), Arrays.asList(subsetNodeA, subsetNodeC));
         SubsetNode subsetNodeJoin = SubsetNode.create(ruleCall.getContext(), logicalJoinACOpN);
 
@@ -84,8 +84,8 @@ public class JoinAssociativeRule implements TransformRule, Serializable {
                 new LogicalJoinOperator(
                         BooleanExpr.of(BooleanExpr.BooleanType.AND,
                               Arrays.asList(
-                                      ComparisonExpr.of(ComparisonExpr.ComparisionType.EQ, InputRef.of(0, InputRef.SpanAccess.END), InputRef.of(2, InputRef.SpanAccess.START)),
-                                      ComparisonExpr.of(ComparisonExpr.ComparisionType.EQ, InputRef.of(2, InputRef.SpanAccess.END), InputRef.of(1, InputRef.SpanAccess.START))
+                                      ComparisonExpr.of(ComparisonExpr.ComparisionType.EQ, SpanInputRef.of(0, SpanInputRef.SpanAccess.END), SpanInputRef.of(2, SpanInputRef.SpanAccess.START)),
+                                      ComparisonExpr.of(ComparisonExpr.ComparisionType.EQ, SpanInputRef.of(2, SpanInputRef.SpanAccess.END), SpanInputRef.of(1, SpanInputRef.SpanAccess.START))
                               ))),
                 logicalJoinAfterOpN.getTraitSet(), Arrays.asList(subsetNodeJoin, subsetNodeB));
 

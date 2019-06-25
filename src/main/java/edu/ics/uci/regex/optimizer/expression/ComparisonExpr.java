@@ -33,6 +33,11 @@ public class ComparisonExpr implements Expression {
     }
 
     @Override
+    public ComparisonExpr copyWithNewOperands(List<ExprOperand> newOperands) {
+        return of(this.type, newOperands);
+    }
+
+    @Override
     public ExprOperator getOperator() {
         return type;
     }

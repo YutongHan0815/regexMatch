@@ -99,6 +99,10 @@ public class PatternNode implements Serializable {
         return new PatternNode.Builder<>(operatorClass);
     }
 
+    public static Tuple2<ChildPolicy, List<PatternNode.Builder>> exact(PatternNode.Builder... children) {
+        return exact(ImmutableList.copyOf(children));
+    }
+
     public static Tuple2<ChildPolicy, List<PatternNode.Builder>> exact(List<PatternNode.Builder> children) {
         return new Tuple2<>(ChildPolicy.EXACT, children);
     }

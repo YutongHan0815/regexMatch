@@ -2,22 +2,21 @@ package edu.ics.uci.regex.optimizer.expression;
 
 import java.util.Objects;
 
-public class InputRef implements ExprOperand {
+public class SpanInputRef implements ExprOperand {
 
-    private final int index;
-
-    // TODO: not general, change later
     public enum SpanAccess {
         START,
         END
     }
+
+    private final int index;
     private final SpanAccess spanAccess;
 
-    public static InputRef of(int index, SpanAccess spanAccess) {
-        return new InputRef(index, spanAccess);
+    public static SpanInputRef of(int index, SpanAccess spanAccess) {
+        return new SpanInputRef(index, spanAccess);
     }
 
-    private InputRef(int index, SpanAccess spanAccess) {
+    private SpanInputRef(int index, SpanAccess spanAccess) {
         this.index = index;
         this.spanAccess = spanAccess;
     }
@@ -34,9 +33,9 @@ public class InputRef implements ExprOperand {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        InputRef inputRef = (InputRef) o;
-        return index == inputRef.index &&
-                Objects.equals(spanAccess, inputRef.spanAccess);
+        SpanInputRef spanInputRef = (SpanInputRef) o;
+        return index == spanInputRef.index &&
+                Objects.equals(spanAccess, spanInputRef.spanAccess);
     }
 
     @Override
@@ -46,7 +45,7 @@ public class InputRef implements ExprOperand {
 
     @Override
     public String toString() {
-        return "InputRef{" +
+        return "SpanInputRef{" +
                 "index=" + index +
                 ", spanAccess=" + spanAccess +
                 '}';
