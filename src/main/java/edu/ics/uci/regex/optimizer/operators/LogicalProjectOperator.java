@@ -3,8 +3,8 @@ package edu.ics.uci.regex.optimizer.operators;
 
 public class LogicalProjectOperator extends ProjectOperator {
 
-    public LogicalProjectOperator(int leftIndex, int rightIndex) {
-        super(leftIndex, rightIndex);
+    public LogicalProjectOperator(int leftIndex, int rightIndex, int resultIndex) {
+        super(leftIndex, rightIndex, resultIndex);
     }
 
     @Override

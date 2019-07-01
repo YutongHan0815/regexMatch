@@ -6,8 +6,8 @@ import edu.ics.uci.regex.runtime.regexMatcher.execution.Project;
 
 public class PhysicalProjectOperator extends ProjectOperator implements PhysicalOperator {
 
-    public PhysicalProjectOperator(int leftIndex, int rightIndex) {
-        super(leftIndex, rightIndex);
+    public PhysicalProjectOperator(int leftIndex, int rightIndex, int resultIndex) {
+        super(leftIndex, rightIndex, resultIndex);
     }
 
     @Override

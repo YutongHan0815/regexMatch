@@ -21,6 +21,10 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 
+/**
+ *
+ * Optimizer maintains an data structure called {@link AndOrTree} to track alternative query plans.
+ */
 public class OptimizerPlanner implements Serializable {
 
     private final OptimizerContext context;

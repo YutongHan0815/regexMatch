@@ -15,10 +15,12 @@ public abstract class ProjectOperator implements Operator, Serializable {
 
     final int leftIndex;
     final int rightIndex;
+    final int resultIndex;
 
-    ProjectOperator(int leftIndex, int rightIndex) {
+    ProjectOperator(int leftIndex, int rightIndex, int resultIndex) {
         this.leftIndex = leftIndex;
         this.rightIndex = rightIndex;
+        this.resultIndex = resultIndex;
     }
 
     public int getLeftIndex() {
@@ -29,6 +31,10 @@ public abstract class ProjectOperator implements Operator, Serializable {
         return rightIndex;
     }
 
+    public int getResultIndex() {
+        return resultIndex;
+    }
+
     @Override
     public RowType deriveRowType(List<RowType> inputRowTypeList) {
         Preconditions.checkArgument(inputRowTypeList.size() == 1);
@@ -37,13 +43,26 @@ public abstract class ProjectOperator implements Operator, Serializable {
         Preconditions.checkArgument(rightIndex < inputRowType.getFields().size());
 
         Builder<Field> builder = ImmutableList.builder();
+
+//        for (int i = 0; i < inputRowType.getFields().size(); i++) {
+//            if (i != leftIndex && i != rightIndex) {
+//                builder.add(inputRowType.getFields().get(i));
+//            }
+//        }
+//        builder.add(Field.of(inputRowType.getFields().get(leftIndex).getName() +
+//                inputRowType.getFields().get(rightIndex).getName(), inputRowType.getFields().get(leftIndex).getType()));
+
         for (int i = 0; i < inputRowType.getFields().size(); i++) {
             if (i != leftIndex && i != rightIndex) {
+                if (i == resultIndex) {
+                    builder.add(Field.of(inputRowType.getFields().get(leftIndex).getName() +
+                            inputRowType.getFields().get(rightIndex).getName(), inputRowType.getFields().get(leftIndex).getType()));
+                }
                 builder.add(inputRowType.getFields().get(i));
-            }
+            } else
+                builder.add(Field.of(inputRowType.getFields().get(leftIndex).getName() +
+                        inputRowType.getFields().get(rightIndex).getName(), inputRowType.getFields().get(leftIndex).getType()));
         }
-        builder.add(Field.of(inputRowType.getFields().get(leftIndex).getName() +
-                inputRowType.getFields().get(rightIndex).getName(), inputRowType.getFields().get(leftIndex).getType()));
 
         return RowType.of(builder.build());
     }

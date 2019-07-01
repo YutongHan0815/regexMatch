@@ -1,5 +1,6 @@
 package edu.ics.uci.optimizer.operator;
 
+
 import com.google.common.collect.ImmutableList;
 import edu.ics.uci.optimizer.OptimizerContext;
 import edu.ics.uci.optimizer.memo.OperatorMemo;
@@ -14,6 +15,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 
+
 public class OperatorNode implements Serializable {
 
     private final int operatorID;
@@ -24,10 +26,6 @@ public class OperatorNode implements Serializable {
 
     public static OperatorNode create(OptimizerContext context, Operator operator, TraitSet traitSet) {
         return create(context, operator, traitSet, new ArrayList<>());
-    }
-
-    public static OperatorNode create(OptimizerContext context, Operator operator, TraitSet traitSet, SubsetNode input) {
-        return create(context, operator, traitSet, Collections.singletonList(input));
     }
 
     public static OperatorNode create(OptimizerContext context, Operator operator, TraitSet traitSet, SubsetNode... inputs) {
@@ -46,6 +44,7 @@ public class OperatorNode implements Serializable {
         this.operatorMemo = OperatorMemo.create();
 
         setRowTypeInMemo();
+
     }
 
 

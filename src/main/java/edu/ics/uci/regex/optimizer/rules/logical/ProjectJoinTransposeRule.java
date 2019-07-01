@@ -18,6 +18,7 @@ import edu.ics.uci.regex.optimizer.expression.SpanInputRef.SpanAccess;
 import edu.ics.uci.regex.optimizer.operators.LogicalJoinOperator;
 import edu.ics.uci.regex.optimizer.operators.LogicalProjectOperator;
 import edu.ics.uci.regex.optimizer.operators.ProjectOperator;
+import edu.ics.uci.regex.runtime.regexMatcher.execution.Project;
 
 import java.io.Serializable;
 import java.util.*;
@@ -82,7 +83,7 @@ public class ProjectJoinTransposeRule implements TransformRule, Serializable {
         Map<SpanInputRef, SpanInputRef> inputRefMapping = new HashMap<>();
 
         if (leftNode.getOperator() instanceof LogicalProjectOperator) {
-            LogicalProjectOperator leftProject = leftNode.getOperator();
+             leftProject = leftNode.getOperator();
             RowType projectInputRowType = leftNode.getInputs().get(0).getEquivSet().getSetMemo().getOutputRowType().get();
             RowType projectOutputRowType = leftNode.getOperatorMemo().getOutputRowType().get();
 
@@ -99,7 +100,7 @@ public class ProjectJoinTransposeRule implements TransformRule, Serializable {
         }
 
         if (rightNode.getOperator() instanceof LogicalProjectOperator) {
-            LogicalProjectOperator rightProject = rightNode.getOperator();
+             rightProject = rightNode.getOperator();
             RowType projectInputRowType = rightNode.getInputs().get(0).getEquivSet().getSetMemo().getOutputRowType().get();
             RowType projectOutputRowType = rightNode.getOperatorMemo().getOutputRowType().get();
 
@@ -118,9 +119,18 @@ public class ProjectJoinTransposeRule implements TransformRule, Serializable {
 
         OperatorNode newJoinNode = OperatorNode.create(context, newJoinOperator, joinNode.getTraitSet(), newLeft, newRight);
 
+        OperatorNode newProjectNode = null;
+        if ( leftNode.getOperator() instanceof LogicalProjectOperator ) {
+            newProjectNode = OperatorNode.create(context, leftNode.getOperator(), leftNode.getTraitSet(), SubsetNode.create(context, newJoinNode));
 
+            if (rightNode.getOperator() instanceof LogicalProjectOperator) {
+                newProjectNode = OperatorNode.create(context, rightNode.getOperator(), rightNode.getTraitSet(), SubsetNode.create(context, newProjectNode));
+            }
+        } else if (rightNode.getOperator() instanceof LogicalProjectOperator) {
+            newProjectNode = OperatorNode.create(context, rightNode.getOperator(), rightNode.getTraitSet(), SubsetNode.create(context, newJoinNode));
+        }
 
-//        ruleCall.transformTo(newJoinNode);
+        ruleCall.transformTo(newProjectNode);
     }
 
     private static ExprOperand transformJoinExpr(ExprOperand node, Map<SpanInputRef, SpanInputRef> inputMapping) {
@@ -144,32 +154,6 @@ public class ProjectJoinTransposeRule implements TransformRule, Serializable {
     }
 
 
-//    public static void main(String[] args) throws Exception {
-//        int oldStartIndex = 4;
-//        int newStartIndex = 5;
-//
-//        LogicalProjectOperator project = new LogicalProjectOperator(1, 3);
-//        RowType projectInputRowType = RowType.of(
-//                Field.of("A", SpanType.SPAN_TYPE),
-//                Field.of("B", SpanType.SPAN_TYPE),
-//                Field.of("C", SpanType.SPAN_TYPE),
-//                Field.of("D", SpanType.SPAN_TYPE),
-//                Field.of("E", SpanType.SPAN_TYPE)
-//        );
-//        RowType projectOutputRowType = RowType.of(
-//                Field.of("A", SpanType.SPAN_TYPE),
-//                Field.of("C", SpanType.SPAN_TYPE),
-//                Field.of("E", SpanType.SPAN_TYPE),
-//                Field.of("BD", SpanType.SPAN_TYPE)
-//        );
-//
-//        Map<SpanInputRef, SpanInputRef> inputMapping = getInputMapping(
-//                oldStartIndex, newStartIndex, project, projectInputRowType, projectOutputRowType);
-//
-//        inputMapping.entrySet().forEach(System.out::println);
-//
-//    }
-
 
     public static Map<SpanInputRef, SpanInputRef> getInputMapping(
             int oldStartIndex, int newStartIndex, LogicalProjectOperator project,
@@ -178,33 +162,85 @@ public class ProjectJoinTransposeRule implements TransformRule, Serializable {
         Map<SpanInputRef, SpanInputRef> inputMapping = new HashMap<>();
         int combineIndex = oldStartIndex + projectOutputRowType.getFields().size() - 1;
 
+        if(project.getResultIndex() > projectOutputRowType.getFields().size()-1)
+            throw new UnsupportedOperationException("resultIndex is out of range");
+
         for (int i = 0; i < projectInputRowType.getFields().size(); i++) {
+            //resultIndex > rightIndex
+
             if (i == project.getLeftIndex()) {
                 inputMapping.put(
-                        SpanInputRef.of(combineIndex, SpanAccess.START),
+                        SpanInputRef.of(oldStartIndex + project.getResultIndex(), SpanAccess.START),
                         SpanInputRef.of(newStartIndex + project.getLeftIndex(), SpanAccess.START)
                 );
             } else if (i == project.getRightIndex()) {
                 inputMapping.put(
-                        SpanInputRef.of(combineIndex, SpanAccess.END),
+                        SpanInputRef.of(oldStartIndex + project.getResultIndex(), SpanAccess.END),
                         SpanInputRef.of(newStartIndex + project.getRightIndex(), SpanAccess.END)
+                );
+            } else if (i == project.getResultIndex()) {
+                inputMapping.put(
+                        SpanInputRef.of(oldStartIndex + project.getLeftIndex(), SpanAccess.START),
+                        SpanInputRef.of(newStartIndex + i, SpanAccess.START)
+                );
+                inputMapping.put(
+                        SpanInputRef.of(oldStartIndex + project.getLeftIndex(), SpanAccess.END),
+                        SpanInputRef.of(newStartIndex + i, SpanAccess.END)
                 );
             } else {
                 Integer oldIndex;
                 Integer newIndex;
-                if (i < project.getLeftIndex()) {
-                    oldIndex = oldStartIndex + i;
-                    newIndex = newStartIndex + i;
-                } else if (i > project.getLeftIndex() && i < project.getRightIndex()) {
-                    oldIndex = oldStartIndex + i - 1;
-                    newIndex = newStartIndex + i;
+                if (project.getResultIndex() >= project.getRightIndex()) {
+                    if (i < project.getLeftIndex()) {
+                        oldIndex = oldStartIndex + i;
+                        newIndex = newStartIndex + i;
+                    } else if (i > project.getLeftIndex() && i < project.getRightIndex()) {
+                        oldIndex = oldStartIndex + i - 1;
+                        newIndex = newStartIndex + i;
+                    } else {
+                        oldIndex = oldStartIndex + i - 2;
+                        newIndex = newStartIndex + i;
+                    }
+                } else if (project.getResultIndex() <= project.getLeftIndex()) {
+                    //resultIndex < leftIndex
+                    if (i < project.getResultIndex()) {
+                        oldIndex = oldStartIndex + i;
+                        newIndex = newStartIndex + i;
+                    } else if (project.getResultIndex() < i && i < project.getLeftIndex()) {
+                        oldIndex = oldStartIndex + i - 1;
+                        newIndex = newStartIndex + i;
+                    } else if (project.getLeftIndex() < i && i < project.getRightIndex()) {
+                        oldIndex = oldStartIndex + i;
+                        newIndex = newStartIndex + i;
+                    } else {
+                        oldIndex = oldStartIndex + i - 1;
+                        newIndex = newStartIndex + i;
+                    }
                 } else {
-                    oldIndex = oldStartIndex + i - 2;
-                    newIndex = newStartIndex + i;
+                    //leftIndex < resultIndex < rightIndex
+
+                    if (i < project.getLeftIndex()) {
+                        oldIndex = oldStartIndex + i;
+                        newIndex = newStartIndex + i;
+                    } else if (i > project.getLeftIndex() && i < project.getResultIndex()) {
+                        oldIndex = oldStartIndex + i - 1;
+                        newIndex = newStartIndex + i;
+                    } else if (i > project.getResultIndex() && i < project.getRightIndex()) {
+                        oldIndex = oldStartIndex + i;
+                        newIndex = newStartIndex + i;
+                    } else {
+                        oldIndex = oldStartIndex + i - 1;
+                        newIndex = newStartIndex + i;
+                    }
                 }
+
+
+
+
                 inputMapping.put(SpanInputRef.of(oldIndex, SpanAccess.START), SpanInputRef.of(newIndex, SpanAccess.START));
                 inputMapping.put(SpanInputRef.of(oldIndex, SpanAccess.END), SpanInputRef.of(newIndex, SpanAccess.END));
             }
+
         }
 
         return inputMapping;

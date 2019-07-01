@@ -1,11 +1,15 @@
 package edu.ics.uci.optimizer;
 
+import com.google.common.base.Preconditions;
 import edu.ics.uci.optimizer.TestOperator.*;
 import edu.ics.uci.optimizer.operator.EquivSet;
 import edu.ics.uci.optimizer.operator.Operator;
 import edu.ics.uci.optimizer.operator.OperatorNode;
 import edu.ics.uci.optimizer.operator.SubsetNode;
 
+import edu.ics.uci.optimizer.operator.schema.Field;
+import edu.ics.uci.optimizer.operator.schema.RowType;
+import edu.ics.uci.optimizer.operator.schema.SpanType;
 import edu.ics.uci.optimizer.rule.RuleSet;
 import edu.ics.uci.optimizer.rule.TransformRule;
 import edu.ics.uci.regex.optimizer.expression.ComparisonExpr;
@@ -15,6 +19,7 @@ import edu.ics.uci.regex.optimizer.operators.*;
 import edu.ics.uci.regex.optimizer.rules.logical.JoinAssociativeRule;
 import edu.ics.uci.regex.optimizer.rules.logical.JoinCommutativeRule;
 import edu.ics.uci.regex.optimizer.rules.logical.MatchToJoinRule;
+import edu.ics.uci.regex.optimizer.rules.logical.ProjectJoinTransposeRule;
 import edu.ics.uci.regex.optimizer.rules.physical.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,8 +60,8 @@ public class OptimizerPlannerTest {
     }
 
     public static SubsetNode createLeafSubset(OptimizerPlanner planner, Operator operator) {
-        return SubsetNode.create(planner.getContext(),
-                OperatorNode.create(planner.getContext(), operator, planner.defaultTraitSet(), emptyList()));
+        OperatorNode operatorNode = OperatorNode.create(planner.getContext(), operator, planner.defaultTraitSet(), emptyList());
+        return SubsetNode.create(planner.getContext(),operatorNode);
     }
     private OptimizerPlanner planner;
 
@@ -596,6 +601,179 @@ public class OptimizerPlannerTest {
 
         assertEquals(1, planner.getRuleCallQueue().size());
     }
+
+    @Test
+    public void testLeftInputMapping() {
+        int oldStartIndex = 0;
+        int newStartIndex = 0;
+
+        LogicalProjectOperator project = new LogicalProjectOperator(1, 3, 3);
+        RowType projectInputRowType = RowType.of(
+                Field.of("A", SpanType.SPAN_TYPE),
+                Field.of("B", SpanType.SPAN_TYPE),
+                Field.of("C", SpanType.SPAN_TYPE),
+                Field.of("D", SpanType.SPAN_TYPE),
+                Field.of("E", SpanType.SPAN_TYPE)
+        );
+        RowType projectOutputRowType = RowType.of(
+                Field.of("A", SpanType.SPAN_TYPE),
+                Field.of("C", SpanType.SPAN_TYPE),
+                Field.of("E", SpanType.SPAN_TYPE),
+                Field.of("BD", SpanType.SPAN_TYPE)
+
+        );
+
+        Map<SpanInputRef, SpanInputRef> inputMapping = ProjectJoinTransposeRule.getInputMapping(
+                oldStartIndex, newStartIndex, project, projectInputRowType, projectOutputRowType);
+
+        assertEquals(inputMapping.get(SpanInputRef.of(3, SpanAccess.START)), SpanInputRef.of(1, SpanAccess.START));
+        assertEquals(inputMapping.get(SpanInputRef.of(3, SpanAccess.END)), SpanInputRef.of(3, SpanAccess.END));
+        assertEquals(inputMapping.get(SpanInputRef.of(0, SpanAccess.START)), SpanInputRef.of(0, SpanAccess.START));
+        assertEquals(inputMapping.get(SpanInputRef.of(0, SpanAccess.END)), SpanInputRef.of(0, SpanAccess.END));
+        assertEquals(inputMapping.get(SpanInputRef.of(1, SpanAccess.START)), SpanInputRef.of(2, SpanAccess.START));
+        assertEquals(inputMapping.get(SpanInputRef.of(1, SpanAccess.END)), SpanInputRef.of(2, SpanAccess.END));
+        assertEquals(inputMapping.get(SpanInputRef.of(2, SpanAccess.START)), SpanInputRef.of(4, SpanAccess.START));
+        assertEquals(inputMapping.get(SpanInputRef.of(2, SpanAccess.END)), SpanInputRef.of(4, SpanAccess.END));
+
+    }
+
+    @Test
+    public void testRightInputMapping() {
+        int oldStartIndex = 4;
+        int newStartIndex = 5;
+
+        LogicalProjectOperator project = new LogicalProjectOperator(1, 3, 3);
+        RowType projectInputRowType = RowType.of(
+                Field.of("A", SpanType.SPAN_TYPE),
+                Field.of("B", SpanType.SPAN_TYPE),
+                Field.of("C", SpanType.SPAN_TYPE),
+                Field.of("D", SpanType.SPAN_TYPE),
+                Field.of("E", SpanType.SPAN_TYPE)
+        );
+        RowType projectOutputRowType = RowType.of(
+                Field.of("A", SpanType.SPAN_TYPE),
+                Field.of("C", SpanType.SPAN_TYPE),
+                Field.of("E", SpanType.SPAN_TYPE),
+                Field.of("BD", SpanType.SPAN_TYPE)
+
+        );
+
+        Map<SpanInputRef, SpanInputRef> inputMapping = ProjectJoinTransposeRule.getInputMapping(
+                oldStartIndex, newStartIndex, project, projectInputRowType, projectOutputRowType);
+
+        assertEquals(inputMapping.get(SpanInputRef.of(4, SpanAccess.START)), SpanInputRef.of(5, SpanAccess.START));
+        assertEquals(inputMapping.get(SpanInputRef.of(4, SpanAccess.END)), SpanInputRef.of(5, SpanAccess.END));
+        assertEquals(inputMapping.get(SpanInputRef.of(5, SpanAccess.START)), SpanInputRef.of(7, SpanAccess.START));
+        assertEquals(inputMapping.get(SpanInputRef.of(5, SpanAccess.END)), SpanInputRef.of(7, SpanAccess.END));
+        assertEquals(inputMapping.get(SpanInputRef.of(6, SpanAccess.START)), SpanInputRef.of(9, SpanAccess.START));
+        assertEquals(inputMapping.get(SpanInputRef.of(6, SpanAccess.END)), SpanInputRef.of(9, SpanAccess.END));
+        assertEquals(inputMapping.get(SpanInputRef.of(7, SpanAccess.START)), SpanInputRef.of(6, SpanAccess.START));
+        assertEquals(inputMapping.get(SpanInputRef.of(7, SpanAccess.END)), SpanInputRef.of(8, SpanAccess.END));
+
+    }
+    /**
+     * Test case resultIndex < leftIndex
+     */
+    @Test
+    public void testResultInputMapping1() {
+        int oldStartIndex = 0;
+        int newStartIndex = 0;
+
+        LogicalProjectOperator project = new LogicalProjectOperator(2, 4, 1);
+        RowType projectInputRowType = RowType.of(
+                Field.of("A", SpanType.SPAN_TYPE),
+                Field.of("B", SpanType.SPAN_TYPE),
+                Field.of("C", SpanType.SPAN_TYPE),
+                Field.of("D", SpanType.SPAN_TYPE),
+                Field.of("E", SpanType.SPAN_TYPE)
+        );
+        RowType projectOutputRowType = RowType.of(
+                Field.of("A", SpanType.SPAN_TYPE),
+                Field.of("C", SpanType.SPAN_TYPE),
+                Field.of("BE", SpanType.SPAN_TYPE),
+                Field.of("D", SpanType.SPAN_TYPE)
+
+        );
+
+        Map<SpanInputRef, SpanInputRef> inputMapping = ProjectJoinTransposeRule.getInputMapping(
+                oldStartIndex, newStartIndex, project, projectInputRowType, projectOutputRowType);
+
+
+        assertEquals(inputMapping.get(SpanInputRef.of(0, SpanAccess.START)), SpanInputRef.of(0, SpanAccess.START));
+        assertEquals(inputMapping.get(SpanInputRef.of(0, SpanAccess.END)), SpanInputRef.of(0, SpanAccess.END));
+        assertEquals(inputMapping.get(SpanInputRef.of(1, SpanAccess.START)), SpanInputRef.of(2, SpanAccess.START));
+        assertEquals(inputMapping.get(SpanInputRef.of(1, SpanAccess.END)), SpanInputRef.of(4, SpanAccess.END));
+        assertEquals(inputMapping.get(SpanInputRef.of(2, SpanAccess.START)), SpanInputRef.of(1, SpanAccess.START));
+        assertEquals(inputMapping.get(SpanInputRef.of(2, SpanAccess.END)), SpanInputRef.of(1, SpanAccess.END));
+        assertEquals(inputMapping.get(SpanInputRef.of(3, SpanAccess.START)), SpanInputRef.of(3, SpanAccess.START));
+        assertEquals(inputMapping.get(SpanInputRef.of(3, SpanAccess.END)), SpanInputRef.of(3, SpanAccess.END));
+
+    }
+
+    /**
+     * Test case leftIndex < resultIndex < rightIndex
+     */
+    @Test
+    public void testResultInputMapping2() {
+        int oldStartIndex = 0;
+        int newStartIndex = 0;
+
+        LogicalProjectOperator project = new LogicalProjectOperator(2, 4, 3);
+        RowType projectInputRowType = RowType.of(
+                Field.of("A", SpanType.SPAN_TYPE),
+                Field.of("B", SpanType.SPAN_TYPE),
+                Field.of("C", SpanType.SPAN_TYPE),
+                Field.of("D", SpanType.SPAN_TYPE),
+                Field.of("E", SpanType.SPAN_TYPE)
+        );
+        RowType projectOutputRowType = RowType.of(
+                Field.of("A", SpanType.SPAN_TYPE),
+                Field.of("B", SpanType.SPAN_TYPE),
+                Field.of("D", SpanType.SPAN_TYPE),
+                Field.of("BE", SpanType.SPAN_TYPE)
+
+        );
+
+        Map<SpanInputRef, SpanInputRef> inputMapping = ProjectJoinTransposeRule.getInputMapping(
+                oldStartIndex, newStartIndex, project, projectInputRowType, projectOutputRowType);
+
+
+        assertEquals(inputMapping.get(SpanInputRef.of(0, SpanAccess.START)), SpanInputRef.of(0, SpanAccess.START));
+        assertEquals(inputMapping.get(SpanInputRef.of(0, SpanAccess.END)), SpanInputRef.of(0, SpanAccess.END));
+        assertEquals(inputMapping.get(SpanInputRef.of(1, SpanAccess.START)), SpanInputRef.of(1, SpanAccess.START));
+        assertEquals(inputMapping.get(SpanInputRef.of(1, SpanAccess.END)), SpanInputRef.of(1, SpanAccess.END));
+        assertEquals(inputMapping.get(SpanInputRef.of(2, SpanAccess.START)), SpanInputRef.of(3, SpanAccess.START));
+        assertEquals(inputMapping.get(SpanInputRef.of(2, SpanAccess.END)), SpanInputRef.of(3, SpanAccess.END));
+        assertEquals(inputMapping.get(SpanInputRef.of(3, SpanAccess.START)), SpanInputRef.of(2, SpanAccess.START));
+        assertEquals(inputMapping.get(SpanInputRef.of(3, SpanAccess.END)), SpanInputRef.of(4, SpanAccess.END));
+
+    }
+
+    @Test
+    public void testProjectJoinTransposeRuleMatching() {
+        SubsetNode subsetA = createLeafSubset(planner, new LogicalMatchOperator("a0"));
+       // SubsetNode subsetB = createLeafSubset(planner, new LogicalMatchOperator("b0"));
+
+        OperatorNode projectOperator = OperatorNode.create(planner.getContext(),
+                new LogicalProjectOperator(1, 2, 3), planner.defaultTraitSet(), subsetA);
+
+        SubsetNode subsetC = SubsetNode.create(planner.getContext(), projectOperator);
+        OperatorNode joinOperator = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(ComparisonExpr.of(EQ,
+                SpanInputRef.of(0, SpanAccess.END), SpanInputRef.of(1, SpanAccess.START)
+                )), planner.defaultTraitSet(),
+                Arrays.asList(subsetC));
+
+        SubsetNode root = SubsetNode.create(planner.getContext(), joinOperator);
+        planner.addRule(ProjectJoinTransposeRule.LEFT_PROJECT);
+        planner.setRoot(root);
+
+        assertEquals(1, planner.getRuleCallQueue().size());
+
+        //assertEquals(11, planner.getAndOrTree().getSet(2).getOperators().size());
+
+    }
+
+
 
 
 }
