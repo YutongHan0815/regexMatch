@@ -52,16 +52,17 @@ public abstract class ProjectOperator implements Operator, Serializable {
 //        builder.add(Field.of(inputRowType.getFields().get(leftIndex).getName() +
 //                inputRowType.getFields().get(rightIndex).getName(), inputRowType.getFields().get(leftIndex).getType()));
 
+
         for (int i = 0; i < inputRowType.getFields().size(); i++) {
-            if (i != leftIndex && i != rightIndex) {
-                if (i == resultIndex) {
-                    builder.add(Field.of(inputRowType.getFields().get(leftIndex).getName() +
-                            inputRowType.getFields().get(rightIndex).getName(), inputRowType.getFields().get(leftIndex).getType()));
-                }
-                builder.add(inputRowType.getFields().get(i));
-            } else
+
+            if (i == resultIndex) {
                 builder.add(Field.of(inputRowType.getFields().get(leftIndex).getName() +
                         inputRowType.getFields().get(rightIndex).getName(), inputRowType.getFields().get(leftIndex).getType()));
+            }
+
+            if (i != leftIndex && i != rightIndex) {
+                builder.add(inputRowType.getFields().get(i));
+            } else continue;
         }
 
         return RowType.of(builder.build());
