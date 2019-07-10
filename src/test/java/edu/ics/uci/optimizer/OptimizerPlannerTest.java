@@ -21,6 +21,7 @@ import edu.ics.uci.regex.optimizer.rules.logical.JoinCommutativeRule;
 import edu.ics.uci.regex.optimizer.rules.logical.MatchToJoinRule;
 import edu.ics.uci.regex.optimizer.rules.logical.ProjectJoinTransposeRule;
 import edu.ics.uci.regex.optimizer.rules.physical.*;
+import edu.ics.uci.regex.runtime.regexMatcher.SubRegex;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -329,10 +330,7 @@ public class OptimizerPlannerTest {
     public void testRuleMatchSetRootMultipleOperators1() {
 
         SubsetNode root = constructSimpleChain(planner,
-                new LogicalMatchOperator("ab(c|d) "),
-                new LogicalJoinOperator(ComparisonExpr.of(EQ,
-                        SpanInputRef.of(0, SpanInputRef.SpanAccess.END), SpanInputRef.of(1, SpanInputRef.SpanAccess.START)
-                )));
+                new LogicalMatchOperator("ab(c|d)"));
         planner.addRule(MatchToJoinRule.INSTANCE);
         planner.setRoot(root);
 
@@ -391,9 +389,7 @@ public class OptimizerPlannerTest {
 
     @Test
     public void testRuleCallLogicalToPhysicalRule() {
-        SubsetNode subsetA = createLeafSubset(planner, new LogicalJoinOperator(ComparisonExpr.of(EQ,
-                        SpanInputRef.of(0, SpanAccess.END), SpanInputRef.of(1, SpanAccess.START)
-                )));
+        SubsetNode subsetA = createLeafSubset(planner, new LogicalMatchOperator(new SubRegex("a0")));
         SubsetNode subsetB = createLeafSubset(planner, new LogicalMatchOperator("b0"));
         OperatorNode operatorRoot = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(ComparisonExpr.of(EQ,
                         SpanInputRef.of(0, SpanAccess.START), SpanInputRef.of(1, SpanAccess.END)
@@ -407,6 +403,7 @@ public class OptimizerPlannerTest {
         planner.addRule(LogicalJoinToPhysicalVerifyRule.INSTANCE);
         planner.addRule(LogicalMatchToPhysicalMatchReverseRule.INSTANCE);
         planner.addRule(LogicalJoinToPhysicalVerifyReverseRule.INSTANCE);
+        planner.addRule(LogicalProjectToPhysicalProjectRule.INSTANCE);
 
         planner.setRoot(root);
         planner.optimize();
