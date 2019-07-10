@@ -12,7 +12,6 @@ import edu.ics.uci.regex.optimizer.operators.PhysicalProjectOperator;
 import java.io.Serializable;
 import java.util.List;
 
-import static edu.ics.uci.optimizer.rule.PatternNode.any;
 import static edu.ics.uci.optimizer.rule.PatternNode.none;
 import static edu.ics.uci.optimizer.rule.PatternNode.operand;
 
@@ -25,7 +24,7 @@ public class LogicalProjectToPhysicalProjectRule implements TransformRule, Seria
     public LogicalProjectToPhysicalProjectRule() {
 
         this.description = this.getClass().getName();
-        this.matchPattern = operand(LogicalProjectOperator.class).children(any()).build();
+        this.matchPattern = operand(LogicalProjectOperator.class).children(none()).build();
     }
 
     @Override

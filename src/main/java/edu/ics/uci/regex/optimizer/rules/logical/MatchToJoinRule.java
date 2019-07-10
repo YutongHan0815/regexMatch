@@ -74,7 +74,7 @@ public class MatchToJoinRule implements TransformRule, Serializable {
                 ImmutableList.of(leftMatchSubsetNode, rightMatchSubsetNode));
         SubsetNode joinSubset = SubsetNode.create(ruleCall.getContext(), newJoinNode);
 
-        LogicalProjectOperator project = new LogicalProjectOperator(0, 1, 0);
+        LogicalProjectOperator project = new LogicalProjectOperator(0, 1, 2);
         OperatorNode projectNode = OperatorNode.create(ruleCall.getContext(), project, newJoinNode.getTraitSet(), joinSubset);
 
         ruleCall.transformTo(projectNode);
