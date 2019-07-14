@@ -242,7 +242,7 @@ public class OptimizerPlannerTest {
     @Test
     public void testRegisterWithMultiEquivalentSubSet() {
         SubsetNode subset1 = createLeafSubset(planner, new OperatorA("a0"));
-        SubsetNode subset2 = createLeafSubset(planner, new OperatorA("a1"));
+        SubsetNode subset2 = createLeafSubset(planner, new OperatorB("a0"));
         OperatorNode operatorRoot = OperatorNode.create(planner.getContext(), new OperatorTwoInput("r"), planner.defaultTraitSet(),
                 Arrays.asList(subset1, subset2));
         SubsetNode root = SubsetNode.create(planner.getContext(), operatorRoot);
@@ -251,14 +251,14 @@ public class OptimizerPlannerTest {
         OperatorNode operatorNodeB0 = OperatorNode.create(planner.getContext(), new OperatorA("a0"), planner.defaultTraitSet());
         planner.registerOperator(operatorNodeB0, 4);
 
-        OperatorNode operatorNodeB1 = OperatorNode.create(planner.getContext(), new OperatorC("a1"), planner.defaultTraitSet());
+        OperatorNode operatorNodeB1 = OperatorNode.create(planner.getContext(), new OperatorB("a0"), planner.defaultTraitSet());
         planner.registerOperator(operatorNodeB1, 5);
 
 
-        EquivSet equivSet = EquivSet.create(planner.getContext(), Arrays.asList(operatorNodeB0,operatorNodeB1));
+        EquivSet equivSet = EquivSet.create(planner.getContext(), Arrays.asList(operatorNodeB0, operatorNodeB1));
         SubsetNode subset3 = SubsetNode.create(equivSet, planner.defaultTraitSet());
 
-        OperatorNode operatorNodeC = OperatorNode.create(planner.getContext(), new OperatorB("c"), planner.defaultTraitSet(), subset3);
+        OperatorNode operatorNodeC = OperatorNode.create(planner.getContext(), new OperatorB("r"), planner.defaultTraitSet(), subset3);
         assertThrows(UnsupportedOperationException.class, ()->planner.registerOperator(operatorNodeC, 3),
                 "TODO: a set equivalent to multiple other sets is not handled yet");
     }
@@ -276,10 +276,10 @@ public class OptimizerPlannerTest {
         planner.setRoot(root);
 
         SubsetNode subset3 = createLeafSubset(planner, new OperatorA("a0"));
-        OperatorNode operatorNodeC = OperatorNode.create(planner.getContext(), new OperatorB("c"), planner.defaultTraitSet(), subset3);
+        OperatorNode operatorNodeC = OperatorNode.create(planner.getContext(), new OperatorB("r"), planner.defaultTraitSet(), subset3);
         planner.registerOperator(operatorNodeC, 3);
 
-        assertEquals(1, subset1.getOperators().size());
+        assertEquals(3, planner.getAndOrTree().getSets().size());
 
     }
 
@@ -499,11 +499,6 @@ public class OptimizerPlannerTest {
         assertEquals(0, planner.getRuleCallQueue().size());
         assertEquals(6, planner.getAndOrTree().getOperators().size());
     }
-
-    @Test
-    public void testJoinCommutativeRuleMatch() {
-
-    }
     @Test
     public void testJoinAssociativeRuleMatch() {
         SubsetNode subsetA = createLeafSubset(planner, new LogicalMatchOperator("a0"));
@@ -571,9 +566,9 @@ public class OptimizerPlannerTest {
         planner.optimize();
 
         assertEquals(0, planner.getRuleCallQueue().size());
-        assertEquals(11, planner.getAndOrTree().getSet(2).getOperators().size());
-        assertEquals(5, planner.getAndOrTree().getSets().size());
-        assertEquals(31, planner.getAndOrTree().getOperators().size());
+        assertEquals(3, planner.getAndOrTree().getSet(2).getOperators().size());
+        assertEquals(9, planner.getAndOrTree().getSets().size());
+        assertEquals(63, planner.getAndOrTree().getOperators().size());
 
     }
 
@@ -751,7 +746,7 @@ public class OptimizerPlannerTest {
         SubsetNode subsetD = SubsetNode.create(planner.getContext(), joinOperator1);
 
         OperatorNode projectOperator = OperatorNode.create(planner.getContext(),
-                new LogicalProjectOperator(0, 1, 1), planner.defaultTraitSet(), subsetD);
+                new LogicalProjectOperator(0, 1, 0), planner.defaultTraitSet(), subsetD);
         SubsetNode subsetPro = SubsetNode.create(planner.getContext(), projectOperator);
 
         OperatorNode joinOperator2 = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(ComparisonExpr.of(EQ,
@@ -764,14 +759,28 @@ public class OptimizerPlannerTest {
        // planner.addRule(ProjectJoinTransposeRule.RIGHT_PROJECT);
 
         planner.setRoot(root);
+        planner.optimize();
 
-        assertEquals(1, planner.getRuleCallQueue().size());
+        assertEquals(0, planner.getRuleCallQueue().size());
 
         //assertEquals(11, planner.getAndOrTree().getSet(2).getOperators().size());
 
     }
+    @Test
+    public void testRuleCallMatchProjectJoinRule() {
+        SubsetNode root = constructSimpleChain(planner, new LogicalMatchOperator("[0-9]+PM(a|b)"));
 
+        planner.addRule(MatchToJoinRule.INSTANCE);
+        planner.addRule(ProjectJoinTransposeRule.RIGHT_PROJECT);
+        planner.addRule(ProjectJoinTransposeRule.BOTH_PROJECT);
+        planner.addRule(ProjectJoinTransposeRule.LEFT_PROJECT);
+        planner.setRoot(root);
+        planner.optimize();
 
+        assertEquals(0, planner.getRuleCallQueue().size());
+        assertEquals(11, planner.getAndOrTree().getOperators().size());
+
+    }
 
 
 }

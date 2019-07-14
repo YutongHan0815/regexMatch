@@ -1,6 +1,8 @@
 package edu.ics.uci.regex.runtime.regexMatcher;
 
 import com.google.common.base.Preconditions;
+import com.google.re2j.PublicParser;
+import com.google.re2j.PublicRE2;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -24,7 +26,7 @@ public class SubRegex extends AbstractSubSequence{
         super(-1, -1);
         Preconditions.checkNotNull(regex);
         super.setOriginalSubCount(-1);
-        this.regex = regex;
+        this.regex = PublicParser.parse(regex, PublicRE2.PERL).toString();
         originalSubId = 0;
         regexPattern = null;
         this.complexity = ComplexityLevel.High;
@@ -40,7 +42,7 @@ public class SubRegex extends AbstractSubSequence{
         super(startingCSRIndex, numberOfCSRs);
         super.setOriginalSubCount(0);
         regexPattern = regexPattern.compile(regex);
-        this.regex = regex;
+        this.regex = PublicParser.parse(regex, PublicRE2.PERL).toString();
         this.complexity = complexity;
         this.reverseSubRegex = reverseSubRegex;
         this.minLength = minLength;

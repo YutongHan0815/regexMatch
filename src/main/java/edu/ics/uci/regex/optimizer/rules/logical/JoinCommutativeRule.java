@@ -7,6 +7,7 @@ import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.TransformRule;
 import edu.ics.uci.optimizer.operator.OperatorNode;
 import edu.ics.uci.optimizer.operator.SubsetNode;
+import edu.ics.uci.regex.optimizer.expression.BooleanExpr;
 import edu.ics.uci.regex.optimizer.expression.ComparisonExpr;
 
 import edu.ics.uci.regex.optimizer.expression.Expression;
@@ -59,22 +60,26 @@ public class JoinCommutativeRule implements TransformRule, Serializable {
         final SpanInputRef spanInputRef0 = SpanInputRef.of(0, SpanInputRef.SpanAccess.START);
         final SpanInputRef spanInputRef1 = SpanInputRef.of(1, SpanInputRef.SpanAccess.END);
 
-        switch ((ComparisonExpr.ComparisionType)logicalJoinOperator.getCondition().getOperator()) {
-            case EQ:
-                condition = ComparisonExpr.of(EQ, spanInputRef0, spanInputRef1);
-                break;
-            case LT:
-                condition = ComparisonExpr.of(GT, spanInputRef0, spanInputRef1);
-                break;
-            case LE:
-                condition = ComparisonExpr.of(GE, spanInputRef0, spanInputRef1);
-                break;
-            case GE:
-                condition = ComparisonExpr.of(LE, spanInputRef0, spanInputRef1);
-                break;
-            case GT:
-                condition = ComparisonExpr.of(LT, spanInputRef0, spanInputRef1);
-                break;
+        if(logicalJoinOperator.getCondition().getOperator() instanceof BooleanExpr.BooleanType)
+            System.out.println("boolean expression");
+        else {
+            switch ((ComparisonExpr.ComparisionType) logicalJoinOperator.getCondition().getOperator()) {
+                case EQ:
+                    condition = ComparisonExpr.of(EQ, spanInputRef0, spanInputRef1);
+                    break;
+                case LT:
+                    condition = ComparisonExpr.of(GT, spanInputRef0, spanInputRef1);
+                    break;
+                case LE:
+                    condition = ComparisonExpr.of(GE, spanInputRef0, spanInputRef1);
+                    break;
+                case GE:
+                    condition = ComparisonExpr.of(LE, spanInputRef0, spanInputRef1);
+                    break;
+                case GT:
+                    condition = ComparisonExpr.of(LT, spanInputRef0, spanInputRef1);
+                    break;
+            }
         }
         LogicalJoinOperator newJoin = new LogicalJoinOperator(condition);
 
