@@ -5,9 +5,7 @@ import edu.ics.uci.optimizer.OptimizerContext;
 import edu.ics.uci.optimizer.operator.Operator;
 import edu.ics.uci.optimizer.operator.OperatorNode;
 import edu.ics.uci.optimizer.operator.SubsetNode;
-import edu.ics.uci.optimizer.operator.schema.Field;
 import edu.ics.uci.optimizer.operator.schema.RowType;
-import edu.ics.uci.optimizer.operator.schema.SpanType;
 import edu.ics.uci.optimizer.rule.PatternNode;
 import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.TransformRule;
@@ -17,8 +15,6 @@ import edu.ics.uci.regex.optimizer.expression.SpanInputRef;
 import edu.ics.uci.regex.optimizer.expression.SpanInputRef.SpanAccess;
 import edu.ics.uci.regex.optimizer.operators.LogicalJoinOperator;
 import edu.ics.uci.regex.optimizer.operators.LogicalProjectOperator;
-import edu.ics.uci.regex.optimizer.operators.ProjectOperator;
-import edu.ics.uci.regex.runtime.regexMatcher.execution.Project;
 
 import java.io.Serializable;
 import java.util.*;

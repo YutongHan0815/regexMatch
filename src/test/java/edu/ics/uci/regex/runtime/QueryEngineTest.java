@@ -1,5 +1,6 @@
-package edu.ics.uci.optimizer;
+package edu.ics.uci.regex.runtime;
 
+import edu.ics.uci.optimizer.OptimizerPlanner;
 import edu.ics.uci.optimizer.operator.*;
 import edu.ics.uci.regex.RegexTestConstantsText;
 
