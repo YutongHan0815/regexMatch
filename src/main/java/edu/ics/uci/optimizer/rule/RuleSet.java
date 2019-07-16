@@ -17,9 +17,9 @@ public class RuleSet implements Serializable {
             ImmutableList.of(
                     JoinCommutativeRule.INSTANCE,
                     MatchToJoinRule.INSTANCE,
+                    JoinAssociativeRule.INSTANCE,
                     LogicalJoinToPhysicalJoinRule.INSTANCE,
                     LogicalMatchToPhysicalMatchRule.INSTANCE,
-                    JoinAssociativeRule.INSTANCE,
                     LogicalJoinToPhysicalVerifyRule.INSTANCE,
                     LogicalJoinToPhysicalVerifyReverseRule.INSTANCE,
                     LogicalMatchToPhysicalMatchReverseRule.INSTANCE,

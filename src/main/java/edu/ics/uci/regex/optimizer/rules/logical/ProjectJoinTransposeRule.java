@@ -5,9 +5,7 @@ import edu.ics.uci.optimizer.OptimizerContext;
 import edu.ics.uci.optimizer.operator.Operator;
 import edu.ics.uci.optimizer.operator.OperatorNode;
 import edu.ics.uci.optimizer.operator.SubsetNode;
-import edu.ics.uci.optimizer.operator.schema.Field;
 import edu.ics.uci.optimizer.operator.schema.RowType;
-import edu.ics.uci.optimizer.operator.schema.SpanType;
 import edu.ics.uci.optimizer.rule.PatternNode;
 import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.TransformRule;
@@ -17,8 +15,6 @@ import edu.ics.uci.regex.optimizer.expression.SpanInputRef;
 import edu.ics.uci.regex.optimizer.expression.SpanInputRef.SpanAccess;
 import edu.ics.uci.regex.optimizer.operators.LogicalJoinOperator;
 import edu.ics.uci.regex.optimizer.operators.LogicalProjectOperator;
-import edu.ics.uci.regex.optimizer.operators.ProjectOperator;
-import edu.ics.uci.regex.runtime.regexMatcher.execution.Project;
 
 import java.io.Serializable;
 import java.util.*;
@@ -112,22 +108,35 @@ public class ProjectJoinTransposeRule implements TransformRule, Serializable {
         } else {
             newRight = joinNode.getInputs().get(1);
         }
-
+       // System.out.println(inputRefMapping.toString());
         ExprOperand transformedExpr = logicalJoin.getCondition().transform(node -> transformJoinExpr(node, inputRefMapping));
         Verify.verify(transformedExpr instanceof Expression);
-        LogicalJoinOperator newJoinOperator = new LogicalJoinOperator((Expression) transformedExpr);
+       // System.out.println(logicalJoin.getCondition());
+       // System.out.println(transformedExpr);
 
+        LogicalJoinOperator newJoinOperator = new LogicalJoinOperator((Expression) transformedExpr);
         OperatorNode newJoinNode = OperatorNode.create(context, newJoinOperator, joinNode.getTraitSet(), newLeft, newRight);
 
         OperatorNode newProjectNode = null;
-        if ( leftNode.getOperator() instanceof LogicalProjectOperator ) {
+        if ( leftProject instanceof LogicalProjectOperator ) {
+
+
             newProjectNode = OperatorNode.create(context, leftNode.getOperator(), leftNode.getTraitSet(), SubsetNode.create(context, newJoinNode));
 
-            if (rightNode.getOperator() instanceof LogicalProjectOperator) {
-                newProjectNode = OperatorNode.create(context, rightNode.getOperator(), rightNode.getTraitSet(), SubsetNode.create(context, newProjectNode));
+            if (rightProject instanceof LogicalProjectOperator) {
+                LogicalProjectOperator newProjectOperator = new LogicalProjectOperator(newLeftColumnCount,
+                        newLeftColumnCount + rightProject.getRightIndex(),
+                        newLeftColumnCount+ rightProject.getResultIndex());
+
+                newProjectNode = OperatorNode.create(context, newProjectOperator, rightNode.getTraitSet(), SubsetNode.create(context, newProjectNode));
             }
-        } else if (rightNode.getOperator() instanceof LogicalProjectOperator) {
-            newProjectNode = OperatorNode.create(context, rightNode.getOperator(), rightNode.getTraitSet(), SubsetNode.create(context, newJoinNode));
+
+        } else if (rightProject instanceof LogicalProjectOperator) {
+            LogicalProjectOperator newProjectOperator = new LogicalProjectOperator(newLeftColumnCount,
+                    newLeftColumnCount + rightProject.getRightIndex(),
+                    newLeftColumnCount+ rightProject.getResultIndex());
+
+            newProjectNode = OperatorNode.create(context, newProjectOperator, rightNode.getTraitSet(), SubsetNode.create(context, newJoinNode));
         }
 
         ruleCall.transformTo(newProjectNode);
@@ -233,9 +242,6 @@ public class ProjectJoinTransposeRule implements TransformRule, Serializable {
                         newIndex = newStartIndex + i;
                     }
                 }
-
-
-
 
                 inputMapping.put(SpanInputRef.of(oldIndex, SpanAccess.START), SpanInputRef.of(newIndex, SpanAccess.START));
                 inputMapping.put(SpanInputRef.of(oldIndex, SpanAccess.END), SpanInputRef.of(newIndex, SpanAccess.END));
