@@ -2,12 +2,18 @@ package edu.ics.uci.optimizer.triat;
 
 import java.util.Objects;
 
+/**
+ * Convention is the instance the trait of the {@link edu.ics.uci.optimizer.operator.Operator}:
+ * Logical
+ * Physical
+ */
 public class Convention implements Trait {
 
     public static final Convention LOGICAL = new Convention("logical");
 
     public static final Convention PHYSICAL = new Convention("physical");
 
+    //Description of a trait
     private final String a;
 
     private Convention(String a) {

@@ -19,8 +19,6 @@ import java.util.List;
 import static edu.ics.uci.optimizer.OptimizerPlannerTest.createLeafSubset;
 import static edu.ics.uci.optimizer.triat.ConventionDef.CONVENTION_TRAIT_DEF;
 import static edu.ics.uci.regex.optimizer.expression.ComparisonExpr.ComparisionType.EQ;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 public class QueryEngineTest {
 
     private OptimizerPlanner planner;

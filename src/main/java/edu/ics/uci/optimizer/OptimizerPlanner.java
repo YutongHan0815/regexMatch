@@ -27,8 +27,9 @@ import static java.util.stream.Collectors.toSet;
  */
 public class OptimizerPlanner implements Serializable {
 
+    //Global context
     private final OptimizerContext context;
-
+    //
     private final List<TraitDef> traitDefs = new ArrayList<>();
 
     private final AndOrTree andOrTree;

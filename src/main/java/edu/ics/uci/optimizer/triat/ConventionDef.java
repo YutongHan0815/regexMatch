@@ -1,5 +1,9 @@
 package edu.ics.uci.optimizer.triat;
 
+/**
+ * Definition of default Convention
+ *
+ */
 public class ConventionDef implements TraitDef<Convention> {
 
     public static ConventionDef CONVENTION_TRAIT_DEF = new ConventionDef();

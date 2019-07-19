@@ -13,8 +13,17 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.toSet;
 
+/**
+ * AndOrTree contains {@link EquivSet} and {@link Operator} in a and-or tree. The Operators in the same EquivSet is disjunction.
+ * The inputs of an operator are EquivSets in the tree. The relationship between the operator and its input EquivSets is conjunction.
+ * When the {@link edu.ics.uci.optimizer.OptimizerPlanner} is initialized, a AndOrTree will be initialized.
+ * AndOrTree is used to register a new Operator or a new EquivSet.
+ * If there are new operator or EquivSet need to be register in the {@link edu.ics.uci.optimizer.OptimizerPlanner},
+ * it will call functions to add the operator or EquivSet into AndOrTree.
+ */
 public class AndOrTree implements Serializable {
 
+    //
     private final OptimizerContext context;
 
     private final Map<Integer, EquivSet> sets = new HashMap<>();

@@ -2,6 +2,7 @@ package edu.ics.uci.optimizer.triat;
 
 import java.io.Serializable;
 
+
 public interface Trait extends Serializable {
 
     TraitDef<? extends Trait> getTraitDef();
