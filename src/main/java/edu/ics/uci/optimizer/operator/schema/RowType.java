@@ -2,6 +2,7 @@ package edu.ics.uci.optimizer.operator.schema;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class RowType {
     public boolean containsField(String fieldName) {
         return this.getFieldNames().contains(fieldName);
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

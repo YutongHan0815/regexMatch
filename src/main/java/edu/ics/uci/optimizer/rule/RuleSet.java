@@ -18,15 +18,16 @@ public class RuleSet implements Serializable {
                     JoinCommutativeRule.INSTANCE,
                     MatchToJoinRule.INSTANCE,
                     JoinAssociativeRule.INSTANCE,
+                    ProjectJoinTransposeRule.BOTH_PROJECT,
+                    ProjectJoinTransposeRule.LEFT_PROJECT,
+                    ProjectJoinTransposeRule.RIGHT_PROJECT,
+
                     LogicalJoinToPhysicalJoinRule.INSTANCE,
                     LogicalMatchToPhysicalMatchRule.INSTANCE,
                     LogicalJoinToPhysicalVerifyRule.INSTANCE,
                     LogicalJoinToPhysicalVerifyReverseRule.INSTANCE,
                     LogicalMatchToPhysicalMatchReverseRule.INSTANCE,
-                    LogicalProjectToPhysicalProjectRule.INSTANCE,
-                    ProjectJoinTransposeRule.BOTH_PROJECT,
-                    ProjectJoinTransposeRule.LEFT_PROJECT,
-                    ProjectJoinTransposeRule.RIGHT_PROJECT
+                    LogicalProjectToPhysicalProjectRule.INSTANCE
 
             );
 

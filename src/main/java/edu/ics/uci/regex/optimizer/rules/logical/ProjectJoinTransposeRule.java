@@ -111,30 +111,31 @@ public class ProjectJoinTransposeRule implements TransformRule, Serializable {
        // System.out.println(inputRefMapping.toString());
         ExprOperand transformedExpr = logicalJoin.getCondition().transform(node -> transformJoinExpr(node, inputRefMapping));
         Verify.verify(transformedExpr instanceof Expression);
-       // System.out.println(logicalJoin.getCondition());
-       // System.out.println(transformedExpr);
+//        System.out.println(logicalJoin.getCondition());
+//        System.out.println(transformedExpr);
 
         LogicalJoinOperator newJoinOperator = new LogicalJoinOperator((Expression) transformedExpr);
         OperatorNode newJoinNode = OperatorNode.create(context, newJoinOperator, joinNode.getTraitSet(), newLeft, newRight);
 
-        OperatorNode newProjectNode = null;
-        if ( leftProject instanceof LogicalProjectOperator ) {
 
+        OperatorNode newProjectNode = null;
+        LogicalProjectOperator newProjectOperator = new LogicalProjectOperator(newLeftColumnCount,
+                newLeftColumnCount + rightProject.getRightIndex(),
+                newLeftColumnCount+ rightProject.getResultIndex());
+
+
+
+        if ( leftProject instanceof LogicalProjectOperator ) {
 
             newProjectNode = OperatorNode.create(context, leftNode.getOperator(), leftNode.getTraitSet(), SubsetNode.create(context, newJoinNode));
 
             if (rightProject instanceof LogicalProjectOperator) {
-                LogicalProjectOperator newProjectOperator = new LogicalProjectOperator(newLeftColumnCount,
-                        newLeftColumnCount + rightProject.getRightIndex(),
-                        newLeftColumnCount+ rightProject.getResultIndex());
+
 
                 newProjectNode = OperatorNode.create(context, newProjectOperator, rightNode.getTraitSet(), SubsetNode.create(context, newProjectNode));
             }
 
         } else if (rightProject instanceof LogicalProjectOperator) {
-            LogicalProjectOperator newProjectOperator = new LogicalProjectOperator(newLeftColumnCount,
-                    newLeftColumnCount + rightProject.getRightIndex(),
-                    newLeftColumnCount+ rightProject.getResultIndex());
 
             newProjectNode = OperatorNode.create(context, newProjectOperator, rightNode.getTraitSet(), SubsetNode.create(context, newJoinNode));
         }

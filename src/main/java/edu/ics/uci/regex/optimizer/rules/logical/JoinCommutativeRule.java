@@ -51,14 +51,15 @@ public class JoinCommutativeRule implements TransformRule, Serializable {
         final OperatorNode logicalLeftOpN = ruleCall.getOperator(1);
         final OperatorNode logicalRightOpN = ruleCall.getOperator(2);
 
-        Expression condition = ComparisonExpr.of(GE,
-                SpanInputRef.of(0, SpanInputRef.SpanAccess.END), SpanInputRef.of(1, SpanInputRef.SpanAccess.START));
+        Expression condition = null;
 
 
         final LogicalJoinOperator logicalJoinOperator = logicalJoinOpN.getOperator();
 
         final SpanInputRef spanInputRef0 = SpanInputRef.of(0, SpanInputRef.SpanAccess.START);
         final SpanInputRef spanInputRef1 = SpanInputRef.of(1, SpanInputRef.SpanAccess.END);
+
+        System.out.println(logicalJoinOperator.getCondition().toString());
 
         if(logicalJoinOperator.getCondition().getOperator() instanceof BooleanExpr.BooleanType)
             System.out.println("boolean expression");
@@ -83,9 +84,11 @@ public class JoinCommutativeRule implements TransformRule, Serializable {
         }
         LogicalJoinOperator newJoin = new LogicalJoinOperator(condition);
 
-        SubsetNode newLeft = SubsetNode.create(ruleCall.getContext(), logicalLeftOpN);
-        SubsetNode newRight = SubsetNode.create(ruleCall.getContext(), logicalRightOpN);
+        SubsetNode newLeft = SubsetNode.create(ruleCall.getContext(), logicalRightOpN);
+        SubsetNode newRight = SubsetNode.create(ruleCall.getContext(), logicalLeftOpN);
         OperatorNode joinOperatorNode = OperatorNode.create(ruleCall.getContext(), newJoin, logicalJoinOpN.getTraitSet(), Arrays.asList(newLeft, newRight));
+        System.out.println(newJoin.getCondition().toString());
+
 
         ruleCall.transformTo(joinOperatorNode);
 

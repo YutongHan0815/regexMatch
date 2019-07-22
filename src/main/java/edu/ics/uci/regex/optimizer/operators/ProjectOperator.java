@@ -81,4 +81,13 @@ public abstract class ProjectOperator implements Operator, Serializable {
     public int hashCode() {
         return Objects.hash(leftIndex, rightIndex);
     }
+
+    @Override
+    public String toString() {
+        return "ProjectOperator{" +
+                "leftIndex=" + leftIndex +
+                ", rightIndex=" + rightIndex +
+                ", resultIndex=" + resultIndex +
+                '}';
+    }
 }

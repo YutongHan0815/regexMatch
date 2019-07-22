@@ -61,6 +61,7 @@ public class JoinAssociativeRule implements TransformRule, Serializable {
         final OperatorNode logicalMatchOpNC = ruleCall.getOperator(3);
         final OperatorNode logicalMatchOpNB = ruleCall.getOperator(4);
 
+        //System.out.println("JoinAssociativeRule");
         OperatorNode matchOperatorA = OperatorNode.create(ruleCall.getContext(), logicalMatchOpNA.getOperator(),
                 logicalJoinAfterOpN.getTraitSet(), logicalMatchOpNA.getInputs());
         OperatorNode matchOperatorC = OperatorNode.create(ruleCall.getContext(), logicalMatchOpNC.getOperator(),
