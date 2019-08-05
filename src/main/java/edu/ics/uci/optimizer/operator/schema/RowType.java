@@ -5,34 +5,32 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class RowType {
 
-    private final ImmutableList<Field> fields;
+    private final ImmutableSet<Field> fields;
 
     public static RowType of(Field... fields) {
-        return new RowType(ImmutableList.copyOf(fields));
+        return new RowType(ImmutableSet.copyOf(fields));
     }
 
     public static RowType of(List<Field> fields) {
-        return new RowType(ImmutableList.copyOf(fields));
+        return new RowType(ImmutableSet.copyOf(fields));
     }
 
-    private RowType(ImmutableList<Field> fields) {
+    private RowType(ImmutableSet<Field> fields) {
         this.fields = fields;
     }
 
     public RowType append(Field field) {
-        return new RowType(ImmutableList.<Field>builder().addAll(this.fields).add(field).build());
+        return new RowType(ImmutableSet.<Field>builder().addAll(this.fields).add(field).build());
     }
 
     public List<Field> getFields() {
-        return fields;
+
+        return fields.asList();
     }
 
     public List<String> getFieldNames() {

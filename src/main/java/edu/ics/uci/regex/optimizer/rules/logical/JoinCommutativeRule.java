@@ -55,11 +55,20 @@ public class JoinCommutativeRule implements TransformRule, Serializable {
 
 
         final LogicalJoinOperator logicalJoinOperator = logicalJoinOpN.getOperator();
+        final SpanInputRef firstSpanInputRef = (SpanInputRef) logicalJoinOperator.getCondition().getOperands().get(0);
+        final SpanInputRef secondSpanInputRef = (SpanInputRef) logicalJoinOperator.getCondition().getOperands().get(1);
 
-        final SpanInputRef spanInputRef0 = SpanInputRef.of(0, SpanInputRef.SpanAccess.START);
-        final SpanInputRef spanInputRef1 = SpanInputRef.of(1, SpanInputRef.SpanAccess.END);
+        SpanInputRef spanInputRef0 = SpanInputRef.of(0, SpanInputRef.SpanAccess.START);
+        SpanInputRef spanInputRef1 = SpanInputRef.of(1, SpanInputRef.SpanAccess.END);
 
-        System.out.println(logicalJoinOperator.getCondition().toString());
+        if (firstSpanInputRef.getSpanAccess() == SpanInputRef.SpanAccess.START
+                && secondSpanInputRef.getSpanAccess() == SpanInputRef.SpanAccess.END) {
+            spanInputRef0 = SpanInputRef.of(0, SpanInputRef.SpanAccess.END);
+            spanInputRef1 = SpanInputRef.of(1, SpanInputRef.SpanAccess.START);
+        }
+
+
+       // System.out.println(logicalJoinOperator.getCondition().toString());
 
         if(logicalJoinOperator.getCondition().getOperator() instanceof BooleanExpr.BooleanType)
             System.out.println("boolean expression");
@@ -87,7 +96,7 @@ public class JoinCommutativeRule implements TransformRule, Serializable {
         SubsetNode newLeft = SubsetNode.create(ruleCall.getContext(), logicalRightOpN);
         SubsetNode newRight = SubsetNode.create(ruleCall.getContext(), logicalLeftOpN);
         OperatorNode joinOperatorNode = OperatorNode.create(ruleCall.getContext(), newJoin, logicalJoinOpN.getTraitSet(), Arrays.asList(newLeft, newRight));
-        System.out.println(newJoin.getCondition().toString());
+        //System.out.println(newJoin.getCondition().toString());
 
 
         ruleCall.transformTo(joinOperatorNode);

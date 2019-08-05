@@ -77,6 +77,7 @@ public class Tuple implements Serializable {
 
            this.rowTypeBuilder = new RowType.Builder(tuple.getRowType());
            this.fieldNameMap = new HashMap<>();
+
            for (int i = 0; i < tuple.getFields().size(); i++) {
                this.fieldNameMap.put(
                        tuple.getRowType().getFields().get(i).getName().toLowerCase(),

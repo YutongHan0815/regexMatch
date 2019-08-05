@@ -73,6 +73,8 @@ public class ProjectJoinTransposeRule implements TransformRule, Serializable {
         LogicalProjectOperator leftProject = null;
         LogicalProjectOperator rightProject = null;
 
+        LogicalProjectOperator newProjectOperator = null;
+
         int oldLeftColumnCount = leftNode.getOperatorMemo().getOutputRowType().get().getFields().size();
         Integer newLeftColumnCount;
 
@@ -105,6 +107,10 @@ public class ProjectJoinTransposeRule implements TransformRule, Serializable {
             );
 
             newRight = rightNode.getInputs().get(0);
+
+            newProjectOperator = new LogicalProjectOperator(newLeftColumnCount,
+                    newLeftColumnCount + rightProject.getRightIndex(),
+                    newLeftColumnCount+ rightProject.getResultIndex());
         } else {
             newRight = joinNode.getInputs().get(1);
         }
@@ -112,34 +118,22 @@ public class ProjectJoinTransposeRule implements TransformRule, Serializable {
         ExprOperand transformedExpr = logicalJoin.getCondition().transform(node -> transformJoinExpr(node, inputRefMapping));
         Verify.verify(transformedExpr instanceof Expression);
 //        System.out.println(logicalJoin.getCondition());
-//        System.out.println(transformedExpr);
+       // System.out.println(transformedExpr);
 
         LogicalJoinOperator newJoinOperator = new LogicalJoinOperator((Expression) transformedExpr);
         OperatorNode newJoinNode = OperatorNode.create(context, newJoinOperator, joinNode.getTraitSet(), newLeft, newRight);
 
 
         OperatorNode newProjectNode = null;
-        LogicalProjectOperator newProjectOperator = new LogicalProjectOperator(newLeftColumnCount,
-                newLeftColumnCount + rightProject.getRightIndex(),
-                newLeftColumnCount+ rightProject.getResultIndex());
-
-
 
         if ( leftProject instanceof LogicalProjectOperator ) {
-
             newProjectNode = OperatorNode.create(context, leftNode.getOperator(), leftNode.getTraitSet(), SubsetNode.create(context, newJoinNode));
-
             if (rightProject instanceof LogicalProjectOperator) {
-
-
                 newProjectNode = OperatorNode.create(context, newProjectOperator, rightNode.getTraitSet(), SubsetNode.create(context, newProjectNode));
             }
-
         } else if (rightProject instanceof LogicalProjectOperator) {
-
             newProjectNode = OperatorNode.create(context, newProjectOperator, rightNode.getTraitSet(), SubsetNode.create(context, newJoinNode));
         }
-
         ruleCall.transformTo(newProjectNode);
     }
 

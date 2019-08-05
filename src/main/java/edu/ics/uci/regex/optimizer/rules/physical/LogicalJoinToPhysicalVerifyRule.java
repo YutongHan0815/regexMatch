@@ -47,7 +47,7 @@ public class LogicalJoinToPhysicalVerifyRule implements TransformRule, Serializa
         final LogicalJoinOperator logicalJoinOperator = logicalJoinOpN.getOperator();
         final List<SubsetNode> inputs = logicalJoinOpN.getInputs();
         PhysicalVerifyJoinOperator physicalVerifyJoinOperator = new PhysicalVerifyJoinOperator(
-                logicalJoinOperator.getCondition(), true, new SubRegex(""));
+                logicalJoinOperator.getCondition(), true, new SubRegex("aaa"));
         inputs.forEach(subsetNode -> subsetNode.getTraitSet().replace(Convention.PHYSICAL));
         OperatorNode verifyJoinOperatorNode = OperatorNode.create(ruleCall.getContext(), physicalVerifyJoinOperator,
                 logicalJoinOpN.getTraitSet().replace(Convention.PHYSICAL), inputs);

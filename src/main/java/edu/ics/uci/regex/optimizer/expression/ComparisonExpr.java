@@ -52,6 +52,7 @@ public class ComparisonExpr implements Expression {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ComparisonExpr that = (ComparisonExpr) o;
+
         return type == that.type &&
                 Objects.equals(operands, that.operands);
     }

@@ -364,8 +364,7 @@ public class RuleCallTest {
         planner.addRule(ProjectJoinTransposeRule.LEFT_PROJECT);
         planner.addRule(ProjectJoinTransposeRule.BOTH_PROJECT);
         planner.addRule(ProjectJoinTransposeRule.RIGHT_PROJECT);
-       // planner.addRule(JoinAssociativeRule.INSTANCE);
-        planner.addRule(JoinCommutativeRule.INSTANCE);
+        planner.addRule(JoinAssociativeRule.INSTANCE);
 
         planner.setRoot(root);
         planner.optimize();
