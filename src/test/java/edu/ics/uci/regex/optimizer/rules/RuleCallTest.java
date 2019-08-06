@@ -154,6 +154,25 @@ public class RuleCallTest {
     }
 
     @Test
+    public void testLogicalJoinToPhysicalVerifyRuleMatching() {
+        SubsetNode subsetA = createLeafSubset(planner, new LogicalMatchOperator("a0"));
+        SubsetNode subsetB = createLeafSubset(planner, new LogicalMatchOperator("b0"));
+
+        OperatorNode joinOperator = OperatorNode.create(planner.getContext(), new LogicalJoinOperator(ComparisonExpr.of(EQ,
+                SpanInputRef.of(0, SpanInputRef.SpanAccess.START), SpanInputRef.of(1, SpanInputRef.SpanAccess.END)
+                )), planner.defaultTraitSet(),
+                subsetA, subsetB);
+        SubsetNode root = SubsetNode.create(planner.getContext(), joinOperator);
+        planner.addRule(LogicalJoinToPhysicalVerifyRule.INSTANCE);
+        planner.setRoot(root);
+        planner.optimize();
+
+        assertEquals(0, planner.getRuleCallQueue().size());
+        assertEquals(4, planner.getAndOrTree().getOperators().size());
+
+    }
+
+    @Test
     public void testLeftInputMapping() {
         int oldStartIndex = 0;
         int newStartIndex = 0;

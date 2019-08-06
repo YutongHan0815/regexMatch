@@ -124,12 +124,13 @@ public class OptimizerPlanner implements Serializable {
 
         // newOperator is operator with all children already registered into the planner
         OperatorNode newOperator = OperatorNode.create(this.getContext(), operator.getOperator(), operator.getTraitSet(), registeredChildren);
-
+        System.out.println(newOperator);
         // check duplicate
         if (this.andOrTree.getOperators().containsValue(newOperator)) {
             int duplicateOpID = this.andOrTree.getOperators().inverse().get(newOperator);
             int duplicateOpSet = this.andOrTree.getOperatorSet(duplicateOpID).getSetID();
             if (duplicateOpSet != setID) {
+                System.out.println("dup" + setID + " " + duplicateOpID + " "+ newOperator);
                 throw new UnsupportedOperationException("TODO: set merge is not implemented yet");
             }
             return duplicateOpID;

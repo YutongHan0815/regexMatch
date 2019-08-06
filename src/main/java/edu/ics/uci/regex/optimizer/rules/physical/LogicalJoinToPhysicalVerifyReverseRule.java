@@ -49,10 +49,12 @@ public class LogicalJoinToPhysicalVerifyReverseRule implements TransformRule, Se
     public void onMatch(RuleCall ruleCall) {
 
         final OperatorNode logicalJoinOpN = ruleCall.getOperator(0);
+        final LogicalMatchOperator logicalMatchOperator = ruleCall.getOperator(2).getOperator();
+
         final LogicalJoinOperator logicalJoinOperator = logicalJoinOpN.getOperator();
         final List<SubsetNode> inputs = logicalJoinOpN.getInputs();
 
-        PhysicalVerifyJoinOperator physicalVerifyJoinOperator = new PhysicalVerifyJoinOperator(logicalJoinOperator.getCondition(), false, new SubRegex("ll"));
+        PhysicalVerifyJoinOperator physicalVerifyJoinOperator = new PhysicalVerifyJoinOperator(logicalJoinOperator.getCondition(), false,  logicalMatchOperator.getSubRegex());
         inputs.forEach(subsetNode -> subsetNode.getTraitSet().replace(Convention.PHYSICAL));
         OperatorNode verifyJoinOperatorNode = OperatorNode.create(ruleCall.getContext(), physicalVerifyJoinOperator,
                 logicalJoinOpN.getTraitSet().replace(Convention.PHYSICAL), inputs);
