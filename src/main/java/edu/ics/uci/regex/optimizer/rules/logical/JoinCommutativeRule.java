@@ -7,11 +7,8 @@ import edu.ics.uci.optimizer.rule.RuleCall;
 import edu.ics.uci.optimizer.rule.TransformRule;
 import edu.ics.uci.optimizer.operator.OperatorNode;
 import edu.ics.uci.optimizer.operator.SubsetNode;
-import edu.ics.uci.regex.optimizer.expression.BooleanExpr;
-import edu.ics.uci.regex.optimizer.expression.ComparisonExpr;
+import edu.ics.uci.regex.optimizer.expression.*;
 
-import edu.ics.uci.regex.optimizer.expression.Expression;
-import edu.ics.uci.regex.optimizer.expression.SpanInputRef;
 import edu.ics.uci.regex.optimizer.operators.*;
 
 import java.io.Serializable;
@@ -30,8 +27,10 @@ public class JoinCommutativeRule implements TransformRule, Serializable {
     public JoinCommutativeRule() {
         this.description = this.getClass().getName();
         this.matchPattern = operand(LogicalJoinOperator.class)
-                .children(exact(Arrays.asList(operand(Operator.class).children(any()),
-                        operand(Operator.class).children(any()))))
+                .children(exact(Arrays.asList(operand(Operator.class)
+                                .children(any()),
+                        operand(Operator.class)
+                                .children(any()))))
                 .build();
     }
 
@@ -55,25 +54,36 @@ public class JoinCommutativeRule implements TransformRule, Serializable {
 
 
         final LogicalJoinOperator logicalJoinOperator = logicalJoinOpN.getOperator();
-        final SpanInputRef firstSpanInputRef = (SpanInputRef) logicalJoinOperator.getCondition().getOperands().get(0);
-        final SpanInputRef secondSpanInputRef = (SpanInputRef) logicalJoinOperator.getCondition().getOperands().get(1);
+        Expression joinExpression = logicalJoinOperator.getCondition();
+        if (joinExpression instanceof BooleanExpr
+                && ((BooleanExpr) joinExpression).getOperator() == BooleanExpr.BooleanType.AND) {
 
-        SpanInputRef spanInputRef0 = SpanInputRef.of(0, SpanInputRef.SpanAccess.START);
-        SpanInputRef spanInputRef1 = SpanInputRef.of(1, SpanInputRef.SpanAccess.END);
+            ExprOperand exprOperand = ComparisonExpr.of(EQ,
+                        SpanInputRef.of(1, SpanInputRef.SpanAccess.END),
+                        SpanInputRef.of(0, SpanInputRef.SpanAccess.START));
 
-        if (firstSpanInputRef.getSpanAccess() == SpanInputRef.SpanAccess.START
-                && secondSpanInputRef.getSpanAccess() == SpanInputRef.SpanAccess.END) {
-            spanInputRef0 = SpanInputRef.of(0, SpanInputRef.SpanAccess.END);
-            spanInputRef1 = SpanInputRef.of(1, SpanInputRef.SpanAccess.START);
-        }
+            condition = BooleanExpr.of(BooleanExpr.BooleanType.AND,
+                    Arrays.asList(joinExpression.getOperands().get(0), exprOperand));
+
+            System.out.println("boolean expression" + condition);
+            //throw new UnsupportedOperationException("TODO: BooleanExpr is not support");
+        } else {
+            final SpanInputRef firstSpanInputRef = (SpanInputRef) joinExpression.getOperands().get(0);
+            final SpanInputRef secondSpanInputRef = (SpanInputRef) joinExpression.getOperands().get(1);
+
+            SpanInputRef spanInputRef0 = SpanInputRef.of(0, SpanInputRef.SpanAccess.START);
+            SpanInputRef spanInputRef1 = SpanInputRef.of(1, SpanInputRef.SpanAccess.END);
+
+            if (firstSpanInputRef.getSpanAccess() == SpanInputRef.SpanAccess.START
+                    && secondSpanInputRef.getSpanAccess() == SpanInputRef.SpanAccess.END) {
+                spanInputRef0 = SpanInputRef.of(0, SpanInputRef.SpanAccess.END);
+                spanInputRef1 = SpanInputRef.of(1, SpanInputRef.SpanAccess.START);
+            }
 
 
-       // System.out.println(logicalJoinOperator.getCondition().toString());
+            // System.out.println(logicalJoinOperator.getCondition().toString());
 
-        if(logicalJoinOperator.getCondition().getOperator() instanceof BooleanExpr.BooleanType)
-            System.out.println("boolean expression");
-        else {
-            switch ((ComparisonExpr.ComparisionType) logicalJoinOperator.getCondition().getOperator()) {
+            switch ((ComparisonExpr.ComparisionType) joinExpression.getOperator()) {
                 case EQ:
                     condition = ComparisonExpr.of(EQ, spanInputRef0, spanInputRef1);
                     break;
@@ -96,7 +106,6 @@ public class JoinCommutativeRule implements TransformRule, Serializable {
         SubsetNode newLeft = SubsetNode.create(ruleCall.getContext(), logicalRightOpN);
         SubsetNode newRight = SubsetNode.create(ruleCall.getContext(), logicalLeftOpN);
         OperatorNode joinOperatorNode = OperatorNode.create(ruleCall.getContext(), newJoin, logicalJoinOpN.getTraitSet(), Arrays.asList(newLeft, newRight));
-        //System.out.println(newJoin.getCondition().toString());
 
 
         ruleCall.transformTo(joinOperatorNode);

@@ -42,7 +42,7 @@ public class LogicalMatchToPhysicalMatchReverseRule implements TransformRule, Se
         final LogicalMatchOperator logicalMatchOperator = logicalMatchOpN.getOperator();
         final List<SubsetNode> inputs = logicalMatchOpN.getInputs();
 
-        PhysicalMatchOperator physicalMatchOperator = new PhysicalMatchOperator(logicalMatchOperator.getSubRegex(), false);
+        PhysicalMatchOperator physicalMatchOperator = new PhysicalMatchOperator(logicalMatchOperator.getSubRegex(), true);
         inputs.forEach(subsetNode -> subsetNode.getTraitSet().replace(Convention.PHYSICAL));
 
         OperatorNode matchOperatorNode = OperatorNode.create(ruleCall.getContext(), physicalMatchOperator,

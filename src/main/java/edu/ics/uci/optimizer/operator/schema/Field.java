@@ -2,9 +2,10 @@ package edu.ics.uci.optimizer.operator.schema;
 
 import com.google.common.base.Preconditions;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Field {
+public class Field implements Serializable {
 
     private final String name;
     private final FieldType type;
@@ -41,4 +42,5 @@ public class Field {
     public int hashCode() {
         return Objects.hash(name, type);
     }
+
 }

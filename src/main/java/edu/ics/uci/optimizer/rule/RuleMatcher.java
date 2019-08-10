@@ -37,6 +37,7 @@ public class RuleMatcher implements Serializable {
 
     public List<RuleCall> match() {
         matchNode(triggerOperator, triggeringPatternNode);
+
         if (matchFailed) {
             return Collections.emptyList();
         }
@@ -56,11 +57,13 @@ public class RuleMatcher implements Serializable {
         List<Integer> idList = allPatternNodes.stream().map(p -> p.getId()).sorted().collect(toList());
         List<List<OperatorNode>> matchedNodes = allPatternNodes.stream().sorted(Comparator.comparing(p -> p.getId()))
                 .map(p -> ImmutableList.copyOf(lookupTable.get(p))).collect(toList());
+
         List<List<OperatorNode>> ruleCalls = Lists.cartesianProduct(matchedNodes);
 
         return ruleCalls.stream().map(matchOperatorList -> {
             Map<Integer, Integer> matchedOperators = new HashMap<>();
             idList.forEach(i -> matchedOperators.put(i, matchOperatorList.get(i).getOperatorID()));
+
             return new RuleCall(planner, rule, matchedOperators);
         }).collect(toList());
 

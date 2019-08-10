@@ -10,6 +10,7 @@ import edu.ics.uci.optimizer.rule.RuleMatcher;
 import edu.ics.uci.optimizer.rule.TransformRule;
 import edu.ics.uci.optimizer.triat.TraitDef;
 import edu.ics.uci.optimizer.triat.TraitSet;
+import edu.ics.uci.regex.optimizer.operators.LogicalMatchOperator;
 import io.vavr.Tuple2;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,12 +32,12 @@ public class OptimizerPlanner implements Serializable {
     private final OptimizerContext context;
     //
     private final List<TraitDef> traitDefs = new ArrayList<>();
-
+    //
     private final AndOrTree andOrTree;
     private SubsetNode root;
 
     private final Set<TransformRule> ruleSet = new HashSet<>();
-    private final Multimap<Class<? extends Operator>, Tuple2<TransformRule, PatternNode>> operatorRuleIndex = HashMultimap.create();
+    private final Multimap<Class<? extends Operator>, Tuple2<TransformRule, PatternNode>> operatorRuleIndex = ArrayListMultimap.create();
 
     private final Queue<RuleCall> ruleCallQueue = new ArrayDeque<>();
 
@@ -60,6 +61,7 @@ public class OptimizerPlanner implements Serializable {
         rule.getMatchPattern().accept(pattern ->
             this.operatorRuleIndex.put(pattern.getOperatorClass(), new Tuple2<>(rule, pattern))
         );
+
     }
 
     public void removeRule(TransformRule rule) {
@@ -124,7 +126,7 @@ public class OptimizerPlanner implements Serializable {
 
         // newOperator is operator with all children already registered into the planner
         OperatorNode newOperator = OperatorNode.create(this.getContext(), operator.getOperator(), operator.getTraitSet(), registeredChildren);
-        System.out.println(newOperator);
+
         // check duplicate
         if (this.andOrTree.getOperators().containsValue(newOperator)) {
             int duplicateOpID = this.andOrTree.getOperators().inverse().get(newOperator);
@@ -137,6 +139,7 @@ public class OptimizerPlanner implements Serializable {
         }
 
         int newOperatorID = this.andOrTree.addOperator(newOperator, setID);
+
 
         fireRules(newOperator);
 
@@ -151,6 +154,7 @@ public class OptimizerPlanner implements Serializable {
                 .flatMap(rules -> rules.stream())
                 .collect(toList());
 
+       // System.out.println("fireRules :" + operatorRuleIndex.get(operatorNode.getOperator().getClass()).toString());
         relevantRules.stream().map(rule -> new RuleMatcher(this, operatorNode, rule._1, rule._2).match())
                 .flatMap(ruleCalls ->  ruleCalls.stream())
                 .forEach(this.ruleCallQueue::add);

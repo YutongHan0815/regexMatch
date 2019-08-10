@@ -78,7 +78,7 @@ public class AndOrTree implements Serializable {
         operator.getInputs().stream().flatMap(subset -> subset.getOperators().stream()).forEach(input ->
                 checkArgument(this.operators.containsValue(input), "input is not registered " + input));
 
-
+        System.out.println("new Operator" + operator);
         this.operators.put(operatorID, operator);
 
         // update set to include the operator in the set

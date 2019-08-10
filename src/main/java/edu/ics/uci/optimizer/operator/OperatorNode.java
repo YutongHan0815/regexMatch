@@ -51,6 +51,7 @@ public class OperatorNode implements Serializable {
         List<RowType> inputRowTypeList = this.inputs.stream()
                 .map(subset -> subset.getEquivSet().getSetMemo().getOutputRowType().get())
                 .collect(Collectors.toList());
+
         this.operatorMemo.setOutputRowType(this.operator.deriveRowType(inputRowTypeList));
     }
 

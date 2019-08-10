@@ -17,7 +17,9 @@ import java.util.Objects;
 
 import static edu.ics.uci.optimizer.rule.PatternNode.*;
 
-
+/**
+ *
+ */
 public class JoinAssociativeRule implements TransformRule, Serializable {
     public static final JoinAssociativeRule INSTANCE = new JoinAssociativeRule();
 

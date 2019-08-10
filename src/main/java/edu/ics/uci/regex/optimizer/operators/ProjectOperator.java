@@ -58,6 +58,7 @@ public abstract class ProjectOperator implements Operator, Serializable {
             if (i == resultIndex) {
                 builder.add(Field.of(inputRowType.getFields().get(leftIndex).getName() +
                         inputRowType.getFields().get(rightIndex).getName(), inputRowType.getFields().get(leftIndex).getType()));
+               // System.out.println("project: "+ inputRowType.getFields().get(leftIndex).getName());
             }
 
             if (i != leftIndex && i != rightIndex) {

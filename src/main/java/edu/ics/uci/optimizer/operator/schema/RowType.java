@@ -10,26 +10,25 @@ import java.util.stream.Collectors;
 
 public class RowType {
 
-    private final ImmutableSet<Field> fields;
+    private final ImmutableList<Field> fields;
 
     public static RowType of(Field... fields) {
-        return new RowType(ImmutableSet.copyOf(fields));
+        return new RowType(ImmutableList.copyOf(fields));
     }
-
     public static RowType of(List<Field> fields) {
-        return new RowType(ImmutableSet.copyOf(fields));
+        return new RowType(ImmutableList.copyOf(fields));
     }
 
-    private RowType(ImmutableSet<Field> fields) {
+
+    private RowType(ImmutableList<Field> fields) {
         this.fields = fields;
     }
 
     public RowType append(Field field) {
-        return new RowType(ImmutableSet.<Field>builder().addAll(this.fields).add(field).build());
+        return new RowType(ImmutableList.<Field>builder().addAll(this.fields).add(field).build());
     }
 
     public List<Field> getFields() {
-
         return fields.asList();
     }
 
@@ -45,7 +44,7 @@ public class RowType {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RowType rowType = (RowType) o;
-        return Objects.equals(fields, rowType.fields);
+        return fields.containsAll(rowType.fields) && rowType.fields.containsAll(fields);
     }
 
     @Override

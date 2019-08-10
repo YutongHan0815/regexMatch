@@ -15,18 +15,39 @@ public class RuleSet implements Serializable {
 
     public static final ImmutableList<TransformRule> DEFAULT_RULES=
             ImmutableList.of(
-                    JoinCommutativeRule.INSTANCE,
                     MatchToJoinRule.INSTANCE,
                     JoinAssociativeRule.INSTANCE,
+                    JoinCommutativeRule.INSTANCE,
                     ProjectJoinTransposeRule.BOTH_PROJECT,
                     ProjectJoinTransposeRule.LEFT_PROJECT,
                     ProjectJoinTransposeRule.RIGHT_PROJECT,
-
                     LogicalJoinToPhysicalJoinRule.INSTANCE,
                     LogicalMatchToPhysicalMatchRule.INSTANCE,
+                    LogicalMatchToPhysicalMatchReverseRule.INSTANCE,
                     LogicalJoinToPhysicalVerifyRule.INSTANCE,
                     LogicalJoinToPhysicalVerifyReverseRule.INSTANCE,
+                    LogicalProjectToPhysicalProjectRule.INSTANCE
+
+            );
+
+    public static final ImmutableList<TransformRule> LOGICAL_RULES=
+            ImmutableList.of(
+                    MatchToJoinRule.INSTANCE,
+                    JoinAssociativeRule.INSTANCE,
+                    JoinCommutativeRule.INSTANCE,
+                    ProjectJoinTransposeRule.BOTH_PROJECT,
+                    ProjectJoinTransposeRule.LEFT_PROJECT,
+                    ProjectJoinTransposeRule.RIGHT_PROJECT
+
+            );
+
+    public static final ImmutableList<TransformRule> LOGICALTOPHYSICAL_RULES=
+            ImmutableList.of(
+                    LogicalJoinToPhysicalJoinRule.INSTANCE,
+                    LogicalMatchToPhysicalMatchRule.INSTANCE,
                     LogicalMatchToPhysicalMatchReverseRule.INSTANCE,
+                    LogicalJoinToPhysicalVerifyRule.INSTANCE,
+                    LogicalJoinToPhysicalVerifyReverseRule.INSTANCE,
                     LogicalProjectToPhysicalProjectRule.INSTANCE
 
             );
