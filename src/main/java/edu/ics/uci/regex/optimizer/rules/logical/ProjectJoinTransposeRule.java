@@ -22,6 +22,41 @@ import java.util.stream.Collectors;
 
 import static edu.ics.uci.optimizer.rule.PatternNode.*;
 
+/**
+ *  Logical ProjectJoinTransposeRule transpose project operator and parent join operator.
+ * 1)  LEFT_PROJECT:
+ *                    Join (C1)                                        Project(0, 1, 0)
+ *                     /     \                                             |
+ *                    /       \                                            |
+ *                   /         \                     <=>                Join (C2)
+ *          Project(0, 1, 0)   ANY2                                      /    \
+ *               |                                                      /      \
+ *               |                                                     /        \
+ *              ANY1                                                 ANY1      ANY2
+ *
+ *  2) RIGHT_PROJECT:
+ *                    Join (C1)                                        Project(leftColumn+0, leftColumn1, leftColumn+0)
+ *                     /     \                                             |
+ *                    /       \                                            |
+ *                   /         \                     <=>                Join (C2)
+ *                 ANY1     Project(0, 1, 0)                              /    \
+ *                               |                                       /      \
+ *                               |                                      /        \
+ *                              ANY2                                  ANY1     ANY2
+ *
+ *  3)  BOTH_PROJECT:
+ *                    Join (C1)                                        Project_R(leftColumn+0, leftColumn1, leftColumn+0)
+ *                     /     \                                             |
+ *                    /       \                                            |
+ *                   /         \                     <=>               Project_L(0, 1, 0)
+ *        Project_L(0, 1, 0)   Project_R(0, 1, 0)                          |
+ *               |                |                                        |
+ *               |                |                                      Join (C2)
+ *              ANY1             ANY2                                    /    \
+ *                                                                      /      \
+ *                                                                     /        \
+ *                                                                   ANY1       ANY2
+ */
 public class ProjectJoinTransposeRule implements TransformRule, Serializable {
 
     public static ProjectJoinTransposeRule LEFT_PROJECT = new ProjectJoinTransposeRule(
@@ -117,8 +152,6 @@ public class ProjectJoinTransposeRule implements TransformRule, Serializable {
        // System.out.println(inputRefMapping.toString());
         ExprOperand transformedExpr = logicalJoin.getCondition().transform(node -> transformJoinExpr(node, inputRefMapping));
         Verify.verify(transformedExpr instanceof Expression);
-//        System.out.println(logicalJoin.getCondition());
-       // System.out.println(transformedExpr);
 
         LogicalJoinOperator newJoinOperator = new LogicalJoinOperator((Expression) transformedExpr);
         OperatorNode newJoinNode = OperatorNode.create(context, newJoinOperator, joinNode.getTraitSet(), newLeft, newRight);
@@ -137,6 +170,12 @@ public class ProjectJoinTransposeRule implements TransformRule, Serializable {
         ruleCall.transformTo(newProjectNode);
     }
 
+    /**
+     * Compute the new {@link Expression} for JoinOperator when ProjectOperator transposed
+     * @param node
+     * @param inputMapping  map the old index to the new index
+     * @return
+     */
     private static ExprOperand transformJoinExpr(ExprOperand node, Map<SpanInputRef, SpanInputRef> inputMapping) {
         ExprOperand newNode;
         if (node instanceof SpanInputRef) {

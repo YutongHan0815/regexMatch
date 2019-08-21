@@ -15,7 +15,16 @@ import java.util.List;
 import static edu.ics.uci.optimizer.rule.PatternNode.any;
 import static edu.ics.uci.optimizer.rule.PatternNode.operand;
 
-
+/**
+ * LogicalJoinToPhysicalJoinRule
+ *
+ *        LogicalJoin (ComparisonExpr1)        <=>       PhysicalJoin (ComparisonExpr1)
+ *          /     \                                       /     \
+ *         /       \                                     /       \
+ *        /         \                                   /         \
+ *       ANY1       ANY2                               ANY1       ANY2
+ *
+ */
 public class LogicalJoinToPhysicalJoinRule implements TransformRule {
     public static final LogicalJoinToPhysicalJoinRule INSTANCE = new LogicalJoinToPhysicalJoinRule();
     private final String description;

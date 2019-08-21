@@ -15,6 +15,12 @@ import java.util.Objects;
 
 import static edu.ics.uci.optimizer.rule.PatternNode.*;
 
+/**
+ * LogicalMatchToPhysicalMatchReverseRule
+ *
+ * LogicalMatch(Q)  <=>  PhysicalMatch(Q, true)
+ *
+ */
 public class LogicalMatchToPhysicalMatchReverseRule implements TransformRule, Serializable {
     public static final LogicalMatchToPhysicalMatchReverseRule INSTANCE = new LogicalMatchToPhysicalMatchReverseRule();
     private final String description;

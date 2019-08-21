@@ -18,7 +18,16 @@ import java.util.Objects;
 import static edu.ics.uci.optimizer.rule.PatternNode.*;
 
 /**
- *
+ * Logical JoinAssociativeRule
+ *                    Join (C1)                                       Join (C4)
+ *                     /     \                                         /     \
+ *                    /       \                                       /       \
+ *                   /         \                                     /         \
+ *               Match(A)      Join (C2)         <=>               Join (C3)   Match(B)
+ *                            /    \                                 /    \
+ *                           /      \                               /      \
+ *                          /        \                             /        \
+ *                     Match(C)   Match(B)                     Match(A)   Match(C)
  */
 public class JoinAssociativeRule implements TransformRule, Serializable {
     public static final JoinAssociativeRule INSTANCE = new JoinAssociativeRule();

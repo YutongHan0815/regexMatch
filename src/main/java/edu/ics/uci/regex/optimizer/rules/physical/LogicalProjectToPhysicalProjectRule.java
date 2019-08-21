@@ -16,6 +16,15 @@ import static edu.ics.uci.optimizer.rule.PatternNode.any;
 import static edu.ics.uci.optimizer.rule.PatternNode.none;
 import static edu.ics.uci.optimizer.rule.PatternNode.operand;
 
+/**
+ * LogicalProjectToPhysicalProjectRule
+ *
+ * LogicalProject() {@link LogicalProjectOperator}  <=>  PhysicalProject() {@link PhysicalProjectOperator}
+ *       |                                                     |
+ *       |                                                     |
+ *      ANY1                                                  ANY1
+ *
+ */
 public class LogicalProjectToPhysicalProjectRule implements TransformRule, Serializable {
     public static final LogicalProjectToPhysicalProjectRule INSTANCE = new LogicalProjectToPhysicalProjectRule();
 

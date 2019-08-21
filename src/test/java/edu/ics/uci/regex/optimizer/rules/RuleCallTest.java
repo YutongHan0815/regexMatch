@@ -471,9 +471,9 @@ public class RuleCallTest {
     @Test
     public void testAllRuleMatch1() {
 
-       // SubsetNode root = constructSimpleChain(planner, new LogicalMatchOperator("(a)(a)(a)"));
-       // SubsetNode root = constructSimpleChain(planner, new LogicalMatchOperator("(a)(b)(c)"));
-        SubsetNode root = constructSimpleChain(planner, new LogicalMatchOperator("(a)(a)(b)"));
+        //SubsetNode root = constructSimpleChain(planner, new LogicalMatchOperator("(a)(a)(a)"));
+        //TODO SubsetNode root = constructSimpleChain(planner, new LogicalMatchOperator("(a)(a)(b)"));
+        SubsetNode root = constructSimpleChain(planner, new LogicalMatchOperator("(a)(b)(c)"));
 
         RuleSet.LOGICAL_RULES.stream().forEach(transformRule -> planner.addRule(transformRule));
 

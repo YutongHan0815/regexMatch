@@ -19,17 +19,19 @@ import static java.util.stream.Collectors.toSet;
  * When the {@link edu.ics.uci.optimizer.OptimizerPlanner} is initialized, a AndOrTree will be initialized.
  * AndOrTree is used to register a new Operator or a new EquivSet.
  * If there are new operator or EquivSet need to be register in the {@link edu.ics.uci.optimizer.OptimizerPlanner},
- * it will call functions to add the operator or EquivSet into AndOrTree.
+ * it will call the functions to add the operator or EquivSet into AndOrTree.
  */
 public class AndOrTree implements Serializable {
 
-    //
+    // To compute next OperatorNodeId and next EquivSetId
     private final OptimizerContext context;
-
+    // <EquivSetId, EquivSet>
     private final Map<Integer, EquivSet> sets = new HashMap<>();
+    // <OperatorNodeId, OperatorNode>
     private final Map<Integer, OperatorNode> operators = new HashMap<>();
+    // <OperatorNodeId, EquivSetId>
     private final Map<Integer, Integer> operatorToSet = new HashMap<>();
-
+    // <OperatorNodeId, tuple<parent, childrenId>>
     private final Multimap<Integer, Tuple2<OperatorNode, Integer>> operatorParentMap = HashMultimap.create();
 
     public static AndOrTree create(OptimizerContext context) {
@@ -58,14 +60,29 @@ public class AndOrTree implements Serializable {
         return this.operators.get(operatorID);
     }
 
+    /**
+     * Add a set into the {@link AndOrTree}
+     * @param set
+     * @return EquivSetId
+     */
+
+
     public int addSet(EquivSet set) {
         int setID = set.getSetID();
-        checkArgument(! this.sets.containsKey(setID), "SetID " + setID + " already exists");
-
+        checkArgument(!this.sets.containsKey(setID), "SetID " + setID + " already exists");
         this.sets.put(setID, set);
         return setID;
     }
 
+    /**
+     * Add a operator into the {@link AndOrTree}
+     * If the operator is already exist in the tree, link to the exist operator in the tree when register it.
+     * Update the operatorParentMap from this operator to the parent of this set in the tree
+     * Update the operatorParentMap from the inputs to this operator.
+     * @param operator
+     * @param setID  the operator belong to
+     * @return operatorNodeId
+     */
     public int addOperator(OperatorNode operator, int setID) {
         checkNotNull(operator);
         // check setID exists
@@ -78,7 +95,7 @@ public class AndOrTree implements Serializable {
         operator.getInputs().stream().flatMap(subset -> subset.getOperators().stream()).forEach(input ->
                 checkArgument(this.operators.containsValue(input), "input is not registered " + input));
 
-        System.out.println("new Operator" + operator);
+       // System.out.println("new Operator" + operator);
         this.operators.put(operatorID, operator);
 
         // update set to include the operator in the set

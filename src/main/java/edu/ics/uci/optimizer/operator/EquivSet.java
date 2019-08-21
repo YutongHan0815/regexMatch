@@ -12,6 +12,9 @@ import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
+/**
+ * Set
+ */
 public class EquivSet implements Serializable {
 
     private final int setID;

@@ -20,6 +20,19 @@ import static edu.ics.uci.optimizer.rule.PatternNode.*;
 import static edu.ics.uci.regex.optimizer.expression.ComparisonExpr.ComparisionType.EQ;
 import static edu.ics.uci.regex.optimizer.operators.MatchOperator.isComposable;
 
+/**
+ * Logical MatchToJoinRule is decompose query into two sub-regexes with a join operator.
+ * If the subregex of the Match operator can be decomposed, this rule can be triggered.
+ *
+ * Match(AB)    <=>    Project(0, 1, 0)
+ *                        |
+ *                        |
+ *                      Join ({@link ComparisonExpr}(EQ, {@link SpanInputRef}(0, END),{@link SpanInputRef}(1, START))
+ *                     /     \
+ *                    /       \
+ *                   /         \
+ *               Match(A)     Match(B)
+ */
 public class MatchToJoinRule implements TransformRule, Serializable {
 
     public static final MatchToJoinRule INSTANCE = new MatchToJoinRule();

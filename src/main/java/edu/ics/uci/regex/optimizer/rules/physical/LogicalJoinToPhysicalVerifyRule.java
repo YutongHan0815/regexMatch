@@ -19,6 +19,16 @@ import java.util.Objects;
 
 import static edu.ics.uci.optimizer.rule.PatternNode.*;
 
+/**
+ *
+ *LogicalJoinToPhysicalVerifyRule
+ *
+ *        LogicalJoin (C1){@link LogicalJoinOperator}    <=>    PhysicalVerify(C1, Q, true){@link PhysicalVerifyJoinOperator}
+ *          /     \                                                  |
+ *         /       \                                                 |
+ *        /         \                                                |
+ *       ANY1      Match(Q)                                        ANY1
+ */
 public class LogicalJoinToPhysicalVerifyRule implements TransformRule, Serializable {
     public static final LogicalJoinToPhysicalVerifyRule INSTANCE = new LogicalJoinToPhysicalVerifyRule();
     private final String description;

@@ -17,6 +17,23 @@ import java.util.*;
 import static edu.ics.uci.optimizer.rule.PatternNode.*;
 import static edu.ics.uci.regex.optimizer.expression.ComparisonExpr.ComparisionType.*;
 
+/**
+ * Logical JoinCommutativeRule
+ *
+ * ComparisonExpr1 {@link ComparisonExpr} and ComparisonExpr2 {@link ComparisonExpr} satisfied:
+ *       ComparisonExpr,       SpanInputRef0,       SpanInputRef1
+ * 1)     EQ|LT|LE|GT|GE,           (0, END)       (1, START)
+ *    =>  EQ|GT|GE|LT|LE,           (0, START)      (1, END)
+ *
+ * 2) BooleanExp  (EQ (0, END), (2, START)) AND (EQ (2, END), (1, START))
+ *     =>         (EQ (0, END), (2, START)) AND (EQ (0, START), (1, END))
+ *
+ *          Join (ComparisonExpr1)        <=>            Join (ComparisonExpr2)
+ *          /     \                                       /     \
+ *         /       \                                     /       \
+ *        /         \                                   /         \
+ *       ANY1       ANY2                               ANY2       ANY1
+ */
 public class JoinCommutativeRule implements TransformRule, Serializable {
 
     public static final JoinCommutativeRule INSTANCE = new JoinCommutativeRule();
@@ -65,8 +82,7 @@ public class JoinCommutativeRule implements TransformRule, Serializable {
             condition = BooleanExpr.of(BooleanExpr.BooleanType.AND,
                     Arrays.asList(joinExpression.getOperands().get(0), exprOperand));
 
-            System.out.println("boolean expression" + condition);
-            //throw new UnsupportedOperationException("TODO: BooleanExpr is not support");
+           // System.out.println("boolean expression" + condition);
         } else {
             final SpanInputRef firstSpanInputRef = (SpanInputRef) joinExpression.getOperands().get(0);
             final SpanInputRef secondSpanInputRef = (SpanInputRef) joinExpression.getOperands().get(1);

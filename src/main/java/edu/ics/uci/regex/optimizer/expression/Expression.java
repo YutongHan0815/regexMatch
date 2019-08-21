@@ -22,7 +22,6 @@ public interface Expression extends ExprOperand {
     @Override
     default ExprOperand transform(Function<ExprOperand, ExprOperand> visitor) {
         getOperands().stream().map(operand -> operand.transform(visitor)).collect(Collectors.toList());
-
         return visitor.apply(this);
     }
 

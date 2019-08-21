@@ -82,8 +82,9 @@ public class OptimizerPlanner implements Serializable {
     public void optimize() {
         while (! ruleCallQueue.isEmpty()) {
             RuleCall ruleCall = ruleCallQueue.poll();
-            //System.out.println("optimize  "+ruleCall.toString());
+            System.out.println("optimize  "+ruleCall.toString());
             ruleCall.getRule().onMatch(ruleCall);
+
         }
     }
 
@@ -132,7 +133,7 @@ public class OptimizerPlanner implements Serializable {
             int duplicateOpID = this.andOrTree.getOperators().inverse().get(newOperator);
             int duplicateOpSet = this.andOrTree.getOperatorSet(duplicateOpID).getSetID();
             if (duplicateOpSet != setID) {
-                System.out.println("dup" + setID + " " + duplicateOpID + " "+ newOperator);
+                //System.out.println("dup" + setID + " " + duplicateOpID + " "+ newOperator);
                 throw new UnsupportedOperationException("TODO: set merge is not implemented yet");
             }
             return duplicateOpID;
@@ -157,7 +158,10 @@ public class OptimizerPlanner implements Serializable {
        // System.out.println("fireRules :" + operatorRuleIndex.get(operatorNode.getOperator().getClass()).toString());
         relevantRules.stream().map(rule -> new RuleMatcher(this, operatorNode, rule._1, rule._2).match())
                 .flatMap(ruleCalls ->  ruleCalls.stream())
-                .forEach(this.ruleCallQueue::add);
+                .forEach(rule->{
+                    //System.out.println("ruleQueue" + rule);
+                    this.ruleCallQueue.add(rule);
+                });
     }
 
 
