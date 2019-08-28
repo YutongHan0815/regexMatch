@@ -18,7 +18,7 @@ import static edu.ics.uci.optimizer.rule.PatternNode.*;
 import static edu.ics.uci.regex.optimizer.expression.ComparisonExpr.ComparisionType.*;
 
 /**
- * Logical JoinCommutativeRule
+ * Logical JoinCommutativeRule that exchange the left child and right child of Join and rewrite the join ComparisonExpr{@link ComparisonExpr}
  *
  * ComparisonExpr1 {@link ComparisonExpr} and ComparisonExpr2 {@link ComparisonExpr} satisfied:
  *       ComparisonExpr,       SpanInputRef0,       SpanInputRef1

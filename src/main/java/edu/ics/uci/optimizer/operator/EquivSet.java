@@ -13,10 +13,10 @@ import java.util.*;
 import static java.util.stream.Collectors.toList;
 
 /**
- * Set
+ * Set in AndOrTree which contains the equivalent operators with the same traits.
  */
 public class EquivSet implements Serializable {
-
+    //set id
     private final int setID;
     private final Set<OperatorNode> operatorNodes;
     private final Multimap<TraitSet, OperatorNode> traits;

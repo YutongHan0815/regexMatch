@@ -14,6 +14,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.TreeSet;
 
+/**
+ * Regex expression that combines two regex expressions according to the condition
+ * The output rowType is the intersection of left and right inputs which satisfy the condition
+ *
+ */
 public abstract class JoinOperator implements Operator, Serializable {
 
     final Expression condition;

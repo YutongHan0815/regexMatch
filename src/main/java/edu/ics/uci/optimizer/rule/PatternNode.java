@@ -16,12 +16,15 @@ import java.util.stream.IntStream;
 
 import static com.google.common.base.Verify.verify;
 
+/**
+ * Node in the regex exprssion which determines whether a {@link TransformRule} can be applied to a particular expression.
+ */
 
 public class PatternNode implements Serializable {
 
     // id in pre-order traversal of the pattern tree, starting from 0
     private final int id;
-
+    // index the children of parent node
     private final Option<Integer> indexInParent;
 
     private final Class<? extends Operator> operatorClass;

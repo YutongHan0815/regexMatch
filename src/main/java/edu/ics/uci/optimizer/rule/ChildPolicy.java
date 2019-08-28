@@ -1,5 +1,8 @@
 package edu.ics.uci.optimizer.rule;
 
+/**
+ * Policy by which operands will be matched with any number of children.
+ */
 public enum ChildPolicy {
 
     /**

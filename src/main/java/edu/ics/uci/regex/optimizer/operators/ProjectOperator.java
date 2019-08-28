@@ -11,6 +11,9 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ *
+ */
 public abstract class ProjectOperator implements Operator, Serializable {
 
     final int leftIndex;

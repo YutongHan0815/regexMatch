@@ -14,7 +14,9 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 
-
+/**
+ * Node in the AndOrTree
+ */
 public class OperatorNode implements Serializable {
 
     private final int operatorID;

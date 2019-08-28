@@ -9,6 +9,9 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * A RuleCall is an invocation of a {@link TransformRule} with a set of {@link OperatorNode}s as arguments
+ */
 public class RuleCall implements Serializable {
 
     private final OptimizerPlanner planner;
@@ -25,14 +28,29 @@ public class RuleCall implements Serializable {
         return this.planner.getContext();
     }
 
+    /**
+     * Returns the invoked rule
+     * @return rule
+     */
     public TransformRule getRule() {
         return rule;
     }
 
+    /**
+     * Return the matched {@link OperatorNode} at {@ordinal}
+     * @param ordinal
+     * @return the matched {@link OperatorNode}
+     */
     public OperatorNode getOperator(int ordinal) {
         return this.planner.getAndOrTree().getOperator(matchedOperators.get(ordinal));
     }
 
+    /**
+     * Registers that a rule has produced an equivalent relational expression.
+     * Called by the rule whenever it finds a match.
+     *
+     * @param equivalentOperator
+     */
     public void transformTo(OperatorNode equivalentOperator) {
         int equivSetID = planner.getAndOrTree().getOperatorSet(matchedOperators.get(0)).getSetID();
         this.planner.registerOperator(equivalentOperator, equivSetID);

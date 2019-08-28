@@ -27,6 +27,9 @@ public class Relation implements Serializable {
         return fieldValue;
     }
 
+    public void addTuple(Span span) {
+
+    }
 
 
 }

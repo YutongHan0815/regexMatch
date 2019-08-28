@@ -17,6 +17,9 @@ import java.util.Objects;
 
 import static edu.ics.uci.optimizer.operator.schema.SpanType.SPAN_TYPE;
 
+/**
+ * Regex expression that match occurrences of a query sub-regex on tuples
+ */
 public abstract class MatchOperator implements Operator, Serializable {
 
     final SubRegex subRegex;

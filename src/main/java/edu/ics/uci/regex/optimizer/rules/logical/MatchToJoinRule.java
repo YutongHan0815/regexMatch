@@ -22,7 +22,7 @@ import static edu.ics.uci.regex.optimizer.operators.MatchOperator.isComposable;
 
 /**
  * Logical MatchToJoinRule is decompose query into two sub-regexes with a join operator.
- * If the subregex of the Match operator can be decomposed, this rule can be triggered.
+ * If the sub-regex of the Match operator can be decomposed, this rule can be triggered.
  *
  * Match(AB)    <=>    Project(0, 1, 0)
  *                        |
